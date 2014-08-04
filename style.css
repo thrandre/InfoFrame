@@ -2054,6 +2054,7 @@ body {
 }
 .bubble-content-wrapper.back {
   transform: rotateX(-180deg) translate(-50%, 50%);
+  -webkit-transform: rotateX(-180deg) translate(-50%, 50%);
 }
 .background {
   position: absolute;
@@ -2079,6 +2080,7 @@ body {
   float: left;
   left: 50%;
   transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
 }
 .weather .data .basic,
 .weather .data .advanced {
@@ -2125,6 +2127,7 @@ body {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
 }
 #clock {
   width: 90px;
@@ -2133,4 +2136,5 @@ body {
   left: 50%;
   position: relative;
   transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
 }

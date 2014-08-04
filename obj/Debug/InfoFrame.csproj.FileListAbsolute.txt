@@ -3,3 +3,4 @@ C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\bin\InfoFrame.dll
 C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\bin\InfoFrame.pdb
 C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFrame.dll
 C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFrame.pdb
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFrame.csprojResolveAssemblyReference.cache
