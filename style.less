@@ -1,0 +1,205 @@
+@import "font-awesome/less/font-awesome.less";
+@import "weather-icons/weather-icons/weather-icons.less";
+
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: 'Open Sans';
+	overflow: hidden;
+}
+
+* {
+	z-index: 3;
+}
+
+.wi {
+	line-height: normal;
+}
+
+.background-wrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.bubble-wrapper {
+	width: 100%;
+	height: 100%;
+
+	position: relative;
+}
+
+.bubble {
+	position: absolute;
+
+	color: white;
+	box-sizing: border-box;
+	
+	background-color: #222;
+	border-radius: 50%;
+	
+	box-shadow: 0 0 5px #111;
+
+	width: 110px;
+	height: 110px;
+
+	&.big {
+		width: 280px;
+		height: 280px;
+		z-index: 100;
+
+		.level-1 {
+			font-size: 70px;
+		}
+
+		.level-2 {
+			font-size: 42px;
+			font-weight: bold;
+		}
+	}
+
+	.level-1 {
+		font-size: 30px;
+	}
+
+	.level-2 {
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.level-3 {
+		font-size: 16px;
+		text-transform: uppercase;
+	}
+
+	.light {
+		font-weight: 300;
+	}
+
+	.bold {
+		font-weight: 700;
+	}
+
+	.row {
+		float: left;
+		text-align: center;
+		width: 100%;
+		padding-bottom: 2px;
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+}
+
+.bubble-content-wrapper {
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	float: left;
+	
+	&.back {
+		transform: rotateX(-180deg) translate(-50%, 50%);
+	}
+}
+
+.background {
+	position: absolute;
+	
+	width: 100%;
+	height: 100%;
+
+	top: 0;
+	left: 0;
+
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	&.l1 {
+		z-index: 0;
+	}
+
+	&.l2 {
+		z-index: 1;
+		opacity: 0;
+	}
+}
+
+.weather {
+	.level-1 {
+		.wi {
+			margin-top: -25px;
+		}
+	}
+
+	.data {
+		position: relative;
+		float: left;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		.basic, .advanced {
+			float: left;
+		}
+
+		.basic {
+			padding-right: 20px;
+			
+			.wi {
+				font-size: 70px;
+				line-height: normal;
+			}
+		}
+
+		.advanced {
+			font-size: 12px;
+
+			.wi {
+				font-size: 25px;
+				line-height: normal;
+				display: block;
+				float: left;
+			}
+
+			.wind, .rain {
+				float: left;
+				
+				padding: 0;
+				margin: 0;
+			}
+
+			.wind-data, .rain-data {
+				float: left;
+				padding-top: 10px;
+				padding-left: 10px;
+			}
+
+			.rain {
+				margin-top: -15px;
+
+				.wi {
+					padding-right: 4px;
+				}
+				
+				clear: both;
+			}
+		}
+	}
+
+	.description {
+		width: 70%;
+		display: block;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+#clock {
+	width: 90px;
+	height: 90px;
+	margin: 0;
+	left: 50%;
+	position: relative;
+	transform: translateX(-50%);
+}

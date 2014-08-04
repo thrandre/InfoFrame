@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>InfoFrame</title>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,latin-ext,greek,greek-ext' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet/less" type="text/css" href="style.less" />
+		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.3/less.min.js"></script>
+		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript" src="jquery.transit.js"></script>
+		<script type="text/javascript" src="moment.js"></script>
+		<script type="text/javascript" src="svg.js"></script>
+		<script type="text/javascript" src="clock.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+	</head>
+	<body>
+		<div class="background-wrapper">
+			<div class="background l1"></div>
+			<div class="background l2"></div>
+			<div class="bubble-wrapper">
+				<div class="bubble big flippable" data-duration="10">
+					<div class="bubble-content-wrapper front clock">
+						<figure id="clock" class="row level-1"></figure>
+						<span class="row level-2 time">
+							<span class="hour">00</span>
+							<span class="minute light">00</span>
+						</span>
+						<span class="row level-3 date">
+							<span class="day bold"></span>
+							<span class="dayMonth"></span>
+						</span>
+					</div>
+					<div class="bubble-content-wrapper back weather">
+						<div class="row level-1">
+							<i class="wi wi-day-rain-mix"></i>
+						</div>
+						<span class="row level-2">
+							<div class="data">
+								<span class="basic">
+									<span class="temperature">--</span>
+									<span class="light">&deg;C</span>
+								</span>
+								<span class="advanced">
+									<span class="wind">
+										<i class="wi wi-right"></i>
+										<span class="wind-data">- m/s</span>
+									</span>
+									<span class="rain">
+										<i class="wi wi-sprinkles"></i>
+										<span class="rain-data">- mm</span>
+									</span>
+								</span>
+							</div>
+						</span>
+						<span class="row level-3">
+							<span class="description"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
