@@ -678,6 +678,65 @@ var EnvironmentService = (function () {
     return EnvironmentService;
 })();
 
+var GitHubPushListener = (function () {
+    function GitHubPushListener(username, repository, mediator) {
+        this.username = username;
+        this.repository = repository;
+        this.mediator = mediator;
+        this.initialize();
+    }
+    GitHubPushListener.prototype.initialize = function () {
+        this.mediator.on("tick-github-update", this.update, this);
+    };
+
+    GitHubPushListener.prototype.getApiUrl = function () {
+        return "https://api.github.com/repos/" + this.username + "/" + this.repository + "/events";
+    };
+
+    GitHubPushListener.prototype.parseEvent = function (event) {
+        return {
+            type: event.type,
+            actor: event.actor.login,
+            message: event.type === "PushEvent" ? event.payload.commits.map(function (c) {
+                return c.message;
+            }).join() : "",
+            created: moment(event.created_at)
+        };
+    };
+
+    GitHubPushListener.prototype.getNewestPush = function (events) {
+        return events.filter(function (e) {
+            return e.type === "PushEvent";
+        }).sort(function (a, b) {
+            return a.created.isAfter(b.created) ? 1 : -1;
+        }).reverse()[0];
+    };
+
+    GitHubPushListener.prototype.triggerIfUpdated = function (events) {
+        var newest = this.getNewestPush(events);
+
+        if (!newest) {
+            return;
+        }
+
+        if (!this.lastPush || newest.created.isAfter(this.lastPush)) {
+            this.mediator.trigger("github-push", newest);
+        }
+
+        this.lastPush = newest.created;
+    };
+
+    GitHubPushListener.prototype.update = function () {
+        var _this = this;
+        $.getJSON(this.getApiUrl()).then(function (data) {
+            return _this.triggerIfUpdated(data.map(function (e) {
+                return _this.parseEvent(e);
+            }));
+        });
+    };
+    return GitHubPushListener;
+})();
+
 $(function () {
     var bubbleStage = new Stage($(".bubble-wrapper"), new TimerFactory());
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
@@ -690,6 +749,8 @@ $(function () {
     var weatherService = new WeatherService("Oslo", "NO", weatherProvider, mediator);
     var environmentService = new EnvironmentService(mediator);
 
+    var github = new GitHubPushListener("thrandre", "InfoFrame", mediator);
+
     var backgroundView = new BackgroundCarousellView($(".background-wrapper"), mediator, new BackgroundCarousellController(flickr), new ImageLoader());
 
     var clockView = new ClockView($(".clock"), mediator);
@@ -698,7 +759,11 @@ $(function () {
     mediator.on("environment-update", function (data) {
         return console.log(data);
     });
+    mediator.on("github-push", function (data) {
+        return console.log(data);
+    });
 
+    scheduler.schedule("tick-github-update", 10 * 1000, true);
     scheduler.schedule("tick-background-load", 60 * 60 * 1000, true);
     scheduler.schedule("tick-background-render", 60 * 1000, true);
     scheduler.schedule("tick-clock-trigger-update", 1000, true);

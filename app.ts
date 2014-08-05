@@ -693,6 +693,63 @@ class EnvironmentService {
     }
 }
 
+interface GitHubEventData {
+    type: string;
+    actor: string;
+    message: string;
+    created: Moment;
+}
+
+class GitHubPushListener {
+    private lastPush: Moment;
+
+    constructor(private username: string, private repository: string, private mediator: EventEmitter) {
+        this.initialize();
+    }
+
+    initialize() {
+        this.mediator.on("tick-github-update", this.update, this);
+    }
+
+    private getApiUrl() {
+        return "https://api.github.com/repos/"+ this.username +"/" + this.repository + "/events";
+    }
+
+    private parseEvent(event): GitHubEventData {
+        return {
+            type: event.type,
+            actor: event.actor.login,
+            message: event.type === "PushEvent" ? event.payload.commits.map( ( c ) => c.message ).join() : "",
+            created: moment( event.created_at )
+        };
+    }
+
+    private getNewestPush(events: GitHubEventData[]) {
+        return events
+            .filter((e) => e.type === "PushEvent")
+            .sort((a, b) => a.created.isAfter(b.created) ? 1 : -1).reverse()[0];
+    }
+
+    private triggerIfUpdated(events: GitHubEventData[]) {
+        var newest = this.getNewestPush( events );
+
+        if (!newest) {
+            return;
+        }
+
+        if ( !this.lastPush || newest.created.isAfter( this.lastPush ) ) {
+            this.mediator.trigger( "github-push", newest );
+        }
+
+        this.lastPush = newest.created;
+    }
+
+    update() {
+        $.getJSON(this.getApiUrl()).then((data) => this.triggerIfUpdated(data.map((e) => this.parseEvent(e))));
+    }
+
+}
+
 $(() => {
     var bubbleStage = new Stage( $( ".bubble-wrapper" ), new TimerFactory() );
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
@@ -705,13 +762,17 @@ $(() => {
     var weatherService = new WeatherService( "Oslo", "NO", weatherProvider, mediator );
     var environmentService = new EnvironmentService( mediator );
 
+    var github = new GitHubPushListener( "thrandre", "InfoFrame", mediator );
+
     var backgroundView = new BackgroundCarousellView( $(".background-wrapper"), mediator, new BackgroundCarousellController( flickr ), new ImageLoader() );
     
     var clockView = new ClockView( $( ".clock" ), mediator );
     var weatherView = new WeatherView( $( ".weather" ), mediator );
 
     mediator.on( "environment-update", ( data ) => console.log( data ) );
-    
+    mediator.on( "github-push", ( data ) => console.log( data ) );
+
+    scheduler.schedule( "tick-github-update", 10 * 1000, true );
     scheduler.schedule( "tick-background-load", 60 * 60 * 1000, true );
     scheduler.schedule( "tick-background-render", 60 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );

@@ -187,6 +187,25 @@ declare class EnvironmentService {
     public triggerEnvironmentUpdate(): void;
     public pull(data: any): void;
 }
+interface GitHubEventData {
+    type: string;
+    actor: string;
+    message: string;
+    created: Moment;
+}
+declare class GitHubPushListener {
+    private username;
+    private repository;
+    private mediator;
+    private lastPush;
+    constructor(username: string, repository: string, mediator: EventEmitter);
+    public initialize(): void;
+    private getApiUrl();
+    private parseEvent(event);
+    private getNewestPush(events);
+    private triggerIfUpdated(events);
+    public update(): void;
+}
 declare module Query {
     interface IEnumerableFactory {
         fromArray<T>(arr: T[]): IEnumerable<T>;
