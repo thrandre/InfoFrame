@@ -1,4 +1,13 @@
 ﻿declare module Simple {
+    interface EventListener {
+        callback: (data: any) => void;
+        context: any;
+    }
+    interface EventEmitter {
+        on(event: string, callback: (data: any) => void, context?: any): any;
+        off(event: string, callback?: (data: any) => void, context?: any): any;
+        trigger(event: string, data?: any): any;
+    }
     class Events {
         private listeners;
         public on(event: string, callback: (data: any) => void, context?: any): void;
@@ -54,104 +63,114 @@ declare module Artwork {
         private userId;
         constructor(apiKey: string, userId: string);
         private getApiUrl();
+        private parsePhoto(data);
         public search(minWidth: number, minHeight: number): JQueryPromise<PhotoData[]>;
     }
 }
-declare class Stage {
-    public el: JQuery;
-    public timerFactory: TimerFactory;
-    public bubbles: Bubble[];
-    constructor(el: JQuery, timerFactory: TimerFactory);
-    public initialize(): void;
-    public getStageOrigin(): JQueryCoordinates;
-    public layout(): void;
+declare module Timers {
+    class Timer {
+        private action;
+        private times;
+        private maxTimes;
+        private handle;
+        constructor(action: () => void);
+        private tick();
+        public trigger(): void;
+        public start(interval: number, times?: number): void;
+        public stop(): void;
+    }
+    class TimerFactory {
+        public create(action: () => void): Timer;
+    }
+    class Scheduler {
+        private timerFactory;
+        private mediator;
+        private timers;
+        constructor(timerFactory: TimerFactory, mediator: Simple.EventEmitter);
+        public schedule(event: string, interval: number, immediate?: boolean, times?: number): void;
+    }
 }
-declare class Bubble {
-    public el: JQuery;
-    public virtualPadding: number;
-    constructor(el: JQuery);
-    public initialize(): void;
-    public getOrigin(): JQueryCoordinates;
-    public getRadius(includeMargin?: boolean): number;
-    public setRadius(radius: number): void;
-    public setVirtualPadding(padding: number): void;
-    public getPointOnCircumference(angle: number, includeMargin?: boolean): JQueryCoordinates;
-    public translateToAbsolute(relative: JQueryCoordinates): JQueryCoordinates;
-    public moveTo(position: JQueryCoordinates): void;
-    public originMoveTo(position: JQueryCoordinates): void;
-    public flip(): void;
+declare module Bubbles {
+    class Stage {
+        public el: JQuery;
+        public timerFactory: Timers.TimerFactory;
+        public bubbles: Bubble[];
+        constructor(el: JQuery, timerFactory: Timers.TimerFactory);
+        public initialize(): void;
+        public getStageOrigin(): JQueryCoordinates;
+        public layout(): void;
+    }
+    class Bubble {
+        public el: JQuery;
+        public virtualPadding: number;
+        constructor(el: JQuery);
+        public initialize(): void;
+        public getOrigin(): JQueryCoordinates;
+        public getRadius(includeMargin?: boolean): number;
+        public setRadius(radius: number): void;
+        public setVirtualPadding(padding: number): void;
+        public getPointOnCircumference(angle: number, includeMargin?: boolean): JQueryCoordinates;
+        public translateToAbsolute(relative: JQueryCoordinates): JQueryCoordinates;
+        public moveTo(position: JQueryCoordinates): void;
+        public originMoveTo(position: JQueryCoordinates): void;
+        public flip(): void;
+    }
 }
-declare class BackgroundCarousellController extends Simple.Controller {
-    private photoProvider;
-    constructor(photoProvider: Artwork.IPhotoProvider);
-    public getPhotos(minWidth: number, minHeight: number): JQueryPromise<Artwork.PhotoData[]>;
+declare module Controllers {
+    class BackgroundController extends Simple.Controller {
+        private photoProvider;
+        constructor(photoProvider: Artwork.IPhotoProvider);
+        public getPhotos(minWidth: number, minHeight: number): JQueryPromise<Artwork.PhotoData[]>;
+    }
 }
-declare class ImageLoader {
-    public load(photoData: Artwork.PhotoData): JQueryPromise<any>;
+declare module Utils {
+    class ImageLoader {
+        public load(photoData: Artwork.PhotoData): JQueryPromise<any>;
+    }
 }
-declare class Timer {
-    private action;
-    private times;
-    private maxTimes;
-    private handle;
-    constructor(action: () => void);
-    private tick();
-    public trigger(): void;
-    public start(interval: number, times?: number): void;
-    public stop(): void;
+declare module Views {
+    class BackgroundView extends Simple.View {
+        public el: JQuery;
+        public mediator: Simple.EventEmitter;
+        public controller: Controllers.BackgroundController;
+        public imageLoader: Utils.ImageLoader;
+        private photos;
+        private currentPhotoSet;
+        private currentPhoto;
+        constructor(el: JQuery, mediator: Simple.EventEmitter, controller: Controllers.BackgroundController, imageLoader: Utils.ImageLoader);
+        public initialize(): void;
+        public getPhotos(): JQueryPromise<any>;
+        public matchTags(wantedTags: string[], tags: string[]): number;
+        public photoIsMatch(wantedTags: string[], tags: string[], fuzzyness: number): boolean;
+        public updatePhotoSet(tags: string[]): void;
+        public getEnvironmentTags(data: EnvironmentData): string[];
+        public environmentUpdate(data: EnvironmentData): void;
+        public renderNext(): void;
+        public render(): void;
+    }
 }
-declare class TimerFactory {
-    public create(action: () => void): Timer;
+declare module Views {
+    class ClockView extends Simple.View {
+        public el: JQuery;
+        public mediator: Simple.EventEmitter;
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
+        public initialize(): void;
+        public update(data: Moment): void;
+    }
 }
-declare class Scheduler {
-    private timerFactory;
-    private mediator;
-    private timers;
-    constructor(timerFactory: TimerFactory, mediator: EventEmitter);
-    public schedule(event: string, interval: number, immediate?: boolean, times?: number): void;
-}
-interface EventEmitter {
-    on(event: string, callback: (data: any) => void, context?: any): any;
-    off(event: string, callback?: (data: any) => void, context?: any): any;
-    trigger(event: string, data?: any): any;
-}
-declare class BackgroundCarousellView extends Simple.View {
-    public el: JQuery;
-    public mediator: EventEmitter;
-    public controller: BackgroundCarousellController;
-    public imageLoader: ImageLoader;
-    private photos;
-    private currentPhotoSet;
-    private currentPhoto;
-    constructor(el: JQuery, mediator: EventEmitter, controller: BackgroundCarousellController, imageLoader: ImageLoader);
-    public initialize(): void;
-    public getPhotos(): JQueryPromise<any>;
-    public matchTags(wantedTags: string[], tags: string[]): number;
-    public photoIsMatch(wantedTags: string[], tags: string[], fuzzyness: number): boolean;
-    public updatePhotoSet(tags: string[]): void;
-    public getEnvironmentTags(data: EnvironmentData): string[];
-    public environmentUpdate(data: EnvironmentData): void;
-    public renderNext(): void;
-    public render(): void;
-}
-declare class ClockView extends Simple.View {
-    public el: JQuery;
-    public mediator: EventEmitter;
-    constructor(el: JQuery, mediator: EventEmitter);
-    public initialize(): void;
-    public update(data: Moment): void;
-}
-declare class WeatherView extends Simple.View {
-    public el: JQuery;
-    public mediator: EventEmitter;
-    constructor(el: JQuery, mediator: EventEmitter);
-    public initialize(): void;
-    public limitDescription(description: string): string;
-    public update(data: Weather.WeatherData): void;
+declare module Views {
+    class WeatherView extends Simple.View {
+        public el: JQuery;
+        public mediator: Simple.EventEmitter;
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
+        public initialize(): void;
+        public limitDescription(description: string): string;
+        public update(data: Weather.WeatherData): void;
+    }
 }
 declare class ClockService {
     private mediator;
-    constructor(mediator: EventEmitter);
+    constructor(mediator: Simple.EventEmitter);
     public initialize(): void;
     public triggerUpdate(): void;
 }
@@ -160,7 +179,7 @@ declare class WeatherService {
     private countryCode;
     private weatherProvider;
     private mediator;
-    constructor(city: string, countryCode: string, weatherProvider: Weather.WeatherProvider, mediator: EventEmitter);
+    constructor(city: string, countryCode: string, weatherProvider: Weather.WeatherProvider, mediator: Simple.EventEmitter);
     public initialize(): void;
     public triggerUpdate(): void;
 }
@@ -176,7 +195,7 @@ declare class EnvironmentService {
     private mediator;
     private currentEnvironment;
     private currentChanged;
-    constructor(mediator: EventEmitter);
+    constructor(mediator: Simple.EventEmitter);
     public initialize(): void;
     private setProperty(key, value);
     private isComplete();
@@ -185,7 +204,6 @@ declare class EnvironmentService {
     private weatherUpdate(data);
     private clockUpdate(data);
     public triggerEnvironmentUpdate(): void;
-    public pull(data: any): void;
 }
 interface GitHubEventData {
     type: string;
@@ -198,7 +216,7 @@ declare class GitHubPushListener {
     private repository;
     private mediator;
     private lastPush;
-    constructor(username: string, repository: string, mediator: EventEmitter);
+    constructor(username: string, repository: string, mediator: Simple.EventEmitter);
     public initialize(): void;
     private getApiUrl();
     private parseEvent(event);
@@ -321,3 +339,4 @@ declare module Query {
         constructor(key: TOut);
     }
 }
+declare function isUndefined(obj: any): boolean;

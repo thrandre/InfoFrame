@@ -2,18 +2,25 @@
 	<head>
 		<title>InfoFrame</title>
 		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,latin-ext,greek,greek-ext' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script type="text/javascript" src="jquery.js"></script>
-		<script type="text/javascript" src="jquery.transit.js"></script>
-		<script type="text/javascript" src="moment.js"></script>
-		<script type="text/javascript" src="svg.js"></script>
-		<script type="text/javascript" src="clock.js"></script>
+		<link rel="stylesheet" type="text/css" href="styles/style.css" />
+		<script type="text/javascript" src="js/vendor/jquery.js"></script>
+		<script type="text/javascript" src="js/vendor/jquery.transit.js"></script>
+		<script type="text/javascript" src="js/vendor/moment.js"></script>
+		<script type="text/javascript" src="js/vendor/svg.js"></script>
+		<script type="text/javascript" src="js/clock.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 	</head>
 	<body>
 		<div class="background-wrapper">
 			<div class="background l1"></div>
 			<div class="background l2"></div>
+			<div class="deploy-info">
+				<h1>New commits are about to be deployed</h1>
+				<ul>
+					<li>Auto update</li>
+					<li>720p</li>
+				</ul>
+			</div>
 			<div class="bubble-wrapper">
 				<div class="bubble big flippable" data-duration="10">
 					<div class="bubble-content-wrapper front clock">

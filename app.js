@@ -62,7 +62,6 @@ var Simple;
     })(Events);
     Simple.View = View;
 })(Simple || (Simple = {}));
-
 var Weather;
 (function (Weather) {
     var OpenWeatherMap = (function () {
@@ -121,7 +120,6 @@ var Weather;
     })();
     Weather.OpenWeatherMap = OpenWeatherMap;
 })(Weather || (Weather = {}));
-
 var Artwork;
 (function (Artwork) {
     var Flickr = (function () {
@@ -133,20 +131,25 @@ var Artwork;
             return "https://api.flickr.com/services/rest/?method=flickr.favorites.getPublicList&api_key=" + this.apiKey + "&user_id=" + this.userId + "&extras=o_dims%2Curl_o%2Ctags&per_page=500&format=json&nojsoncallback=1";
         };
 
+        Flickr.prototype.parsePhoto = function (data) {
+            return {
+                title: data.title,
+                tags: data.tags.split(" ").map(function (tag) {
+                    return tag.toLowerCase();
+                }),
+                source: data.url_o,
+                width: data.width_o,
+                height: data.height_o
+            };
+        };
+
         Flickr.prototype.search = function (minWidth, minHeight) {
+            var _this = this;
             return $.getJSON(this.getApiUrl()).then(function (data) {
                 return data.photos.photo.filter(function (photo) {
                     return photo.width_o >= minWidth && photo.height_o >= minHeight;
                 }).map(function (photo) {
-                    return {
-                        title: photo.title,
-                        tags: photo.tags.split(" ").map(function (tag) {
-                            return tag.toLowerCase();
-                        }),
-                        source: photo.url_o,
-                        width: photo.width_o,
-                        height: photo.height_o
-                    };
+                    return _this.parsePhoto(photo);
                 });
             });
         };
@@ -154,404 +157,444 @@ var Artwork;
     })();
     Artwork.Flickr = Flickr;
 })(Artwork || (Artwork = {}));
-
-var Stage = (function () {
-    function Stage(el, timerFactory) {
-        this.el = el;
-        this.timerFactory = timerFactory;
-        this.bubbles = [];
-        this.initialize();
-    }
-    Stage.prototype.initialize = function () {
-        var _this = this;
-        this.el.find(".bubble").each(function (i, e) {
-            return _this.bubbles.push(new Bubble($(e)));
-        });
-        this.timerFactory.create(function () {
-            return _this.bubbles.forEach(function (b) {
-                return b.flip();
-            });
-        }).start(10000);
-        this.layout();
-    };
-
-    Stage.prototype.getStageOrigin = function () {
-        return {
-            left: this.el.width() / 2,
-            top: this.el.height() / 2
-        };
-    };
-
-    Stage.prototype.layout = function () {
-        if (this.bubbles.length == 0) {
-            return;
+var Timers;
+(function (Timers) {
+    var Timer = (function () {
+        function Timer(action) {
+            this.action = action;
         }
-
-        var center = this.bubbles[0];
-
-        center.setVirtualPadding(200);
-        center.originMoveTo(this.getStageOrigin());
-
-        var spacingAngle = (2 * Math.PI) / (this.bubbles.length - 1);
-
-        for (var i = 1; i < this.bubbles.length; i++) {
-            var angle = (i - 1) * spacingAngle;
-            var position = center.getPointOnCircumference(angle, true);
-            this.bubbles[i].originMoveTo(center.translateToAbsolute(position));
-        }
-    };
-    return Stage;
-})();
-
-var Bubble = (function () {
-    function Bubble(el) {
-        this.el = el;
-        this.virtualPadding = 0;
-        this.initialize();
-    }
-    Bubble.prototype.initialize = function () {
-        this.el.find(".back").hide();
-    };
-
-    Bubble.prototype.getOrigin = function () {
-        return {
-            left: this.el.outerWidth(true) / 2,
-            top: this.el.outerHeight(true) / 2
+        Timer.prototype.tick = function () {
+            if (isUndefined(this.maxTimes) || this.times < this.maxTimes) {
+                this.action();
+                this.times++;
+            } else {
+                window.clearInterval(this.handle);
+            }
         };
-    };
 
-    Bubble.prototype.getRadius = function (includeMargin) {
-        return this.el.outerWidth(!!includeMargin) / 2;
-    };
-
-    Bubble.prototype.setRadius = function (radius) {
-        this.el.width(radius * 2);
-    };
-
-    Bubble.prototype.setVirtualPadding = function (padding) {
-        this.virtualPadding = padding;
-    };
-
-    Bubble.prototype.getPointOnCircumference = function (angle, includeMargin) {
-        var radius = this.getRadius(includeMargin), origin = this.getOrigin();
-
-        return {
-            left: origin.left + (radius + this.virtualPadding) * Math.cos(angle),
-            top: origin.top - (radius + this.virtualPadding) * Math.sin(angle)
-        };
-    };
-
-    Bubble.prototype.translateToAbsolute = function (relative) {
-        var position = this.el.offset();
-        return {
-            left: position.left + relative.left,
-            top: position.top + relative.top
-        };
-    };
-
-    Bubble.prototype.moveTo = function (position) {
-        this.el.offset(position);
-    };
-
-    Bubble.prototype.originMoveTo = function (position) {
-        var origin = this.getOrigin();
-
-        this.moveTo({
-            left: position.left - origin.left,
-            top: position.top - origin.top
-        });
-    };
-
-    Bubble.prototype.flip = function () {
-        var _this = this;
-        var front = this.el.find(".front"), back = this.el.find(".back"), rotate1, rotate2, show, hide;
-
-        if (front.is(":visible")) {
-            show = back;
-            hide = front;
-            rotate1 = { rotateX: "90deg" };
-            rotate2 = { rotateX: "180deg" };
-        } else {
-            show = front;
-            hide = back;
-            rotate1 = { rotateX: "90deg" };
-            rotate2 = { rotateX: "0deg" };
-        }
-
-        this.el.transition(rotate1, function () {
-            hide.hide();
-            show.show();
-            _this.el.transition(rotate2);
-        });
-    };
-    return Bubble;
-})();
-
-var BackgroundCarousellController = (function (_super) {
-    __extends(BackgroundCarousellController, _super);
-    function BackgroundCarousellController(photoProvider) {
-        _super.call(this);
-        this.photoProvider = photoProvider;
-    }
-    BackgroundCarousellController.prototype.getPhotos = function (minWidth, minHeight) {
-        return this.photoProvider.search(minWidth, minHeight);
-    };
-    return BackgroundCarousellController;
-})(Simple.Controller);
-
-var ImageLoader = (function () {
-    function ImageLoader() {
-    }
-    ImageLoader.prototype.load = function (photoData) {
-        var deferred = $.Deferred();
-        var image = $("<img src=\"" + photoData.source + "\"/>");
-        image.load(function () {
-            deferred.resolve();
-            image.remove();
-        });
-        return deferred.promise();
-    };
-    return ImageLoader;
-})();
-
-var Timer = (function () {
-    function Timer(action) {
-        this.action = action;
-    }
-    Timer.prototype.tick = function () {
-        if (!this.maxTimes || this.times < this.maxTimes) {
+        Timer.prototype.trigger = function () {
             this.action();
-            this.times++;
-        } else {
+        };
+
+        Timer.prototype.start = function (interval, times) {
+            var _this = this;
+            this.times = 0;
+            this.maxTimes = times;
+            this.handle = window.setInterval(function () {
+                return _this.tick();
+            }, interval);
+        };
+
+        Timer.prototype.stop = function () {
+            if (isUndefined(this.handle)) {
+                return;
+            }
             window.clearInterval(this.handle);
+        };
+        return Timer;
+    })();
+    Timers.Timer = Timer;
+
+    var TimerFactory = (function () {
+        function TimerFactory() {
         }
-    };
+        TimerFactory.prototype.create = function (action) {
+            return new Timer(action);
+        };
+        return TimerFactory;
+    })();
+    Timers.TimerFactory = TimerFactory;
 
-    Timer.prototype.trigger = function () {
-        this.action();
-    };
-
-    Timer.prototype.start = function (interval, times) {
-        var _this = this;
-        this.times = 0;
-        this.maxTimes = times;
-        this.handle = window.setInterval(function () {
-            return _this.tick();
-        }, interval);
-    };
-
-    Timer.prototype.stop = function () {
-        if (!this.handle) {
-            return;
+    var Scheduler = (function () {
+        function Scheduler(timerFactory, mediator) {
+            this.timerFactory = timerFactory;
+            this.mediator = mediator;
+            this.timers = {};
         }
-        window.clearInterval(this.handle);
-    };
-    return Timer;
-})();
+        Scheduler.prototype.schedule = function (event, interval, immediate, times) {
+            var _this = this;
+            if (typeof immediate === "undefined") { immediate = false; }
+            var timer = (this.timers[event] || (this.timers[event] = this.timerFactory.create(function () {
+                return _this.mediator.trigger(event);
+            })));
 
-var TimerFactory = (function () {
-    function TimerFactory() {
-    }
-    TimerFactory.prototype.create = function (action) {
-        return new Timer(action);
-    };
-    return TimerFactory;
-})();
-
-var Scheduler = (function () {
-    function Scheduler(timerFactory, mediator) {
-        this.timerFactory = timerFactory;
-        this.mediator = mediator;
-        this.timers = {};
-    }
-    Scheduler.prototype.schedule = function (event, interval, immediate, times) {
-        var _this = this;
-        if (typeof immediate === "undefined") { immediate = false; }
-        var timer = (this.timers[event] || (this.timers[event] = this.timerFactory.create(function () {
-            return _this.mediator.trigger(event);
-        })));
-
-        if (immediate) {
-            timer.trigger();
-        }
-
-        timer.start(interval, times);
-    };
-    return Scheduler;
-})();
-
-var BackgroundCarousellView = (function (_super) {
-    __extends(BackgroundCarousellView, _super);
-    function BackgroundCarousellView(el, mediator, controller, imageLoader) {
-        _super.call(this, el, controller);
-        this.el = el;
-        this.mediator = mediator;
-        this.controller = controller;
-        this.imageLoader = imageLoader;
-        this.currentPhoto = 0;
-        this.initialize();
-    }
-    BackgroundCarousellView.prototype.initialize = function () {
-        this.mediator.on("tick-background-load", this.getPhotos, this);
-        this.mediator.on("environment-update", this.environmentUpdate, this);
-        this.mediator.on("tick-background-render", this.render, this);
-    };
-
-    BackgroundCarousellView.prototype.getPhotos = function () {
-        var _this = this;
-        return this.controller.getPhotos(this.el.width(), this.el.height()).then(function (photos) {
-            return _this.photos = photos;
-        });
-    };
-
-    BackgroundCarousellView.prototype.matchTags = function (wantedTags, tags) {
-        var matches = 0;
-        wantedTags.forEach(function (tag) {
-            if (tags.indexOf(tag) !== -1) {
-                matches++;
+            if (immediate) {
+                timer.trigger();
             }
-        });
 
-        return matches;
-    };
-
-    BackgroundCarousellView.prototype.photoIsMatch = function (wantedTags, tags, fuzzyness) {
-        return this.matchTags(wantedTags, tags) >= wantedTags.length - fuzzyness;
-    };
-
-    BackgroundCarousellView.prototype.updatePhotoSet = function (tags) {
-        var _this = this;
-        if (!this.photos) {
-            return;
+            timer.start(interval, times);
+        };
+        return Scheduler;
+    })();
+    Timers.Scheduler = Scheduler;
+})(Timers || (Timers = {}));
+///<reference path="timers.ts"/>
+var Bubbles;
+(function (Bubbles) {
+    var Stage = (function () {
+        function Stage(el, timerFactory) {
+            this.el = el;
+            this.timerFactory = timerFactory;
+            this.bubbles = [];
+            this.initialize();
         }
-
-        var photoSet = [];
-
-        for (var i = 0; i <= tags.length; i++) {
-            photoSet = this.photos.filter(function (photo) {
-                return _this.photoIsMatch(tags, photo.tags, i);
+        Stage.prototype.initialize = function () {
+            var _this = this;
+            this.el.find(".bubble").each(function (i, e) {
+                return _this.bubbles.push(new Bubble($(e)));
             });
+            this.timerFactory.create(function () {
+                return _this.bubbles.forEach(function (b) {
+                    return b.flip();
+                });
+            }).start(10000);
+            this.layout();
+        };
 
-            if (photoSet.length !== 0) {
-                break;
+        Stage.prototype.getStageOrigin = function () {
+            return {
+                left: this.el.width() / 2,
+                top: this.el.height() / 2
+            };
+        };
+
+        Stage.prototype.layout = function () {
+            if (this.bubbles.length == 0) {
+                return;
             }
+
+            var center = this.bubbles[0];
+
+            center.setVirtualPadding(200);
+            center.originMoveTo(this.getStageOrigin());
+
+            var spacingAngle = (2 * Math.PI) / (this.bubbles.length - 1);
+
+            for (var i = 1; i < this.bubbles.length; i++) {
+                var angle = (i - 1) * spacingAngle;
+                var position = center.getPointOnCircumference(angle, true);
+                this.bubbles[i].originMoveTo(center.translateToAbsolute(position));
+            }
+        };
+        return Stage;
+    })();
+    Bubbles.Stage = Stage;
+
+    var Bubble = (function () {
+        function Bubble(el) {
+            this.el = el;
+            this.virtualPadding = 0;
+            this.initialize();
         }
+        Bubble.prototype.initialize = function () {
+            this.el.find(".back").hide();
+        };
 
-        if (photoSet.length === 0) {
-            return;
-        }
+        Bubble.prototype.getOrigin = function () {
+            return {
+                left: this.el.outerWidth(true) / 2,
+                top: this.el.outerHeight(true) / 2
+            };
+        };
 
-        photoSet.sort(function (a, b) {
-            return _this.matchTags(tags, a.tags) - _this.matchTags(tags, b.tags);
-        });
+        Bubble.prototype.getRadius = function (includeMargin) {
+            return this.el.outerWidth(!!includeMargin) / 2;
+        };
 
-        this.currentPhotoSet = photoSet;
-        this.currentPhoto = 0;
-    };
+        Bubble.prototype.setRadius = function (radius) {
+            this.el.width(radius * 2);
+        };
 
-    BackgroundCarousellView.prototype.getEnvironmentTags = function (data) {
-        return [data.season, data.timeOfDay, data.weather];
-    };
+        Bubble.prototype.setVirtualPadding = function (padding) {
+            this.virtualPadding = padding;
+        };
 
-    BackgroundCarousellView.prototype.environmentUpdate = function (data) {
-        var _this = this;
-        if (!this.photos || this.photos.length === 0) {
-            this.getPhotos().then(function () {
-                return _this.updatePhotoSet(_this.getEnvironmentTags(data));
+        Bubble.prototype.getPointOnCircumference = function (angle, includeMargin) {
+            var radius = this.getRadius(includeMargin), origin = this.getOrigin();
+
+            return {
+                left: origin.left + (radius + this.virtualPadding) * Math.cos(angle),
+                top: origin.top - (radius + this.virtualPadding) * Math.sin(angle)
+            };
+        };
+
+        Bubble.prototype.translateToAbsolute = function (relative) {
+            var position = this.el.offset();
+            return {
+                left: position.left + relative.left,
+                top: position.top + relative.top
+            };
+        };
+
+        Bubble.prototype.moveTo = function (position) {
+            this.el.offset(position);
+        };
+
+        Bubble.prototype.originMoveTo = function (position) {
+            var origin = this.getOrigin();
+
+            this.moveTo({
+                left: position.left - origin.left,
+                top: position.top - origin.top
             });
-            return;
+        };
+
+        Bubble.prototype.flip = function () {
+            var _this = this;
+            var front = this.el.find(".front"), back = this.el.find(".back"), rotate1, rotate2, show, hide;
+
+            if (front.is(":visible")) {
+                show = back;
+                hide = front;
+                rotate1 = { rotateX: "90deg" };
+                rotate2 = { rotateX: "180deg" };
+            } else {
+                show = front;
+                hide = back;
+                rotate1 = { rotateX: "90deg" };
+                rotate2 = { rotateX: "0deg" };
+            }
+
+            this.el.transition(rotate1, function () {
+                hide.hide();
+                show.show();
+                _this.el.transition(rotate2);
+            });
+        };
+        return Bubble;
+    })();
+    Bubbles.Bubble = Bubble;
+})(Bubbles || (Bubbles = {}));
+var Controllers;
+(function (Controllers) {
+    var BackgroundController = (function (_super) {
+        __extends(BackgroundController, _super);
+        function BackgroundController(photoProvider) {
+            _super.call(this);
+            this.photoProvider = photoProvider;
         }
-
-        this.updatePhotoSet(this.getEnvironmentTags(data));
-    };
-
-    BackgroundCarousellView.prototype.renderNext = function () {
-        var l1 = this.el.find(".l1");
-        var l2 = this.el.find(".l2");
-
-        l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
-
-        l2.animate({ opacity: 1 }, {
-            duration: 1000, complete: function () {
-                l1.css({ opacity: 0 });
-                l1.removeClass("l1").addClass("l2");
-                l2.removeClass("l2").addClass("l1");
-            } });
-    };
-
-    BackgroundCarousellView.prototype.render = function () {
-        var _this = this;
-        if (!this.currentPhotoSet || this.currentPhotoSet.length === 0) {
-            return;
+        BackgroundController.prototype.getPhotos = function (minWidth, minHeight) {
+            return this.photoProvider.search(minWidth, minHeight);
+        };
+        return BackgroundController;
+    })(Simple.Controller);
+    Controllers.BackgroundController = BackgroundController;
+})(Controllers || (Controllers = {}));
+var Utils;
+(function (Utils) {
+    var ImageLoader = (function () {
+        function ImageLoader() {
         }
-
-        if (this.currentPhoto === this.currentPhotoSet.length) {
+        ImageLoader.prototype.load = function (photoData) {
+            var deferred = $.Deferred();
+            var image = $("<img src=\"" + photoData.source + "\"/>");
+            image.load(function () {
+                deferred.resolve();
+                image.remove();
+            });
+            return deferred.promise();
+        };
+        return ImageLoader;
+    })();
+    Utils.ImageLoader = ImageLoader;
+})(Utils || (Utils = {}));
+///<reference path="../simple.ts"/>
+///<reference path="../controllers/backgroundController.ts"/>
+///<reference path="../utils/imageLoader.ts"/>
+var Views;
+(function (Views) {
+    var BackgroundView = (function (_super) {
+        __extends(BackgroundView, _super);
+        function BackgroundView(el, mediator, controller, imageLoader) {
+            _super.call(this, el, controller);
+            this.el = el;
+            this.mediator = mediator;
+            this.controller = controller;
+            this.imageLoader = imageLoader;
             this.currentPhoto = 0;
+            this.initialize();
         }
+        BackgroundView.prototype.initialize = function () {
+            this.mediator.on("tick-background-load", this.getPhotos, this);
+            this.mediator.on("environment-update", this.environmentUpdate, this);
+            this.mediator.on("tick-background-render", this.render, this);
+        };
 
-        this.imageLoader.load(this.currentPhotoSet[this.currentPhoto]).then(function () {
-            _this.renderNext();
-            _this.currentPhoto++;
-        });
-    };
-    return BackgroundCarousellView;
-})(Simple.View);
+        BackgroundView.prototype.getPhotos = function () {
+            var _this = this;
+            return this.controller.getPhotos(this.el.width(), this.el.height()).then(function (photos) {
+                return _this.photos = photos;
+            });
+        };
 
-var ClockView = (function (_super) {
-    __extends(ClockView, _super);
-    function ClockView(el, mediator) {
-        _super.call(this, el);
-        this.el = el;
-        this.mediator = mediator;
-        this.initialize();
-    }
-    ClockView.prototype.initialize = function () {
-        this.mediator.on("clock-update", this.update, this);
-    };
+        BackgroundView.prototype.matchTags = function (wantedTags, tags) {
+            var matches = 0;
+            wantedTags.forEach(function (tag) {
+                if (tags.indexOf(tag) !== -1) {
+                    matches++;
+                }
+            });
 
-    ClockView.prototype.update = function (data) {
-        var time = this.el.find(".time"), date = this.el.find(".date");
+            return matches;
+        };
 
-        time.find(".hour").text(data.format("HH"));
-        time.find(".minute").text(data.format("mm"));
+        BackgroundView.prototype.photoIsMatch = function (wantedTags, tags, fuzzyness) {
+            return this.matchTags(wantedTags, tags) >= wantedTags.length - fuzzyness;
+        };
 
-        date.find(".day").text(data.format("dddd"));
-        date.find(".dayMonth").text(data.format("Mo MMM"));
-    };
-    return ClockView;
-})(Simple.View);
+        BackgroundView.prototype.updatePhotoSet = function (tags) {
+            var _this = this;
+            if (!this.photos) {
+                return;
+            }
 
-var WeatherView = (function (_super) {
-    __extends(WeatherView, _super);
-    function WeatherView(el, mediator) {
-        _super.call(this, el);
-        this.el = el;
-        this.mediator = mediator;
-        this.initialize();
-    }
-    WeatherView.prototype.initialize = function () {
-        this.mediator.on("weather-update", this.update, this);
-    };
+            var photoSet = [];
 
-    WeatherView.prototype.limitDescription = function (description) {
-        var parts = description.split(" ");
-        if (parts.length > 2) {
-            parts.shift();
+            for (var i = 0; i <= tags.length; i++) {
+                photoSet = this.photos.filter(function (photo) {
+                    return _this.photoIsMatch(tags, photo.tags, i);
+                });
+
+                if (photoSet.length !== 0) {
+                    break;
+                }
+            }
+
+            if (photoSet.length === 0) {
+                return;
+            }
+
+            photoSet.sort(function (a, b) {
+                return _this.matchTags(tags, a.tags) - _this.matchTags(tags, b.tags);
+            });
+
+            this.currentPhotoSet = photoSet;
+            this.currentPhoto = 0;
+        };
+
+        BackgroundView.prototype.getEnvironmentTags = function (data) {
+            return [data.season, data.timeOfDay, data.weather];
+        };
+
+        BackgroundView.prototype.environmentUpdate = function (data) {
+            var _this = this;
+            if (!this.photos || this.photos.length === 0) {
+                this.getPhotos().then(function () {
+                    return _this.updatePhotoSet(_this.getEnvironmentTags(data));
+                });
+                return;
+            }
+
+            this.updatePhotoSet(this.getEnvironmentTags(data));
+        };
+
+        BackgroundView.prototype.renderNext = function () {
+            var l1 = this.el.find(".l1");
+            var l2 = this.el.find(".l2");
+
+            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
+
+            l2.animate({ opacity: 1 }, {
+                duration: 1000,
+                complete: function () {
+                    l1.css({ opacity: 0 });
+                    l1.removeClass("l1").addClass("l2");
+                    l2.removeClass("l2").addClass("l1");
+                }
+            });
+        };
+
+        BackgroundView.prototype.render = function () {
+            var _this = this;
+            if (isUndefined(this.currentPhotoSet) || this.currentPhotoSet.length === 0) {
+                return;
+            }
+
+            if (this.currentPhoto === this.currentPhotoSet.length) {
+                this.currentPhoto = 0;
+            }
+
+            this.imageLoader.load(this.currentPhotoSet[this.currentPhoto]).then(function () {
+                _this.renderNext();
+                _this.currentPhoto++;
+            });
+        };
+        return BackgroundView;
+    })(Simple.View);
+    Views.BackgroundView = BackgroundView;
+})(Views || (Views = {}));
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
+    var ClockView = (function (_super) {
+        __extends(ClockView, _super);
+        function ClockView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
         }
+        ClockView.prototype.initialize = function () {
+            this.mediator.on("clock-update", this.update, this);
+        };
 
-        return parts.join(" ");
-    };
+        ClockView.prototype.update = function (data) {
+            var time = this.el.find(".time"), date = this.el.find(".date");
 
-    WeatherView.prototype.update = function (data) {
-        this.el.find(".level-1 i").removeClass().addClass("wi").addClass(data.icon);
-        this.el.find(".temperature").text(data.temperature);
-        this.el.find(".description").text(data.description);
-        this.el.find(".rain-data").text(data.percipitation + " mm");
-        this.el.find(".wind-data").text(data.windSpeed + " m/s");
-    };
-    return WeatherView;
-})(Simple.View);
+            time.find(".hour").text(data.format("HH"));
+            time.find(".minute").text(data.format("mm"));
 
+            date.find(".day").text(data.format("dddd"));
+            date.find(".dayMonth").text(data.format("Mo MMM"));
+        };
+        return ClockView;
+    })(Simple.View);
+    Views.ClockView = ClockView;
+})(Views || (Views = {}));
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
+    var WeatherView = (function (_super) {
+        __extends(WeatherView, _super);
+        function WeatherView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
+        }
+        WeatherView.prototype.initialize = function () {
+            this.mediator.on("weather-update", this.update, this);
+        };
+
+        WeatherView.prototype.limitDescription = function (description) {
+            var parts = description.split(" ");
+            if (parts.length > 2) {
+                parts.shift();
+            }
+
+            return parts.join(" ");
+        };
+
+        WeatherView.prototype.update = function (data) {
+            this.el.find(".level-1 i").removeClass().addClass("wi").addClass(data.icon);
+            this.el.find(".temperature").text(data.temperature);
+            this.el.find(".description").text(data.description);
+            this.el.find(".rain-data").text(data.percipitation + " mm");
+            this.el.find(".wind-data").text(data.windSpeed + " m/s");
+        };
+        return WeatherView;
+    })(Simple.View);
+    Views.WeatherView = WeatherView;
+})(Views || (Views = {}));
+///<reference path="backroundView.ts"/>
+///<reference path="clockView.ts"/>
+///<reference path="weatherView.ts"/>
+///<reference path="simple.ts"/>
+///<reference path="weather.ts"/>
+///<reference path="artwork.ts"/>
+///<reference path="timers.ts"/>
+///<reference path="bubbles.ts"/>
+///<reference path="views/views.ts"/>
 var ClockService = (function () {
     function ClockService(mediator) {
         this.mediator = mediator;
@@ -604,7 +647,6 @@ var EnvironmentService = (function () {
             updated: undefined
         };
 
-        this.mediator.on("pull-environment", this.pull, this);
         this.mediator.on("weather-update", this.weatherUpdate, this);
         this.mediator.on("clock-update", this.clockUpdate, this);
     };
@@ -667,13 +709,6 @@ var EnvironmentService = (function () {
             this.mediator.trigger("environment-update", this.currentEnvironment);
             this.currentChanged = false;
         }
-    };
-
-    EnvironmentService.prototype.pull = function (data) {
-        if (!data.cb) {
-            return;
-        }
-        data.cb(this.currentEnvironment);
     };
     return EnvironmentService;
 })();
@@ -738,12 +773,12 @@ var GitHubPushListener = (function () {
 })();
 
 $(function () {
-    var bubbleStage = new Stage($(".bubble-wrapper"), new TimerFactory());
+    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Timers.TimerFactory());
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr("c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04");
 
     var mediator = new Simple.Events();
-    var scheduler = new Scheduler(new TimerFactory(), mediator);
+    var scheduler = new Timers.Scheduler(new Timers.TimerFactory(), mediator);
 
     var clockService = new ClockService(mediator);
     var weatherService = new WeatherService("Oslo", "NO", weatherProvider, mediator);
@@ -751,10 +786,9 @@ $(function () {
 
     var github = new GitHubPushListener("thrandre", "InfoFrame", mediator);
 
-    var backgroundView = new BackgroundCarousellView($(".background-wrapper"), mediator, new BackgroundCarousellController(flickr), new ImageLoader());
-
-    var clockView = new ClockView($(".clock"), mediator);
-    var weatherView = new WeatherView($(".weather"), mediator);
+    var backgroundView = new Views.BackgroundView($(".background-wrapper"), mediator, new Controllers.BackgroundController(flickr), new Utils.ImageLoader());
+    var clockView = new Views.ClockView($(".clock"), mediator);
+    var weatherView = new Views.WeatherView($(".weather"), mediator);
 
     mediator.on("environment-update", function (data) {
         return console.log(data);
@@ -1157,4 +1191,8 @@ var Query;
         return ArrayEnumerator;
     })();
 })(Query || (Query = {}));
+function isUndefined(obj) {
+    return !obj;
+}
+;
 //# sourceMappingURL=app.js.map
