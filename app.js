@@ -381,8 +381,9 @@ var Views;
             this.hide();
         };
 
-        UpdateView.prototype.show = function () {
+        UpdateView.prototype.show = function (data) {
             this.el.show();
+            console.log(data);
         };
 
         UpdateView.prototype.hide = function () {
@@ -848,9 +849,9 @@ $(function () {
         return console.log(data);
     });
     mediator.on("autoUpdater-update", function (data) {
-        updateView.show();
+        mediator.trigger("updateView-show", data);
         setTimeout(function () {
-            return document.URL = document.URL + "?123";
+            return window.location.href = window.location.href + "?123";
         }, 10000);
     });
 

@@ -240,8 +240,8 @@ $(() => {
     mediator.on( "environment-update", ( data ) => console.log( data ) );
     mediator.on( "github-push", ( data ) => console.log( data ) );
     mediator.on( "autoUpdater-update", (data) => {
-        updateView.show();
-        setTimeout(() => document.URL = document.URL + "?123", 10000);
+        mediator.trigger("updateView-show", data);
+        setTimeout(() => window.location.href = window.location.href + "?123", 10000);
     });
 
     scheduler.schedule( "tick-github-update", 10 * 1000, true );

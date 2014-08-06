@@ -122,7 +122,7 @@ declare module Views {
         private mediator;
         constructor(el: JQuery, mediator: Simple.EventEmitter);
         public initialize(): void;
-        public show(): void;
+        public show(data: EventData): void;
         public hide(): void;
     }
 }

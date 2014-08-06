@@ -14,8 +14,9 @@ module Views {
             this.hide();
         }
 
-        show() {
+        show(data: EventData) {
             this.el.show();
+            console.log(data);
         }
 
         hide() {
