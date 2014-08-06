@@ -2004,9 +2004,7 @@ body {
   color: #fff;
   background-color: #222;
   z-index: 100;
-}
-.update-info h1 {
-  font-size: 24px;
+  font-size: 14px;
 }
 .bubble-wrapper {
   width: 100%;
