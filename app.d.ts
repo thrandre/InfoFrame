@@ -116,6 +116,16 @@ declare module Bubbles {
         public flip(): void;
     }
 }
+declare module Views {
+    class UpdateView extends Simple.View {
+        public el: JQuery;
+        private mediator;
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
+        public initialize(): void;
+        public show(): void;
+        public hide(): void;
+    }
+}
 declare module Controllers {
     class BackgroundController extends Simple.Controller {
         private photoProvider;
@@ -205,13 +215,16 @@ declare class EnvironmentService {
     private clockUpdate(data);
     public triggerEnvironmentUpdate(): void;
 }
-interface GitHubEventData {
+interface EventData {
     type: string;
     actor: string;
-    message: string;
+    messages: string[];
     created: Moment;
 }
-declare class GitHubPushListener {
+interface EventService {
+    getLastEventOfType(type: string): JQueryPromise<EventData>;
+}
+declare class GitHubEventService {
     private username;
     private repository;
     private mediator;
@@ -220,9 +233,16 @@ declare class GitHubPushListener {
     public initialize(): void;
     private getApiUrl();
     private parseEvent(event);
-    private getNewestPush(events);
-    private triggerIfUpdated(events);
-    public update(): void;
+    private update();
+    public getLastEventOfType(type: string): JQueryPromise<any>;
+}
+declare class AutoUpdater {
+    private mediator;
+    private eventService;
+    private lastEvent;
+    constructor(mediator: Simple.EventEmitter, eventService: EventService);
+    public initialize(): void;
+    public check(): void;
 }
 declare module Query {
     interface IEnumerableFactory {
@@ -340,3 +360,5 @@ declare module Query {
     }
 }
 declare function isUndefined(obj: any): boolean;
+declare function isEmpty(obj: any[]): boolean;
+declare function isUndefinedOrEmpty(obj: any[]): boolean;

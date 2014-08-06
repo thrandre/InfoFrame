@@ -133,14 +133,18 @@ class EnvironmentService {
     }
 }
 
-interface GitHubEventData {
+interface EventData {
     type: string;
     actor: string;
-    message: string;
+    messages: string[];
     created: Moment;
 }
 
-class GitHubPushListener {
+interface EventService {
+    getLastEventOfType(type: string): JQueryPromise<EventData>
+}
+
+class GitHubEventService {
     private lastPush: Moment;
 
     constructor(private username: string, private repository: string, private mediator: Simple.EventEmitter) {
@@ -155,37 +159,58 @@ class GitHubPushListener {
         return "https://api.github.com/repos/"+ this.username +"/" + this.repository + "/events";
     }
 
-    private parseEvent(event): GitHubEventData {
+    private parseEvent(event): EventData {
         return {
             type: event.type,
             actor: event.actor.login,
-            message: event.type === "PushEvent" ? event.payload.commits.map( ( c ) => c.message ).join() : "",
+            messages: event.type === "PushEvent" ? event.payload.commits.map( ( c ) => c.message ) : [],
             created: moment( event.created_at )
         };
     }
 
-    private getNewestPush(events: GitHubEventData[]) {
-        return events
-            .filter((e) => e.type === "PushEvent")
-            .sort((a, b) => a.created.isAfter(b.created) ? 1 : -1).reverse()[0];
+    private update() {
+        return $.getJSON(this.getApiUrl()).then((data) => data.map((e) => this.parseEvent(e)));
     }
 
-    private triggerIfUpdated(events: GitHubEventData[]) {
-        var newest = this.getNewestPush( events );
+    getLastEventOfType(type: string) {
+        return this
+            .update()
+            .then((events) => events
+                .filter((e) => e.type === type)
+                .sort((a, b) => a.created.isAfter(b.created) ? 1 : -1).reverse()[0]);
 
-        if (!newest) {
-            return;
-        }
-
-        if ( !this.lastPush || newest.created.isAfter( this.lastPush ) ) {
-            this.mediator.trigger( "github-push", newest );
-        }
-
-        this.lastPush = newest.created;
     }
 
-    update() {
-        $.getJSON(this.getApiUrl()).then((data) => this.triggerIfUpdated(data.map((e) => this.parseEvent(e))));
+}
+
+class AutoUpdater {
+    
+    private lastEvent;
+
+    constructor( private mediator: Simple.EventEmitter, private eventService: EventService ) {
+        this.initialize();
+    }
+
+    initialize() {
+        this.mediator.on( "tick-autoUpdater-check", this.check, this );
+    }
+
+    check() {
+        this.eventService.getLastEventOfType( "PushEvent" ).then( ( event ) => {
+            if ( isUndefined( event ) ) {
+                return;
+            }
+
+            if ( isUndefined( this.lastEvent ) ) {
+                this.lastEvent = event;
+                return;
+            }
+
+            if ( event.created.isAfter( this.lastEvent.created ) ) {
+                this.mediator.trigger( "autoUpdater-update" );
+                this.lastEvent = event;
+            }
+        });
     }
 
 }
@@ -202,7 +227,11 @@ $(() => {
     var weatherService = new WeatherService( "Oslo", "NO", weatherProvider, mediator );
     var environmentService = new EnvironmentService( mediator );
 
-    var github = new GitHubPushListener( "thrandre", "InfoFrame", mediator );
+    var github = new GitHubEventService( "thrandre", "InfoFrame", mediator );
+
+    var autoUpdater = new AutoUpdater( mediator, github );
+
+    var updateView = new Views.UpdateView( $(".update-info"), mediator );
 
     var backgroundView = new Views.BackgroundView( $(".background-wrapper"), mediator, new Controllers.BackgroundController( flickr ), new Utils.ImageLoader() );
     var clockView = new Views.ClockView( $( ".clock" ), mediator );
@@ -210,12 +239,19 @@ $(() => {
 
     mediator.on( "environment-update", ( data ) => console.log( data ) );
     mediator.on( "github-push", ( data ) => console.log( data ) );
+    mediator.on( "autoUpdater-update", (data) => {
+        updateView.show();
+        document.URL = document.URL + "?123";
+    });
 
     scheduler.schedule( "tick-github-update", 10 * 1000, true );
     scheduler.schedule( "tick-background-load", 60 * 60 * 1000, true );
     scheduler.schedule( "tick-background-render", 60 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );
     scheduler.schedule( "tick-weather-trigger-update", 10 * 60 * 1000, true );
+    scheduler.schedule( "tick-autoUpdater-check", 10 * 60 * 1000, true );
 
-    (<any>window).SVG("clock").clock("100%").start();
+    ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
+
+    $( window ).resize( () => bubbleStage.layout() );
 });

@@ -10,6 +10,10 @@ html, body {
 
 * {
 	z-index: 3;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-shadow:none;
+	text-rendering: optimizeLegibility;
 }
 
 .wi {
@@ -60,8 +64,8 @@ html, body {
 	height: 110px;
 
 	&.big {
-		width: 280px;
-		height: 280px;
+		width: 320px;
+		height: 320px;
 		z-index: 100;
 
 		.level-1 {
@@ -81,6 +85,7 @@ html, body {
 	.level-2 {
 		font-size: 18px;
 		font-weight: bold;
+		padding-bottom: 15px;
 	}
 
 	.level-3 {
@@ -100,7 +105,6 @@ html, body {
 		float: left;
 		text-align: center;
 		width: 100%;
-		padding-bottom: 2px;
 
 		&:last-child {
 			padding-bottom: 0;

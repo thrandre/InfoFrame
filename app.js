@@ -69,7 +69,7 @@ var Weather;
             this.appId = appId;
         }
         OpenWeatherMap.prototype.translateIcon = function (icon) {
-            switch (icon) {
+            switch (icon.replace("n", "d")) {
                 case "01d":
                     return "wi-day-sunny";
                 case "02d":
@@ -99,7 +99,7 @@ var Weather;
                 main: data.weather[0].main,
                 icon: this.translateIcon(data.weather[0].icon),
                 temperature: Math.round(data.main.temp - 273.15),
-                percipitation: data.rain["3h"],
+                percipitation: data.rain ? data.rain["3h"] : 0,
                 windSpeed: data.wind.speed,
                 sunrise: moment.unix(data.sys.sunrise),
                 sunset: moment.unix(data.sys.sunset)
@@ -259,7 +259,7 @@ var Bubbles;
         };
 
         Stage.prototype.layout = function () {
-            if (this.bubbles.length == 0) {
+            if (isEmpty(this.bubbles)) {
                 return;
             }
 
@@ -327,7 +327,7 @@ var Bubbles;
         };
 
         Bubble.prototype.moveTo = function (position) {
-            this.el.offset(position);
+            this.el.css(position);
         };
 
         Bubble.prototype.originMoveTo = function (position) {
@@ -365,6 +365,33 @@ var Bubbles;
     })();
     Bubbles.Bubble = Bubble;
 })(Bubbles || (Bubbles = {}));
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
+    var UpdateView = (function (_super) {
+        __extends(UpdateView, _super);
+        function UpdateView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
+        }
+        UpdateView.prototype.initialize = function () {
+            this.mediator.on("updateView-show", this.show, this);
+            this.hide();
+        };
+
+        UpdateView.prototype.show = function () {
+            this.el.show();
+        };
+
+        UpdateView.prototype.hide = function () {
+            this.el.hide();
+        };
+        return UpdateView;
+    })(Simple.View);
+    Views.UpdateView = UpdateView;
+})(Views || (Views = {}));
 var Controllers;
 (function (Controllers) {
     var BackgroundController = (function (_super) {
@@ -444,7 +471,7 @@ var Views;
 
         BackgroundView.prototype.updatePhotoSet = function (tags) {
             var _this = this;
-            if (!this.photos) {
+            if (isUndefined(this.photos)) {
                 return;
             }
 
@@ -455,12 +482,12 @@ var Views;
                     return _this.photoIsMatch(tags, photo.tags, i);
                 });
 
-                if (photoSet.length !== 0) {
+                if (!isEmpty(photoSet)) {
                     break;
                 }
             }
 
-            if (photoSet.length === 0) {
+            if (isEmpty(photoSet)) {
                 return;
             }
 
@@ -478,7 +505,7 @@ var Views;
 
         BackgroundView.prototype.environmentUpdate = function (data) {
             var _this = this;
-            if (!this.photos || this.photos.length === 0) {
+            if (isUndefinedOrEmpty(this.photos)) {
                 this.getPhotos().then(function () {
                     return _this.updatePhotoSet(_this.getEnvironmentTags(data));
                 });
@@ -506,7 +533,7 @@ var Views;
 
         BackgroundView.prototype.render = function () {
             var _this = this;
-            if (isUndefined(this.currentPhotoSet) || this.currentPhotoSet.length === 0) {
+            if (isUndefinedOrEmpty(this.currentPhotoSet)) {
                 return;
             }
 
@@ -545,7 +572,7 @@ var Views;
             time.find(".minute").text(data.format("mm"));
 
             date.find(".day").text(data.format("dddd"));
-            date.find(".dayMonth").text(data.format("Mo MMM"));
+            date.find(".dayMonth").text(data.format("Do MMM"));
         };
         return ClockView;
     })(Simple.View);
@@ -586,6 +613,7 @@ var Views;
     })(Simple.View);
     Views.WeatherView = WeatherView;
 })(Views || (Views = {}));
+///<reference path="updateView.ts"/>
 ///<reference path="backroundView.ts"/>
 ///<reference path="clockView.ts"/>
 ///<reference path="weatherView.ts"/>
@@ -713,63 +741,82 @@ var EnvironmentService = (function () {
     return EnvironmentService;
 })();
 
-var GitHubPushListener = (function () {
-    function GitHubPushListener(username, repository, mediator) {
+var GitHubEventService = (function () {
+    function GitHubEventService(username, repository, mediator) {
         this.username = username;
         this.repository = repository;
         this.mediator = mediator;
         this.initialize();
     }
-    GitHubPushListener.prototype.initialize = function () {
+    GitHubEventService.prototype.initialize = function () {
         this.mediator.on("tick-github-update", this.update, this);
     };
 
-    GitHubPushListener.prototype.getApiUrl = function () {
+    GitHubEventService.prototype.getApiUrl = function () {
         return "https://api.github.com/repos/" + this.username + "/" + this.repository + "/events";
     };
 
-    GitHubPushListener.prototype.parseEvent = function (event) {
+    GitHubEventService.prototype.parseEvent = function (event) {
         return {
             type: event.type,
             actor: event.actor.login,
-            message: event.type === "PushEvent" ? event.payload.commits.map(function (c) {
+            messages: event.type === "PushEvent" ? event.payload.commits.map(function (c) {
                 return c.message;
-            }).join() : "",
+            }) : [],
             created: moment(event.created_at)
         };
     };
 
-    GitHubPushListener.prototype.getNewestPush = function (events) {
-        return events.filter(function (e) {
-            return e.type === "PushEvent";
-        }).sort(function (a, b) {
-            return a.created.isAfter(b.created) ? 1 : -1;
-        }).reverse()[0];
-    };
-
-    GitHubPushListener.prototype.triggerIfUpdated = function (events) {
-        var newest = this.getNewestPush(events);
-
-        if (!newest) {
-            return;
-        }
-
-        if (!this.lastPush || newest.created.isAfter(this.lastPush)) {
-            this.mediator.trigger("github-push", newest);
-        }
-
-        this.lastPush = newest.created;
-    };
-
-    GitHubPushListener.prototype.update = function () {
+    GitHubEventService.prototype.update = function () {
         var _this = this;
-        $.getJSON(this.getApiUrl()).then(function (data) {
-            return _this.triggerIfUpdated(data.map(function (e) {
+        return $.getJSON(this.getApiUrl()).then(function (data) {
+            return data.map(function (e) {
                 return _this.parseEvent(e);
-            }));
+            });
         });
     };
-    return GitHubPushListener;
+
+    GitHubEventService.prototype.getLastEventOfType = function (type) {
+        return this.update().then(function (events) {
+            return events.filter(function (e) {
+                return e.type === type;
+            }).sort(function (a, b) {
+                return a.created.isAfter(b.created) ? 1 : -1;
+            }).reverse()[0];
+        });
+    };
+    return GitHubEventService;
+})();
+
+var AutoUpdater = (function () {
+    function AutoUpdater(mediator, eventService) {
+        this.mediator = mediator;
+        this.eventService = eventService;
+        this.initialize();
+    }
+    AutoUpdater.prototype.initialize = function () {
+        this.mediator.on("tick-autoUpdater-check", this.check, this);
+    };
+
+    AutoUpdater.prototype.check = function () {
+        var _this = this;
+        this.eventService.getLastEventOfType("PushEvent").then(function (event) {
+            if (isUndefined(event)) {
+                return;
+            }
+
+            if (isUndefined(_this.lastEvent)) {
+                _this.lastEvent = event;
+                return;
+            }
+
+            if (event.created.isAfter(_this.lastEvent.created)) {
+                _this.mediator.trigger("autoUpdater-update");
+                _this.lastEvent = event;
+            }
+        });
+    };
+    return AutoUpdater;
 })();
 
 $(function () {
@@ -784,7 +831,11 @@ $(function () {
     var weatherService = new WeatherService("Oslo", "NO", weatherProvider, mediator);
     var environmentService = new EnvironmentService(mediator);
 
-    var github = new GitHubPushListener("thrandre", "InfoFrame", mediator);
+    var github = new GitHubEventService("thrandre", "InfoFrame", mediator);
+
+    var autoUpdater = new AutoUpdater(mediator, github);
+
+    var updateView = new Views.UpdateView($(".update-info"), mediator);
 
     var backgroundView = new Views.BackgroundView($(".background-wrapper"), mediator, new Controllers.BackgroundController(flickr), new Utils.ImageLoader());
     var clockView = new Views.ClockView($(".clock"), mediator);
@@ -796,14 +847,23 @@ $(function () {
     mediator.on("github-push", function (data) {
         return console.log(data);
     });
+    mediator.on("autoUpdater-update", function (data) {
+        updateView.show();
+        document.URL = document.URL + "?123";
+    });
 
     scheduler.schedule("tick-github-update", 10 * 1000, true);
     scheduler.schedule("tick-background-load", 60 * 60 * 1000, true);
     scheduler.schedule("tick-background-render", 60 * 1000, true);
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
+    scheduler.schedule("tick-autoUpdater-check", 10 * 60 * 1000, true);
 
     window.SVG("clock").clock("100%").start();
+
+    $(window).resize(function () {
+        return bubbleStage.layout();
+    });
 });
 var Query;
 (function (Query) {
@@ -1194,5 +1254,12 @@ var Query;
 function isUndefined(obj) {
     return !obj;
 }
-;
+
+function isEmpty(obj) {
+    return obj.length === 0;
+}
+
+function isUndefinedOrEmpty(obj) {
+    return isUndefined(obj) || isEmpty(obj);
+}
 //# sourceMappingURL=app.js.map

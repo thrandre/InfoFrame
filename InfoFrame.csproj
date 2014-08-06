@@ -80,6 +80,7 @@
     <TypeScriptCompile Include="simple.ts" />
     <TypeScriptCompile Include="timers.ts" />
     <TypeScriptCompile Include="views\clockView.ts" />
+    <TypeScriptCompile Include="views\updateView.ts" />
     <TypeScriptCompile Include="views\views.ts" />
     <TypeScriptCompile Include="views\weatherView.ts" />
     <TypeScriptCompile Include="weather.ts" />

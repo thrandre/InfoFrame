@@ -20,7 +20,7 @@ module Views {
             time.find(".minute").text(data.format("mm"));
 
             date.find(".day").text(data.format("dddd"));
-            date.find(".dayMonth").text(data.format("Mo MMM"));
+            date.find(".dayMonth").text(data.format("Do MMM"));
         }
     }
 

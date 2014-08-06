@@ -20,12 +20,12 @@
         constructor( private appId: string ) { }
 
         private translateIcon( icon: string ): string {
-            switch ( icon ) {
+            switch ( icon.replace( "n", "d" ) ) {
                 case "01d":
                     return "wi-day-sunny";
                 case "02d":
                     return "wi-day-sunny-overcast";
-                case "03d":
+                case "03d": 
                     return "wi-day-cloudy";
                 case "04d":
                     return "wi-cloudy";
@@ -50,7 +50,7 @@
                 main: data.weather[0].main,
                 icon: this.translateIcon( data.weather[0].icon ),
                 temperature: Math.round( data.main.temp - 273.15 ),
-                percipitation: data.rain["3h"],
+                percipitation: data.rain ? data.rain["3h"] : 0,
                 windSpeed: data.wind.speed,
                 sunrise: moment.unix( data.sys.sunrise ),
                 sunset: moment.unix( data.sys.sunset )

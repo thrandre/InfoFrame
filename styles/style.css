@@ -1984,6 +1984,10 @@ body {
 }
 * {
   z-index: 3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: none;
+  text-rendering: optimizeLegibility;
 }
 .wi {
   line-height: normal;
@@ -2021,8 +2025,8 @@ body {
   height: 110px;
 }
 .bubble.big {
-  width: 280px;
-  height: 280px;
+  width: 320px;
+  height: 320px;
   z-index: 100;
 }
 .bubble.big .level-1 {
@@ -2038,6 +2042,7 @@ body {
 .bubble .level-2 {
   font-size: 18px;
   font-weight: bold;
+  padding-bottom: 15px;
 }
 .bubble .level-3 {
   font-size: 16px;
@@ -2053,7 +2058,6 @@ body {
   float: left;
   text-align: center;
   width: 100%;
-  padding-bottom: 2px;
 }
 .bubble .row:last-child {
   padding-bottom: 0;

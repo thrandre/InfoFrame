@@ -24,7 +24,7 @@ module Bubbles {
         }
 
         layout() {
-            if ( this.bubbles.length == 0 ) {
+            if ( isEmpty( this.bubbles ) ) {
                 return;
             }
 
@@ -95,7 +95,7 @@ module Bubbles {
         }
 
         moveTo( position: JQueryCoordinates ) {
-            this.el.offset( position );
+            this.el.css(position);
         }
 
         originMoveTo( position: JQueryCoordinates ) {
@@ -104,7 +104,7 @@ module Bubbles {
             this.moveTo( {
                 left: position.left - origin.left,
                 top: position.top - origin.top
-            });
+            } );
         }
 
         flip() {

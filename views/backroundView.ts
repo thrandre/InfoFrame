@@ -42,7 +42,7 @@ module Views {
         }
 
         updatePhotoSet(tags: string[]) {
-            if (!this.photos) {
+            if (isUndefined(this.photos)) {
                 return;
             }
 
@@ -50,14 +50,14 @@ module Views {
 
             for (var i = 0; i <= tags.length; i++) {
                 photoSet = this.photos
-                    .filter((photo) => this.photoIsMatch(tags, photo.tags, i));
+                    .filter( ( photo ) => this.photoIsMatch( tags, photo.tags, i ) );
 
-                if (photoSet.length !== 0) {
+                if ( !isEmpty( photoSet ) ) {
                     break;
                 }
             }
 
-            if (photoSet.length === 0) {
+            if (isEmpty(photoSet)) {
                 return;
             }
 
@@ -74,7 +74,7 @@ module Views {
         }
 
         environmentUpdate(data: EnvironmentData) {
-            if (!this.photos || this.photos.length === 0) {
+            if (isUndefinedOrEmpty(this.photos)) {
                 this.getPhotos().then(() => this.updatePhotoSet(this.getEnvironmentTags(data)));
                 return;
             }
@@ -99,7 +99,7 @@ module Views {
         }
 
         render() {
-            if (isUndefined(this.currentPhotoSet) || this.currentPhotoSet.length === 0) {
+            if (isUndefinedOrEmpty(this.currentPhotoSet)) {
                 return;
             }
 
