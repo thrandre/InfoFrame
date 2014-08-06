@@ -812,7 +812,7 @@ var AutoUpdater = (function () {
             }
 
             if (event.created.isAfter(_this.lastEvent.created)) {
-                _this.mediator.trigger("autoUpdater-update");
+                _this.mediator.trigger("autoUpdater-update", event);
                 _this.lastEvent = event;
             }
         });

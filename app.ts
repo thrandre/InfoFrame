@@ -207,7 +207,7 @@ class AutoUpdater {
             }
 
             if ( event.created.isAfter( this.lastEvent.created ) ) {
-                this.mediator.trigger( "autoUpdater-update" );
+                this.mediator.trigger( "autoUpdater-update", event );
                 this.lastEvent = event;
             }
         });
