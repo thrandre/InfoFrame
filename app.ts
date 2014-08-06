@@ -215,6 +215,17 @@ class AutoUpdater {
 
 }
 
+var noCacheUrl = (url: string) => {
+    var noCache = url,
+        split = url.split( "?" );
+
+    if (split.length > 1) {
+        noCache = split[0];
+    }
+
+    return noCache + "?" + Math.random();
+};
+
 $(() => {
     var bubbleStage = new Bubbles.Stage( $( ".bubble-wrapper" ), new Timers.TimerFactory() );
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
@@ -239,9 +250,10 @@ $(() => {
 
     mediator.on( "environment-update", ( data ) => console.log( data ) );
     mediator.on( "github-push", ( data ) => console.log( data ) );
-    mediator.on( "autoUpdater-update", (data) => {
+
+    mediator.on( "autoUpdater-update", ( data ) => {
         mediator.trigger("updateView-show", data);
-        setTimeout(() => window.location.href = window.location.href + "?123", 10000);
+        new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(10 * 60 * 1000, 1);
     });
 
     scheduler.schedule( "tick-github-update", 10 * 1000, true );

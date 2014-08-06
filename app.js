@@ -820,6 +820,16 @@ var AutoUpdater = (function () {
     return AutoUpdater;
 })();
 
+var noCacheUrl = function (url) {
+    var noCache = url, split = url.split("?");
+
+    if (split.length > 1) {
+        noCache = split[0];
+    }
+
+    return noCache + "?" + Math.random();
+};
+
 $(function () {
     var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Timers.TimerFactory());
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
@@ -848,11 +858,12 @@ $(function () {
     mediator.on("github-push", function (data) {
         return console.log(data);
     });
+
     mediator.on("autoUpdater-update", function (data) {
         mediator.trigger("updateView-show", data);
-        setTimeout(function () {
-            return window.location.href = window.location.href + "?123";
-        }, 10000);
+        new Timers.Timer(function () {
+            return window.location.href = noCacheUrl(window.location.href);
+        }).start(10 * 60 * 1000, 1);
     });
 
     scheduler.schedule("tick-github-update", 10 * 1000, true);

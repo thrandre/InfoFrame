@@ -244,6 +244,7 @@ declare class AutoUpdater {
     public initialize(): void;
     public check(): void;
 }
+declare var noCacheUrl: (url: string) => string;
 declare module Query {
     interface IEnumerableFactory {
         fromArray<T>(arr: T[]): IEnumerable<T>;
