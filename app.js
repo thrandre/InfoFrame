@@ -849,7 +849,9 @@ $(function () {
     });
     mediator.on("autoUpdater-update", function (data) {
         updateView.show();
-        document.URL = document.URL + "?123";
+        setTimeout(function () {
+            return document.URL = document.URL + "?123";
+        }, 10000);
     });
 
     scheduler.schedule("tick-github-update", 10 * 1000, true);
@@ -857,7 +859,7 @@ $(function () {
     scheduler.schedule("tick-background-render", 60 * 1000, true);
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
-    scheduler.schedule("tick-autoUpdater-check", 10 * 60 * 1000, true);
+    scheduler.schedule("tick-autoUpdater-check", 10 * 1000, true);
 
     window.SVG("clock").clock("100%").start();
 

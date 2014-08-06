@@ -241,7 +241,7 @@ $(() => {
     mediator.on( "github-push", ( data ) => console.log( data ) );
     mediator.on( "autoUpdater-update", (data) => {
         updateView.show();
-        document.URL = document.URL + "?123";
+        setTimeout(() => document.URL = document.URL + "?123", 10000);
     });
 
     scheduler.schedule( "tick-github-update", 10 * 1000, true );
@@ -249,7 +249,7 @@ $(() => {
     scheduler.schedule( "tick-background-render", 60 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );
     scheduler.schedule( "tick-weather-trigger-update", 10 * 60 * 1000, true );
-    scheduler.schedule( "tick-autoUpdater-check", 10 * 60 * 1000, true );
+    scheduler.schedule( "tick-autoUpdater-check", 10 * 1000, true );
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
 
