@@ -256,7 +256,7 @@ $(() => {
         new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(10 * 60 * 1000, 1);
     });
 
-    scheduler.schedule( "tick-github-update", 10 * 1000, true );
+    scheduler.schedule( "tick-github-update", 5 * 60 * 1000, true );
     scheduler.schedule( "tick-background-load", 60 * 60 * 1000, true );
     scheduler.schedule( "tick-background-render", 60 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );
