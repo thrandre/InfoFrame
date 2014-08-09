@@ -2025,11 +2025,13 @@ body {
   box-shadow: 0 0 5px #111;
   width: 110px;
   height: 110px;
+  opacity: 0.5;
 }
 .bubble.big {
   width: 320px;
   height: 320px;
   z-index: 100;
+  opacity: 1;
 }
 .bubble.big .level-1 {
   font-size: 70px;
@@ -2084,6 +2086,7 @@ body {
   left: 0;
   background-size: cover;
   background-repeat: no-repeat;
+  -webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2);
 }
 .background.l1 {
   z-index: 0;
