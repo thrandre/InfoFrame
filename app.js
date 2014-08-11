@@ -404,7 +404,9 @@ var Views;
         UpdateView.prototype.renderTemplate = function () {
             this.template = this._template.compile({
                 ".eta": function (e, d) {
-                    return e.text(d.created.add("minutes", d.deployMinutes).diff(moment()));
+                    var diff = d.created.add("minutes", d.deployMinutes).diff(moment(), "seconds", true), minutes = Math.floor(diff / 60), seconds = Math.floor(diff % 60);
+
+                    e.text(minutes + " minutes, " + seconds + " seconds");
                 },
                 ".commits": function (e, d) {
                     e.empty();
