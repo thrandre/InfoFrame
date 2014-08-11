@@ -23,7 +23,7 @@ module Views {
         renderTemplate() {
             this.template = this._template.compile<EventData>({
                 ".eta"      : (e, d) => {
-                    var diff = d.created.add("minutes", d.deployMinutes).diff(moment(), "seconds", true),
+                    var diff = moment().diff( d.created.add( "minutes", d.deployMinutes ), "seconds", true ),
                         minutes = Math.floor(diff / 60),
                         seconds = Math.floor( diff % 60 );
 
