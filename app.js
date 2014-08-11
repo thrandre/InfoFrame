@@ -395,6 +395,8 @@ var Views;
         }
         UpdateView.prototype.initialize = function () {
             this.mediator.on("updateView-show", this.show, this);
+            this.mediator.on("tick-clock-trigger-update", this.update, this);
+
             this.renderTemplate();
             this.hide();
         };
@@ -414,12 +416,18 @@ var Views;
         };
 
         UpdateView.prototype.show = function (data) {
-            this.template(data);
+            this.currentData = data;
             this.el.show();
         };
 
         UpdateView.prototype.hide = function () {
             this.el.hide();
+        };
+
+        UpdateView.prototype.update = function () {
+            if (this.el.is(":visible")) {
+                this.template(this.currentData);
+            }
         };
         return UpdateView;
     })(Simple.View);

@@ -5,6 +5,7 @@ module Views {
     export class UpdateView extends Simple.View {
         
         private template;
+        private currentData;
 
         constructor( public el: JQuery, private mediator: Simple.EventEmitter ) {
             super( el );
@@ -13,6 +14,8 @@ module Views {
 
         initialize() {
             this.mediator.on( "updateView-show", this.show, this );
+            this.mediator.on( "tick-clock-trigger-update", this.update, this );
+
             this.renderTemplate();
             this.hide();
         }
@@ -28,12 +31,18 @@ module Views {
         }
 
         show(data: EventData) {
-            this.template( data );
+            this.currentData = data;
             this.el.show();
         }
 
         hide() {
             this.el.hide();
+        }
+
+        update() {
+            if (this.el.is(":visible")) {
+                this.template(this.currentData);
+            }
         }
 
     }

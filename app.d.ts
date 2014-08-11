@@ -129,11 +129,13 @@ declare module Views {
         public el: JQuery;
         private mediator;
         private template;
+        private currentData;
         constructor(el: JQuery, mediator: Simple.EventEmitter);
         public initialize(): void;
         public renderTemplate(): void;
         public show(data: EventData): void;
         public hide(): void;
+        public update(): void;
     }
 }
 declare module Controllers {
