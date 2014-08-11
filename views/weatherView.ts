@@ -3,13 +3,16 @@
 module Views {
 
     export class WeatherView extends Simple.View {
-        constructor(public el: JQuery, public mediator: Simple.EventEmitter) {
+        private template;
+
+        constructor( public el: JQuery, public mediator: Simple.EventEmitter ) {
             super(el);
             this.initialize();
         }
 
         initialize() {
-            this.mediator.on("weather-update", this.update, this);
+            this.mediator.on( "weather-update", this.update, this );
+            this.compileTemplate();
         }
 
         limitDescription(description: string): string {
@@ -21,12 +24,18 @@ module Views {
             return parts.join(" ");
         }
 
+        compileTemplate() {
+            this.template = this._template.compile<Weather.WeatherData>( {
+                ".level-1 i"    : ( e, d ) => e.removeClass().addClass( "wi" ).addClass( d.icon ),
+                ".temperature"  : ( e, d ) => e.text( d.temperature ),
+                ".description"  : ( e, d ) => e.text( d.description ),
+                ".rain-data"    : ( e, d ) => e.text( d.percipitation + " mm" ),
+                ".wind-data"    : ( e, d ) => e.text( d.windSpeed + " m/s")
+            });
+        }
+
         update(data: Weather.WeatherData) {
-            this.el.find(".level-1 i").removeClass().addClass("wi").addClass(data.icon);
-            this.el.find(".temperature").text(data.temperature);
-            this.el.find(".description").text(data.description);
-            this.el.find(".rain-data").text(data.percipitation + " mm");
-            this.el.find(".wind-data").text(data.windSpeed + " m/s");
+            this.template(data);
         }
     }
 

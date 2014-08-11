@@ -2034,22 +2034,23 @@ body {
   opacity: 1;
 }
 .bubble.big .level-1 {
-  font-size: 83px;
+  font-size: 90px;
 }
 .bubble.big .level-2 {
-  font-size: 50px;
+  font-size: 60px;
   font-weight: bold;
 }
 .bubble .level-1 {
   font-size: 36px;
-}
-.bubble .level-2 {
-  font-size: 22px;
-  font-weight: bold;
   padding-bottom: 18px;
 }
+.bubble .level-2 {
+  font-size: 26px;
+  font-weight: bold;
+  padding-bottom: 5px;
+}
 .bubble .level-3 {
-  font-size: 20px;
+  font-size: 22px;
   text-transform: uppercase;
 }
 .bubble .light {
@@ -2110,17 +2111,17 @@ body {
   float: left;
 }
 .weather .data .basic {
-  padding-right: 20px;
+  padding-right: 35px;
 }
 .weather .data .basic .wi {
-  font-size: 70px;
+  font-size: 90px;
   line-height: normal;
 }
 .weather .data .advanced {
-  font-size: 12px;
+  font-size: 18px;
 }
 .weather .data .advanced .wi {
-  font-size: 25px;
+  font-size: 32px;
   line-height: normal;
   display: block;
   float: left;
@@ -2134,7 +2135,7 @@ body {
 .weather .data .advanced .wind-data,
 .weather .data .advanced .rain-data {
   float: left;
-  padding-top: 10px;
+  padding-top: 15px;
   padding-left: 10px;
 }
 .weather .data .advanced .rain {
@@ -2153,8 +2154,8 @@ body {
   -webkit-transform: translateX(-50%);
 }
 #clock {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   margin: 0;
   left: 50%;
   position: relative;

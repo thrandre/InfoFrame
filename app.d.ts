@@ -19,9 +19,17 @@
     class View extends Events {
         public el: JQuery;
         public controller: Controller;
+        public _template: Template;
         constructor(el: JQuery, controller?: Controller);
         public initialize(): void;
         public render(): void;
+    }
+    class Template {
+        private el;
+        constructor(el: JQuery);
+        public compile<T>(map: {
+            [selector: string]: (el: JQuery, data: T) => void;
+        }): (data: T) => void;
     }
 }
 declare module Weather {
@@ -120,8 +128,10 @@ declare module Views {
     class UpdateView extends Simple.View {
         public el: JQuery;
         private mediator;
+        private template;
         constructor(el: JQuery, mediator: Simple.EventEmitter);
         public initialize(): void;
+        public renderTemplate(): void;
         public show(data: EventData): void;
         public hide(): void;
     }
@@ -172,9 +182,11 @@ declare module Views {
     class WeatherView extends Simple.View {
         public el: JQuery;
         public mediator: Simple.EventEmitter;
+        private template;
         constructor(el: JQuery, mediator: Simple.EventEmitter);
         public initialize(): void;
         public limitDescription(description: string): string;
+        public compileTemplate(): void;
         public update(data: Weather.WeatherData): void;
     }
 }

@@ -52,6 +52,7 @@ var Simple;
             _super.call(this);
             this.el = el;
             this.controller = controller;
+            this._template = new Template(el);
         }
         View.prototype.initialize = function () {
         };
@@ -61,6 +62,22 @@ var Simple;
         return View;
     })(Events);
     Simple.View = View;
+
+    var Template = (function () {
+        function Template(el) {
+            this.el = el;
+        }
+        Template.prototype.compile = function (map) {
+            var _this = this;
+            return function (data) {
+                return Object.keys(map).forEach(function (i) {
+                    map[i](_this.el.find(i), data);
+                });
+            };
+        };
+        return Template;
+    })();
+    Simple.Template = Template;
 })(Simple || (Simple = {}));
 var Weather;
 (function (Weather) {
@@ -378,12 +395,24 @@ var Views;
         }
         UpdateView.prototype.initialize = function () {
             this.mediator.on("updateView-show", this.show, this);
+            this.renderTemplate();
             this.hide();
         };
 
+        UpdateView.prototype.renderTemplate = function () {
+            this.template = this._template.compile({
+                ".commits": function (e, d) {
+                    e.empty();
+                    d.messages.forEach(function (m) {
+                        return e.append($("<li>" + m + "</li>"));
+                    });
+                }
+            });
+        };
+
         UpdateView.prototype.show = function (data) {
+            this.template(data);
             this.el.show();
-            console.log(data);
         };
 
         UpdateView.prototype.hide = function () {
@@ -592,6 +621,7 @@ var Views;
         }
         WeatherView.prototype.initialize = function () {
             this.mediator.on("weather-update", this.update, this);
+            this.compileTemplate();
         };
 
         WeatherView.prototype.limitDescription = function (description) {
@@ -603,12 +633,28 @@ var Views;
             return parts.join(" ");
         };
 
+        WeatherView.prototype.compileTemplate = function () {
+            this.template = this._template.compile({
+                ".level-1 i": function (e, d) {
+                    return e.removeClass().addClass("wi").addClass(d.icon);
+                },
+                ".temperature": function (e, d) {
+                    return e.text(d.temperature);
+                },
+                ".description": function (e, d) {
+                    return e.text(d.description);
+                },
+                ".rain-data": function (e, d) {
+                    return e.text(d.percipitation + " mm");
+                },
+                ".wind-data": function (e, d) {
+                    return e.text(d.windSpeed + " m/s");
+                }
+            });
+        };
+
         WeatherView.prototype.update = function (data) {
-            this.el.find(".level-1 i").removeClass().addClass("wi").addClass(data.icon);
-            this.el.find(".temperature").text(data.temperature);
-            this.el.find(".description").text(data.description);
-            this.el.find(".rain-data").text(data.percipitation + " mm");
-            this.el.find(".wind-data").text(data.windSpeed + " m/s");
+            this.template(data);
         };
         return WeatherView;
     })(Simple.View);

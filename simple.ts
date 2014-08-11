@@ -42,19 +42,33 @@
 
     }
 
-    export class Controller extends Events {
-
-    }
+    export class Controller extends Events {}
 
     export class View extends Events {
 
+        public _template: Template;
+
         constructor( public el: JQuery, public controller?: Controller ) {
             super();
+            this._template = new Template(el);
         }
 
         public initialize() { }
 
         public render() { }
+
+    }
+
+    export class Template {
+        
+        constructor( private el: JQuery ) {}
+
+        compile<T>( map: {[selector:string]: (el: JQuery, data: T) => void} ) {
+            return (data: T) =>
+                Object.keys( map ).forEach( ( i ) => {
+                    map[i](this.el.find(i), data);
+                });
+        }
 
     }
 
