@@ -923,7 +923,7 @@ $(function () {
         mediator.trigger("updateView-show", data);
         new Timers.Timer(function () {
             return window.location.href = noCacheUrl(window.location.href);
-        }).start(data.deployMinutes * 60 * 1000, 1);
+        }).start(moment(data.created).add("minutes", data.deployMinutes).diff(moment()), 1);
     });
 
     scheduler.schedule("tick-github-update", 5 * 60 * 1000, true);
