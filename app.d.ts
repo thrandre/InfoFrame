@@ -135,7 +135,7 @@ declare module Views {
         public renderTemplate(): void;
         public show(data: EventData): void;
         public hide(): void;
-        public update(): void;
+        public update(data: Moment): void;
     }
 }
 declare module Controllers {

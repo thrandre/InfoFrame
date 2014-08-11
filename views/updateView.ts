@@ -14,7 +14,7 @@ module Views {
 
         initialize() {
             this.mediator.on( "updateView-show", this.show, this );
-            this.mediator.on( "tick-clock-trigger-update", this.update, this );
+            this.mediator.on( "clock-update", this.update, this );
 
             this.renderTemplate();
             this.hide();
@@ -23,9 +23,12 @@ module Views {
         renderTemplate() {
             this.template = this._template.compile<EventData>({
                 ".eta"      : (e, d) => {
-                    var diff = moment().diff( d.created.add( "minutes", d.deployMinutes ), "seconds", true ),
+                    var diff = d.created.add( "minutes", d.deployMinutes ).diff( moment(), "seconds" ),
                         minutes = Math.floor(diff / 60),
                         seconds = Math.floor( diff % 60 );
+
+                    console.log( moment().add( "minutes", 5 ) );
+                    console.log(moment().add("minutes", 5).diff(moment(), "minutes"));
 
                     e.text(minutes + " minutes, " + seconds + " seconds");
                 },
@@ -45,7 +48,7 @@ module Views {
             this.el.hide();
         }
 
-        update() {
+        update(data: Moment) {
             if (this.el.is(":visible")) {
                 this.template(this.currentData);
             }

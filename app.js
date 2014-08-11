@@ -395,7 +395,7 @@ var Views;
         }
         UpdateView.prototype.initialize = function () {
             this.mediator.on("updateView-show", this.show, this);
-            this.mediator.on("tick-clock-trigger-update", this.update, this);
+            this.mediator.on("clock-update", this.update, this);
 
             this.renderTemplate();
             this.hide();
@@ -404,7 +404,10 @@ var Views;
         UpdateView.prototype.renderTemplate = function () {
             this.template = this._template.compile({
                 ".eta": function (e, d) {
-                    var diff = moment().diff(d.created.add("minutes", d.deployMinutes), "seconds", true), minutes = Math.floor(diff / 60), seconds = Math.floor(diff % 60);
+                    var diff = d.created.add("minutes", d.deployMinutes).diff(moment(), "seconds"), minutes = Math.floor(diff / 60), seconds = Math.floor(diff % 60);
+
+                    console.log(moment().add("minutes", 5));
+                    console.log(moment().add("minutes", 5).diff(moment(), "minutes"));
 
                     e.text(minutes + " minutes, " + seconds + " seconds");
                 },
@@ -426,7 +429,7 @@ var Views;
             this.el.hide();
         };
 
-        UpdateView.prototype.update = function () {
+        UpdateView.prototype.update = function (data) {
             if (this.el.is(":visible")) {
                 this.template(this.currentData);
             }
