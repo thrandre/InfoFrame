@@ -2042,7 +2042,7 @@ body {
 }
 .bubble .level-1 {
   font-size: 36px;
-  padding-bottom: 18px;
+  padding-bottom: 10px;
 }
 .bubble .level-2 {
   font-size: 26px;
@@ -2050,7 +2050,7 @@ body {
   padding-bottom: 5px;
 }
 .bubble .level-3 {
-  font-size: 22px;
+  font-size: 21px;
   text-transform: uppercase;
 }
 .bubble .light {
@@ -2097,7 +2097,8 @@ body {
   opacity: 0;
 }
 .weather .level-1 .wi {
-  margin-top: -25px;
+  margin-top: -20px;
+  margin-bottom: -20px;
 }
 .weather .data {
   position: relative;
@@ -2135,7 +2136,7 @@ body {
 .weather .data .advanced .wind-data,
 .weather .data .advanced .rain-data {
   float: left;
-  padding-top: 15px;
+  padding-top: 17px;
   padding-left: 10px;
 }
 .weather .data .advanced .rain {
