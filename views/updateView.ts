@@ -19,15 +19,16 @@ module Views {
 
         renderTemplate() {
             this.template = this._template.compile<EventData>({
-                ".commits": (e, d) => {
+                ".eta"      : ( e, d ) => e.text(d.created.add("minutes", d.deployMinutes).diff(moment())),
+                ".commits"  : ( e, d ) => {
                     e.empty();
-                    d.messages.forEach((m) => e.append($("<li>" + m + "</li>")));
+                    d.messages.forEach( ( m ) => e.append( $( "<li>" + m + "</li>" ) ) );
                 }
             });
         }
 
         show(data: EventData) {
-            this.template(data);
+            this.template( data );
             this.el.show();
         }
 

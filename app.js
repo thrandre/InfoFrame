@@ -401,6 +401,9 @@ var Views;
 
         UpdateView.prototype.renderTemplate = function () {
             this.template = this._template.compile({
+                ".eta": function (e, d) {
+                    return e.text(d.created.add("minutes", d.deployMinutes).diff(moment()));
+                },
                 ".commits": function (e, d) {
                     e.empty();
                     d.messages.forEach(function (m) {
@@ -810,7 +813,8 @@ var GitHubEventService = (function () {
             messages: event.type === "PushEvent" ? event.payload.commits.map(function (c) {
                 return c.message;
             }) : [],
-            created: moment(event.created_at)
+            created: moment(event.created_at),
+            deployMinutes: 7
         };
     };
 
@@ -909,7 +913,7 @@ $(function () {
         mediator.trigger("updateView-show", data);
         new Timers.Timer(function () {
             return window.location.href = noCacheUrl(window.location.href);
-        }).start(7 * 60 * 1000, 1);
+        }).start(data.deployMinutes * 60 * 1000, 1);
     });
 
     scheduler.schedule("tick-github-update", 5 * 60 * 1000, true);

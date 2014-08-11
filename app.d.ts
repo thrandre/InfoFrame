@@ -232,6 +232,7 @@ interface EventData {
     actor: string;
     messages: string[];
     created: Moment;
+    deployMinutes: number;
 }
 interface EventService {
     getLastEventOfType(type: string): JQueryPromise<EventData>;

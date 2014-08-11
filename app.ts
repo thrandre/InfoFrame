@@ -138,6 +138,7 @@ interface EventData {
     actor: string;
     messages: string[];
     created: Moment;
+    deployMinutes: number;
 }
 
 interface EventService {
@@ -164,7 +165,8 @@ class GitHubEventService {
             type: event.type,
             actor: event.actor.login,
             messages: event.type === "PushEvent" ? event.payload.commits.map( ( c ) => c.message ) : [],
-            created: moment( event.created_at )
+            created: moment( event.created_at ),
+            deployMinutes: 7
         };
     }
 
@@ -252,8 +254,8 @@ $(() => {
     mediator.on( "github-push", ( data ) => console.log( data ) );
 
     mediator.on( "autoUpdater-update", ( data ) => {
-        mediator.trigger("updateView-show", data);
-        new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(7 * 60 * 1000, 1);
+        mediator.trigger( "updateView-show", data );
+        new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(data.deployMinutes * 60 * 1000, 1);
     });
 
     scheduler.schedule( "tick-github-update", 5 * 60 * 1000, true );
