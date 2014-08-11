@@ -253,7 +253,7 @@ $(() => {
 
     mediator.on( "autoUpdater-update", ( data ) => {
         mediator.trigger("updateView-show", data);
-        new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(10 * 60 * 1000, 1);
+        new Timers.Timer(() => window.location.href = noCacheUrl(window.location.href)).start(7 * 60 * 1000, 1);
     });
 
     scheduler.schedule( "tick-github-update", 5 * 60 * 1000, true );

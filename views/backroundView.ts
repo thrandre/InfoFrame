@@ -70,7 +70,7 @@ module Views {
         }
 
         getEnvironmentTags(data: EnvironmentData) {
-            return [data.season, data.timeOfDay, data.weather];
+            return [data.season, data.weather];
         }
 
         environmentUpdate(data: EnvironmentData) {

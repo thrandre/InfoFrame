@@ -501,7 +501,7 @@ var Views;
         };
 
         BackgroundView.prototype.getEnvironmentTags = function (data) {
-            return [data.season, data.timeOfDay, data.weather];
+            return [data.season, data.weather];
         };
 
         BackgroundView.prototype.environmentUpdate = function (data) {
@@ -863,7 +863,7 @@ $(function () {
         mediator.trigger("updateView-show", data);
         new Timers.Timer(function () {
             return window.location.href = noCacheUrl(window.location.href);
-        }).start(10 * 60 * 1000, 1);
+        }).start(7 * 60 * 1000, 1);
     });
 
     scheduler.schedule("tick-github-update", 5 * 60 * 1000, true);
