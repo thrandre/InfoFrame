@@ -407,7 +407,7 @@ var Views;
                     var diff = d.created.add("minutes", d.deployMinutes).diff(moment(), "seconds"), minutes = Math.floor(diff / 60), seconds = Math.floor(diff % 60);
 
                     console.log(moment().add("minutes", 5));
-                    console.log(moment().add("minutes", 5).diff(moment(), "minutes"));
+                    console.log(moment().add("minutes", 5).diff(moment(), "seconds"));
 
                     e.text(minutes + " minutes, " + seconds + " seconds");
                 },

@@ -28,7 +28,7 @@ module Views {
                         seconds = Math.floor( diff % 60 );
 
                     console.log( moment().add( "minutes", 5 ) );
-                    console.log(moment().add("minutes", 5).diff(moment(), "minutes"));
+                    console.log(moment().add("minutes", 5).diff(moment(), "seconds"));
 
                     e.text(minutes + " minutes, " + seconds + " seconds");
                 },
