@@ -457,11 +457,15 @@ var Utils;
         }
         ImageLoader.prototype.load = function (photoData) {
             var deferred = $.Deferred();
-            var image = $("<img src=\"" + photoData.source + "\"/>");
-            image.load(function () {
+
+            var image = new Image();
+
+            image.onload = function (e) {
                 deferred.resolve();
-                image.remove();
-            });
+            };
+
+            image.src = photoData.source;
+
             return deferred.promise();
         };
         return ImageLoader;

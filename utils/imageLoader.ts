@@ -4,11 +4,15 @@
 
         public load( photoData: Artwork.PhotoData ): JQueryPromise<any> {
             var deferred = $.Deferred();
-            var image = $( "<img src=\"" + photoData.source + "\"/>" );
-            image.load( () => {
+
+            var image = new Image();
+
+            image.onload = (e) => {
                 deferred.resolve();
-                image.remove();
-            });
+            };
+
+            image.src = photoData.source;
+
             return deferred.promise();
         }
 

@@ -2136,7 +2136,7 @@ body {
 .weather .data .advanced .wind-data,
 .weather .data .advanced .rain-data {
   float: left;
-  padding-top: 12px;
+  padding-top: 10px;
   padding-left: 10px;
 }
 .weather .data .advanced .rain {
