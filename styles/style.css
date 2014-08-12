@@ -2023,9 +2023,13 @@ body {
   border-radius: 50%;
   box-shadow: 0 0 10px #000;
   border: 2px dashed #fff;
-  width: 140px;
-  height: 140px;
+  width: 75px;
+  height: 75px;
   background-color: #bf0000;
+}
+.bubble.scaled {
+  width: 480px;
+  height: 480px;
 }
 .bubble.big {
   width: 380px;

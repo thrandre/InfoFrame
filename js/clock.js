@@ -33,7 +33,7 @@
 		.fill({ color: "#fff" });
 
 	this.seconds = this.path()
-		.stroke({ width: 3, color: "#666" })
+		.stroke({ width: 3, color: "#bf0000" })
 		.fill({ opacity: 0 });
 
 	this.update(0);

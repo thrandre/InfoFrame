@@ -12,7 +12,6 @@ module Bubbles {
 
         initialize() {
             this.el.find( ".bubble" ).each( ( i, e ) => this.bubbles.push( new Bubble( $( e ) ) ) );
-            this.timerFactory.create( () => this.bubbles.forEach( ( b ) => b.flip() ) ).start( 10000 );
             this.layout();
         }
 
@@ -30,7 +29,7 @@ module Bubbles {
 
             var center = this.bubbles[0];
 
-            center.setVirtualPadding( 50 );
+            center.setVirtualPadding( -20 );
             center.originMoveTo( this.getStageOrigin() );
 
             var spacingAngle = ( 2 * Math.PI ) / ( this.bubbles.length - 1 );
@@ -40,7 +39,6 @@ module Bubbles {
                 var position = center.getPointOnCircumference( angle, true );
 
                 this.bubbles[i].circumferenceMoveTo( center.translateToAbsolute( position ), angle );
-                //this.bubbles[i].moveTo( center.translateToAbsolute( position ) );
             }
 
         }

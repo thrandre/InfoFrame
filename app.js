@@ -260,11 +260,6 @@ var Bubbles;
             this.el.find(".bubble").each(function (i, e) {
                 return _this.bubbles.push(new Bubble($(e)));
             });
-            this.timerFactory.create(function () {
-                return _this.bubbles.forEach(function (b) {
-                    return b.flip();
-                });
-            }).start(10000);
             this.layout();
         };
 
@@ -282,7 +277,7 @@ var Bubbles;
 
             var center = this.bubbles[0];
 
-            center.setVirtualPadding(50);
+            center.setVirtualPadding(-20);
             center.originMoveTo(this.getStageOrigin());
 
             var spacingAngle = (2 * Math.PI) / (this.bubbles.length - 1);
@@ -292,7 +287,6 @@ var Bubbles;
                 var position = center.getPointOnCircumference(angle, true);
 
                 this.bubbles[i].circumferenceMoveTo(center.translateToAbsolute(position), angle);
-                //this.bubbles[i].moveTo( center.translateToAbsolute( position ) );
             }
         };
         return Stage;
