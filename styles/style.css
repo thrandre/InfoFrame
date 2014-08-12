@@ -2097,8 +2097,8 @@ body {
   opacity: 0;
 }
 .weather .level-1 .wi {
-  margin-top: -20px;
-  margin-bottom: -20px;
+  margin-top: -15px;
+  margin-bottom: -15px;
 }
 .weather .data {
   position: relative;
@@ -2136,11 +2136,11 @@ body {
 .weather .data .advanced .wind-data,
 .weather .data .advanced .rain-data {
   float: left;
-  padding-top: 10px;
+  padding-top: 13px;
   padding-left: 10px;
 }
 .weather .data .advanced .rain {
-  margin-top: -15px;
+  margin-top: -12px;
   clear: both;
 }
 .weather .data .advanced .rain .wi {

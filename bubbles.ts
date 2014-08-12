@@ -128,10 +128,10 @@ module Bubbles {
                 rotate2 = { rotateX: "0deg" };
             }
 
-            this.el.transition( rotate1, () => {
+            this.el.velocity( rotate1, () => {
                 hide.hide();
                 show.show();
-                this.el.transition( rotate2 );
+                this.el.velocity( rotate2 );
             });
         }
 

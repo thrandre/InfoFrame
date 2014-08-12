@@ -88,12 +88,12 @@ module Views {
 
             l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
 
-            l2.animate({ opacity: 1 }, {
-                duration: 1000,
+            l2.velocity( { opacity: 1 }, {
+                duration: 500,
                 complete: () => {
-                    l1.css({ opacity: 0 });
-                    l1.removeClass("l1").addClass("l2");
-                    l2.removeClass("l2").addClass("l1");
+                    l1.css( { opacity: 0 });
+                    l1.removeClass( "l1" ).addClass( "l2" );
+                    l2.removeClass( "l2" ).addClass( "l1" );
                 }
             });
         }

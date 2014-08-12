@@ -372,10 +372,10 @@ var Bubbles;
                 rotate2 = { rotateX: "0deg" };
             }
 
-            this.el.transition(rotate1, function () {
+            this.el.velocity(rotate1, function () {
                 hide.hide();
                 show.show();
-                _this.el.transition(rotate2);
+                _this.el.velocity(rotate2);
             });
         };
         return Bubble;
@@ -568,8 +568,8 @@ var Views;
 
             l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
 
-            l2.animate({ opacity: 1 }, {
-                duration: 1000,
+            l2.velocity({ opacity: 1 }, {
+                duration: 500,
                 complete: function () {
                     l1.css({ opacity: 0 });
                     l1.removeClass("l1").addClass("l2");
@@ -813,7 +813,6 @@ var GitHubEventService = (function () {
         this.initialize();
     }
     GitHubEventService.prototype.initialize = function () {
-        this.mediator.on("tick-github-update", this.update, this);
     };
 
     GitHubEventService.prototype.getApiUrl = function () {
@@ -932,10 +931,10 @@ $(function () {
 
     scheduler.schedule("tick-github-update", 5 * 60 * 1000, true);
     scheduler.schedule("tick-background-load", 60 * 60 * 1000, true);
-    scheduler.schedule("tick-background-render", 60 * 1000, true);
+    scheduler.schedule("tick-background-render", 65 * 1000, true);
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
-    scheduler.schedule("tick-autoUpdater-check", 10 * 1000, true);
+    scheduler.schedule("tick-autoUpdater-check", 60 * 1000, true);
 
     window.SVG("clock").clock("100%").start();
 

@@ -153,7 +153,6 @@ class GitHubEventService {
     }
 
     initialize() {
-        this.mediator.on("tick-github-update", this.update, this);
     }
 
     private getApiUrl() {
@@ -263,10 +262,10 @@ $(() => {
 
     scheduler.schedule( "tick-github-update", 5 * 60 * 1000, true );
     scheduler.schedule( "tick-background-load", 60 * 60 * 1000, true );
-    scheduler.schedule( "tick-background-render", 60 * 1000, true );
+    scheduler.schedule( "tick-background-render", 65 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );
     scheduler.schedule( "tick-weather-trigger-update", 10 * 60 * 1000, true );
-    scheduler.schedule( "tick-autoUpdater-check", 10 * 1000, true );
+    scheduler.schedule( "tick-autoUpdater-check", 60 * 1000, true );
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
 
