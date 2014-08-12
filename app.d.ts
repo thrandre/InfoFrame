@@ -99,16 +99,22 @@ declare module Timers {
     }
 }
 declare module Bubbles {
-    class Stage {
+    class Stage implements Hitable {
         public el: JQuery;
+        public bubbleFactory: BubbleFactory;
         public timerFactory: Timers.TimerFactory;
         public bubbles: Bubble[];
-        constructor(el: JQuery, timerFactory: Timers.TimerFactory);
+        constructor(el: JQuery, bubbleFactory: BubbleFactory, timerFactory: Timers.TimerFactory);
         public initialize(): void;
         public getStageOrigin(): JQueryCoordinates;
         public layout(): void;
+        public getBoundingBox(): Rectangle;
+        public isHit(x: number, y: number): boolean;
     }
-    class Bubble {
+    class BubbleFactory {
+        public create(el: JQuery): Bubble;
+    }
+    class Bubble implements Hitable {
         public el: JQuery;
         public virtualPadding: number;
         constructor(el: JQuery);
@@ -122,7 +128,39 @@ declare module Bubbles {
         public moveTo(position: JQueryCoordinates): void;
         public originMoveTo(position: JQueryCoordinates): void;
         public circumferenceMoveTo(relative: JQueryCoordinates, angle: number): void;
+        public getBoundingBox(): Rectangle;
+        public isHit(x: number, y: number): boolean;
+        public spotlight(): void;
+    }
+    class FlipableBubble extends Bubble {
+        public spotlight(): void;
         public flip(): void;
+    }
+    class ScaleableBubble extends Bubble {
+        public spotlight(): void;
+        public scale(): void;
+    }
+    class Rectangle {
+        public x: number;
+        public y: number;
+        public w: number;
+        public h: number;
+        constructor(x: number, y: number, w: number, h: number);
+        public x1(): number;
+        public x2(): number;
+        public y1(): number;
+        public y2(): number;
+        public width(): number;
+        public height(): number;
+        public intersects(rect: Rectangle): boolean;
+        public getIntersection(rect: Rectangle): Rectangle;
+    }
+    interface Hitable {
+        getBoundingBox(): Rectangle;
+        isHit(x: number, y: number): boolean;
+    }
+    class HitTester {
+        static test(obj1: Hitable, obj2: Hitable): boolean;
     }
 }
 declare module Views {

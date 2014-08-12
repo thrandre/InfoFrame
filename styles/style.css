@@ -2026,17 +2026,18 @@ body {
   width: 75px;
   height: 75px;
   background-color: #bf0000;
+  opacity: 0.8;
 }
 .bubble.scaled {
-  width: 480px;
-  height: 480px;
+  width: 600px;
+  height: 600px;
 }
 .bubble.big {
   width: 380px;
   height: 380px;
   z-index: 100;
   background-color: #222;
-  opacity: 1;
+  opacity: 0.9;
 }
 .bubble.big .level-1 {
   font-size: 80px;

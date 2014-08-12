@@ -249,8 +249,9 @@ var Timers;
 var Bubbles;
 (function (Bubbles) {
     var Stage = (function () {
-        function Stage(el, timerFactory) {
+        function Stage(el, bubbleFactory, timerFactory) {
             this.el = el;
+            this.bubbleFactory = bubbleFactory;
             this.timerFactory = timerFactory;
             this.bubbles = [];
             this.initialize();
@@ -258,7 +259,7 @@ var Bubbles;
         Stage.prototype.initialize = function () {
             var _this = this;
             this.el.find(".bubble").each(function (i, e) {
-                return _this.bubbles.push(new Bubble($(e)));
+                return _this.bubbles.push(_this.bubbleFactory.create($(e)));
             });
             this.layout();
         };
@@ -288,10 +289,34 @@ var Bubbles;
 
                 this.bubbles[i].circumferenceMoveTo(center.translateToAbsolute(position), angle);
             }
+
+            console.log(HitTester.test(center, this.bubbles[1]));
+        };
+
+        Stage.prototype.getBoundingBox = function () {
+            var position = this.el.offset(), size = { width: this.el.width(), height: this.el.height() };
+            return new Rectangle(position.left, position.top, size.width, size.height);
+        };
+
+        Stage.prototype.isHit = function (x, y) {
+            return !new Rectangle(x, y, 1, 1).intersects(this.getBoundingBox());
         };
         return Stage;
     })();
     Bubbles.Stage = Stage;
+
+    var BubbleFactory = (function () {
+        function BubbleFactory() {
+        }
+        BubbleFactory.prototype.create = function (el) {
+            if (el.hasClass("flipable")) {
+                return new FlipableBubble(el);
+            }
+            return new ScaleableBubble(el);
+        };
+        return BubbleFactory;
+    })();
+    Bubbles.BubbleFactory = BubbleFactory;
 
     var Bubble = (function () {
         function Bubble(el) {
@@ -361,7 +386,32 @@ var Bubbles;
             });
         };
 
-        Bubble.prototype.flip = function () {
+        Bubble.prototype.getBoundingBox = function () {
+            var position = this.el.offset(), size = { width: this.el.width(), height: this.el.height() };
+            return new Rectangle(position.left, position.top, size.width, size.height);
+        };
+
+        Bubble.prototype.isHit = function (x, y) {
+            var origin = this.translateToAbsolute(this.getOrigin());
+            return Math.pow((x - origin.left), 2) + Math.pow((y - origin.top), 2) < Math.pow(this.getRadius(), 2);
+        };
+
+        Bubble.prototype.spotlight = function () {
+        };
+        return Bubble;
+    })();
+    Bubbles.Bubble = Bubble;
+
+    var FlipableBubble = (function (_super) {
+        __extends(FlipableBubble, _super);
+        function FlipableBubble() {
+            _super.apply(this, arguments);
+        }
+        FlipableBubble.prototype.spotlight = function () {
+            this.flip();
+        };
+
+        FlipableBubble.prototype.flip = function () {
             var _this = this;
             var front = this.el.find(".front"), back = this.el.find(".back"), rotate1, rotate2, show, hide;
 
@@ -383,9 +433,102 @@ var Bubbles;
                 _this.el.velocity(rotate2);
             });
         };
-        return Bubble;
+        return FlipableBubble;
+    })(Bubble);
+    Bubbles.FlipableBubble = FlipableBubble;
+
+    var ScaleableBubble = (function (_super) {
+        __extends(ScaleableBubble, _super);
+        function ScaleableBubble() {
+            _super.apply(this, arguments);
+        }
+        ScaleableBubble.prototype.spotlight = function () {
+            this.scale();
+        };
+
+        ScaleableBubble.prototype.scale = function () {
+        };
+        return ScaleableBubble;
+    })(Bubble);
+    Bubbles.ScaleableBubble = ScaleableBubble;
+
+    var Rectangle = (function () {
+        function Rectangle(x, y, w, h) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+        Rectangle.prototype.x1 = function () {
+            return this.x;
+        };
+
+        Rectangle.prototype.x2 = function () {
+            return this.x + this.w;
+        };
+
+        Rectangle.prototype.y1 = function () {
+            return this.y;
+        };
+
+        Rectangle.prototype.y2 = function () {
+            return this.y + this.h;
+        };
+
+        Rectangle.prototype.width = function () {
+            return this.w;
+        };
+
+        Rectangle.prototype.height = function () {
+            return this.h;
+        };
+
+        Rectangle.prototype.intersects = function (rect) {
+            return this.x1() < rect.x2() && this.x2() > rect.x1() && this.y1() < rect.y2() && this.y2() > rect.y1();
+        };
+
+        Rectangle.prototype.getIntersection = function (rect) {
+            var x1, x2, y1, y2;
+
+            x1 = this.x1() < rect.x1() ? rect.x1() : this.x1();
+            x2 = this.x2() < rect.x2() ? this.x2() : rect.x2();
+            y1 = this.y1() < rect.y1() ? rect.y1() : this.y1();
+            y2 = this.y2() < rect.y2() ? this.y2() : rect.y2();
+
+            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+        };
+        return Rectangle;
     })();
-    Bubbles.Bubble = Bubble;
+    Bubbles.Rectangle = Rectangle;
+
+    var HitTester = (function () {
+        function HitTester() {
+        }
+        HitTester.test = function (obj1, obj2) {
+            var bounding1 = obj1.getBoundingBox(), bounding2 = obj2.getBoundingBox();
+
+            if (!bounding1.intersects(bounding2)) {
+                return false;
+            }
+
+            var intersection = bounding1.getIntersection(bounding2);
+
+            console.log(intersection);
+
+            for (var x = intersection.x1(); x <= intersection.x2(); x++) {
+                for (var y = intersection.y1(); y <= intersection.y2(); y++) {
+                    if (obj1.isHit(x, y) && obj2.isHit(x, y)) {
+                        console.log(x, y);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        };
+        return HitTester;
+    })();
+    Bubbles.HitTester = HitTester;
 })(Bubbles || (Bubbles = {}));
 ///<reference path="../simple.ts"/>
 var Views;
@@ -899,7 +1042,7 @@ var noCacheUrl = function (url) {
 };
 
 $(function () {
-    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Timers.TimerFactory());
+    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Bubbles.BubbleFactory(), new Timers.TimerFactory());
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr("c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04");
 

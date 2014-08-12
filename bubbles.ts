@@ -2,16 +2,16 @@
 
 module Bubbles {
 
-    export class Stage {
+    export class Stage implements Hitable {
 
         bubbles: Bubble[] = [];
 
-        constructor( public el: JQuery, public timerFactory: Timers.TimerFactory ) {
+        constructor( public el: JQuery, public bubbleFactory: BubbleFactory, public timerFactory: Timers.TimerFactory ) {
             this.initialize();
         }
 
         initialize() {
-            this.el.find( ".bubble" ).each( ( i, e ) => this.bubbles.push( new Bubble( $( e ) ) ) );
+            this.el.find( ".bubble" ).each( ( i, e ) => this.bubbles.push( this.bubbleFactory.create( $( e ) ) ) );
             this.layout();
         }
 
@@ -41,11 +41,33 @@ module Bubbles {
                 this.bubbles[i].circumferenceMoveTo( center.translateToAbsolute( position ), angle );
             }
 
+            console.log( HitTester.test( center, this.bubbles[1] ) );
+        }
+
+        getBoundingBox(): Rectangle {
+            var position = this.el.offset(),
+                size = { width: this.el.width(), height: this.el.height() };
+            return new Rectangle( position.left, position.top, size.width, size.height );
+        }
+
+        isHit(x: number, y: number): boolean {
+            return !new Rectangle(x, y, 1, 1).intersects(this.getBoundingBox());
         }
 
     }
 
-    export class Bubble {
+    export class BubbleFactory {
+        
+        create( el: JQuery ): Bubble {
+            if (el.hasClass("flipable")) {
+                return new FlipableBubble( el );
+            }
+            return new ScaleableBubble( el );
+        }
+
+    }
+
+    export class Bubble implements Hitable {
 
         virtualPadding: number = 0;
 
@@ -120,6 +142,27 @@ module Bubbles {
             });
         }
 
+        getBoundingBox(): Rectangle {
+            var position = this.el.offset(),
+                size = { width: this.el.width(), height: this.el.height() };
+            return new Rectangle( position.left, position.top, size.width, size.height );
+        }
+
+        isHit(x: number, y: number): boolean {
+            var origin = this.translateToAbsolute( this.getOrigin() );
+            return Math.pow((x - origin.left), 2) + Math.pow((y - origin.top), 2) < Math.pow(this.getRadius(), 2);
+        }
+
+        spotlight() {}
+
+    }
+
+    export class FlipableBubble extends Bubble {
+        
+        spotlight() {
+            this.flip();
+        }
+
         flip() {
             var front = this.el.find( ".front" ),
                 back = this.el.find( ".back" ),
@@ -146,6 +189,99 @@ module Bubbles {
                 show.show();
                 this.el.velocity( rotate2 );
             });
+        }
+
+    }
+
+    export class ScaleableBubble extends Bubble {
+        
+        spotlight() {
+            this.scale();
+        }
+
+        scale() {
+            
+        }
+
+    }
+
+    export class Rectangle {
+        
+        constructor( public x: number, public y: number, public w: number, public h: number ) { }
+
+        x1(): number {
+            return this.x;
+        }
+
+        x2(): number {
+            return this.x + this.w;
+        }
+
+        y1(): number {
+            return this.y;
+        }
+
+        y2(): number {
+            return this.y + this.h;
+        }
+
+        width(): number {
+            return this.w;
+        }
+
+        height(): number {
+            return this.h;
+        }
+
+        intersects(rect: Rectangle): boolean {
+            return this.x1() < rect.x2()
+                && this.x2() > rect.x1()
+                && this.y1() < rect.y2()
+                && this.y2() > rect.y1();
+        }
+
+        getIntersection(rect: Rectangle): Rectangle {
+            var x1, x2, y1, y2;
+
+            x1 = this.x1() < rect.x1() ? rect.x1() : this.x1();
+            x2 = this.x2() < rect.x2() ? this.x2() : rect.x2();
+            y1 = this.y1() < rect.y1() ? rect.y1() : this.y1();
+            y2 = this.y2() < rect.y2() ? this.y2() : rect.y2();
+
+            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+        }
+
+    }
+
+    export interface Hitable {
+        getBoundingBox(): Rectangle;
+        isHit(x: number, y: number): boolean;
+    }
+
+    export class HitTester {
+        
+        static test( obj1: Hitable, obj2: Hitable ): boolean {
+            var bounding1 = obj1.getBoundingBox(),
+                bounding2 = obj2.getBoundingBox();
+
+            if (!bounding1.intersects(bounding2)) {
+                return false;
+            }
+
+            var intersection = bounding1.getIntersection( bounding2 );
+
+            console.log(intersection);
+
+            for (var x = intersection.x1(); x <= intersection.x2(); x++) {
+                for (var y = intersection.y1(); y <= intersection.y2(); y++) {
+                    if (obj1.isHit(x, y) && obj2.isHit(x, y)) {
+                        console.log(x,y);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
     }

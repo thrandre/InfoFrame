@@ -228,7 +228,7 @@ var noCacheUrl = (url: string) => {
 };
 
 $(() => {
-    var bubbleStage = new Bubbles.Stage( $( ".bubble-wrapper" ), new Timers.TimerFactory() );
+    var bubbleStage = new Bubbles.Stage( $( ".bubble-wrapper" ), new Bubbles.BubbleFactory(), new Timers.TimerFactory() );
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr( "c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04" );
 
