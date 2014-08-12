@@ -282,7 +282,7 @@ var Bubbles;
 
             var center = this.bubbles[0];
 
-            center.setVirtualPadding(100);
+            center.setVirtualPadding(50);
             center.originMoveTo(this.getStageOrigin());
 
             var spacingAngle = (2 * Math.PI) / (this.bubbles.length - 1);
@@ -290,7 +290,9 @@ var Bubbles;
             for (var i = 1; i < this.bubbles.length; i++) {
                 var angle = (i - 1) * spacingAngle;
                 var position = center.getPointOnCircumference(angle, true);
-                this.bubbles[i].originMoveTo(center.translateToAbsolute(position));
+
+                this.bubbles[i].circumferenceMoveTo(center.translateToAbsolute(position), angle);
+                //this.bubbles[i].moveTo( center.translateToAbsolute( position ) );
             }
         };
         return Stage;
@@ -353,6 +355,15 @@ var Bubbles;
             this.moveTo({
                 left: position.left - origin.left,
                 top: position.top - origin.top
+            });
+        };
+
+        Bubble.prototype.circumferenceMoveTo = function (relative, angle) {
+            var position = this.el.offset(), beta = relative.top > position.top ? angle + Math.PI : angle - Math.PI, circ = this.getPointOnCircumference(beta);
+
+            this.moveTo({
+                left: relative.left + (position.left - circ.left),
+                top: relative.top + (position.top - circ.top)
             });
         };
 

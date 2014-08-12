@@ -121,6 +121,7 @@ declare module Bubbles {
         public translateToAbsolute(relative: JQueryCoordinates): JQueryCoordinates;
         public moveTo(position: JQueryCoordinates): void;
         public originMoveTo(position: JQueryCoordinates): void;
+        public circumferenceMoveTo(relative: JQueryCoordinates, angle: number): void;
         public flip(): void;
     }
 }
