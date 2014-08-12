@@ -2020,21 +2020,22 @@ body {
   position: absolute;
   color: white;
   box-sizing: border-box;
-  background-color: #222;
   border-radius: 50%;
   box-shadow: 0 0 5px #111;
-  width: 110px;
-  height: 110px;
-  opacity: 0.5;
+  border: 2px dashed #fff;
+  width: 70px;
+  height: 70px;
+  background-color: #bf0000;
 }
 .bubble.big {
   width: 380px;
   height: 380px;
   z-index: 100;
+  background-color: #222;
   opacity: 1;
 }
 .bubble.big .level-1 {
-  font-size: 90px;
+  font-size: 80px;
 }
 .bubble.big .level-2 {
   font-size: 60px;
@@ -2096,10 +2097,6 @@ body {
   z-index: 1;
   opacity: 0;
 }
-.weather .level-1 .wi {
-  margin-top: -15px;
-  margin-bottom: -15px;
-}
 .weather .data {
   position: relative;
   float: left;
@@ -2136,7 +2133,7 @@ body {
 .weather .data .advanced .wind-data,
 .weather .data .advanced .rain-data {
   float: left;
-  padding-top: 13px;
+  padding-top: 10px;
   padding-left: 10px;
 }
 .weather .data .advanced .rain {
@@ -2147,7 +2144,7 @@ body {
   padding-right: 4px;
 }
 .weather .description {
-  width: 70%;
+  width: 60%;
   display: block;
   position: relative;
   left: 50%;

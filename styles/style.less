@@ -57,26 +57,26 @@ html, body {
 
 	color: white;
 	box-sizing: border-box;
-	
-	background-color: #222;
 	border-radius: 50%;
-	
 	box-shadow: 0 0 5px #111;
 
-	width: 110px;
-	height: 110px;
+	border: 2px dashed #fff;
 
-	opacity: 0.5;
+	width: 70px;
+	height: 70px;
+
+	background-color: #bf0000;
 
 	&.big {
 		width: 380px;
 		height: 380px;
 		z-index: 100;
 
+		background-color: #222;
 		opacity: 1;
 
 		.level-1 {
-			font-size: 90px;
+			font-size: 80px;
 		}
 
 		.level-2 {
@@ -161,13 +161,6 @@ html, body {
 }
 
 .weather {
-	.level-1 {
-		.wi {
-			margin-top: -15px;
-			margin-bottom: -15px;
-		}
-	}
-
 	.data {
 		position: relative;
 		float: left;
@@ -208,7 +201,7 @@ html, body {
 
 			.wind-data, .rain-data {
 				float: left;
-				padding-top: 13px;
+				padding-top: 10px;
 				padding-left: 10px;
 			}
 
@@ -225,7 +218,7 @@ html, body {
 	}
 
 	.description {
-		width: 70%;
+		width: 60%;
 		display: block;
 		position: relative;
 		left: 50%;

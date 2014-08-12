@@ -30,7 +30,7 @@ module Bubbles {
 
             var center = this.bubbles[0];
 
-            center.setVirtualPadding( 0 );
+            center.setVirtualPadding( 100 );
             center.originMoveTo( this.getStageOrigin() );
 
             var spacingAngle = ( 2 * Math.PI ) / ( this.bubbles.length - 1 );
