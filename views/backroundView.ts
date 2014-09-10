@@ -89,7 +89,7 @@ module Views {
             l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
 
             l2.velocity( { opacity: 1 }, {
-                duration: 500,
+                duration: 1000,
                 complete: () => {
                     l1.css( { opacity: 0 });
                     l1.removeClass( "l1" ).addClass( "l2" );
