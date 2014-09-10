@@ -102,9 +102,9 @@ declare module Bubbles {
     class Stage implements Hitable {
         public el: JQuery;
         public bubbleFactory: BubbleFactory;
-        public timerFactory: Timers.TimerFactory;
+        public mediator: Simple.EventEmitter;
         public bubbles: Bubble[];
-        constructor(el: JQuery, bubbleFactory: BubbleFactory, timerFactory: Timers.TimerFactory);
+        constructor(el: JQuery, bubbleFactory: BubbleFactory, mediator: Simple.EventEmitter);
         public initialize(): void;
         public getStageOrigin(): JQueryCoordinates;
         public layout(): void;
@@ -112,12 +112,13 @@ declare module Bubbles {
         public isHit(x: number, y: number): boolean;
     }
     class BubbleFactory {
-        public create(el: JQuery): Bubble;
+        public create(el: JQuery, mediator: Simple.EventEmitter): Bubble;
     }
     class Bubble implements Hitable {
         public el: JQuery;
+        public mediator: Simple.EventEmitter;
         public virtualPadding: number;
-        constructor(el: JQuery);
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
         public initialize(): void;
         public getOrigin(): JQueryCoordinates;
         public getRadius(includeMargin?: boolean): number;
