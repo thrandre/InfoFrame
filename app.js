@@ -249,18 +249,19 @@ var Timers;
 var Bubbles;
 (function (Bubbles) {
     var Stage = (function () {
-        function Stage(el, bubbleFactory, timerFactory) {
+        function Stage(el, bubbleFactory, mediator) {
             this.el = el;
             this.bubbleFactory = bubbleFactory;
-            this.timerFactory = timerFactory;
+            this.mediator = mediator;
             this.bubbles = [];
             this.initialize();
         }
         Stage.prototype.initialize = function () {
             var _this = this;
             this.el.find(".bubble").each(function (i, e) {
-                return _this.bubbles.push(_this.bubbleFactory.create($(e)));
+                return _this.bubbles.push(_this.bubbleFactory.create($(e), _this.mediator));
             });
+
             this.layout();
         };
 
@@ -284,13 +285,10 @@ var Bubbles;
             var spacingAngle = (2 * Math.PI) / (this.bubbles.length - 1);
 
             for (var i = 1; i < this.bubbles.length; i++) {
-                var angle = (i - 1) * spacingAngle;
-                var position = center.getPointOnCircumference(angle, true);
+                var angle = (i - 1) * spacingAngle, position = center.getPointOnCircumference(angle, true);
 
                 this.bubbles[i].circumferenceMoveTo(center.translateToAbsolute(position), angle);
             }
-
-            console.log(HitTester.test(center, this.bubbles[1]));
         };
 
         Stage.prototype.getBoundingBox = function () {
@@ -308,19 +306,20 @@ var Bubbles;
     var BubbleFactory = (function () {
         function BubbleFactory() {
         }
-        BubbleFactory.prototype.create = function (el) {
+        BubbleFactory.prototype.create = function (el, mediator) {
             if (el.hasClass("flipable")) {
-                return new FlipableBubble(el);
+                return new FlipableBubble(el, mediator);
             }
-            return new ScaleableBubble(el);
+            return new ScaleableBubble(el, mediator);
         };
         return BubbleFactory;
     })();
     Bubbles.BubbleFactory = BubbleFactory;
 
     var Bubble = (function () {
-        function Bubble(el) {
+        function Bubble(el, mediator) {
             this.el = el;
+            this.mediator = mediator;
             this.virtualPadding = 0;
             this.initialize();
         }
@@ -381,8 +380,8 @@ var Bubbles;
             var position = this.el.offset(), beta = relative.top > position.top ? angle + Math.PI : angle - Math.PI, circ = this.getPointOnCircumference(beta);
 
             this.moveTo({
-                left: relative.left + (position.left - circ.left),
-                top: relative.top + (position.top - circ.top)
+                left: relative.left - circ.left,
+                top: relative.top - circ.top
             });
         };
 
@@ -513,12 +512,9 @@ var Bubbles;
 
             var intersection = bounding1.getIntersection(bounding2);
 
-            console.log(intersection);
-
             for (var x = intersection.x1(); x <= intersection.x2(); x++) {
                 for (var y = intersection.y1(); y <= intersection.y2(); y++) {
                     if (obj1.isHit(x, y) && obj2.isHit(x, y)) {
-                        console.log(x, y);
                         return true;
                     }
                 }

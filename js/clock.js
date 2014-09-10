@@ -47,7 +47,7 @@ SVG.extend(SVG.Clock, {
 
 		setInterval(function() {
 			self.update();
-		}, 100);
+		}, 1000);
 
 		return this;
 	},

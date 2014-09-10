@@ -6,12 +6,16 @@ module Bubbles {
 
         bubbles: Bubble[] = [];
 
-        constructor( public el: JQuery, public bubbleFactory: BubbleFactory, public timerFactory: Timers.TimerFactory ) {
+        constructor( public el: JQuery, public bubbleFactory: BubbleFactory, public mediator: Simple.EventEmitter ) {
             this.initialize();
         }
 
         initialize() {
-            this.el.find( ".bubble" ).each( ( i, e ) => this.bubbles.push( this.bubbleFactory.create( $( e ) ) ) );
+            this.el
+                .find( ".bubble" )
+                .each( ( i, e ) =>
+                    this.bubbles.push( this.bubbleFactory.create( $( e ), this.mediator ) ) );
+
             this.layout();
         }
 
@@ -35,13 +39,11 @@ module Bubbles {
             var spacingAngle = ( 2 * Math.PI ) / ( this.bubbles.length - 1 );
 
             for ( var i = 1; i < this.bubbles.length; i++ ) {
-                var angle = ( i - 1 ) * spacingAngle;
-                var position = center.getPointOnCircumference( angle, true );
+                var angle = ( i - 1 ) * spacingAngle,
+                    position = center.getPointOnCircumference( angle, true );
 
                 this.bubbles[i].circumferenceMoveTo( center.translateToAbsolute( position ), angle );
             }
-
-            console.log( HitTester.test( center, this.bubbles[1] ) );
         }
 
         getBoundingBox(): Rectangle {
@@ -58,11 +60,11 @@ module Bubbles {
 
     export class BubbleFactory {
         
-        create( el: JQuery ): Bubble {
+        create( el: JQuery, mediator: Simple.EventEmitter ): Bubble {
             if (el.hasClass("flipable")) {
-                return new FlipableBubble( el );
+                return new FlipableBubble( el, mediator );
             }
-            return new ScaleableBubble( el );
+            return new ScaleableBubble( el, mediator );
         }
 
     }
@@ -71,7 +73,7 @@ module Bubbles {
 
         virtualPadding: number = 0;
 
-        constructor( public el: JQuery ) {
+        constructor( public el: JQuery, public mediator: Simple.EventEmitter ) {
             this.initialize();
         }
 
@@ -137,8 +139,8 @@ module Bubbles {
                 circ = this.getPointOnCircumference( beta );
 
             this.moveTo({
-                left: relative.left + (position.left - circ.left),
-                top: relative.top + (position.top - circ.top)
+                left    : relative.left - circ.left,
+                top     : relative.top  - circ.top
             });
         }
 
@@ -150,7 +152,7 @@ module Bubbles {
 
         isHit(x: number, y: number): boolean {
             var origin = this.translateToAbsolute( this.getOrigin() );
-            return Math.pow((x - origin.left), 2) + Math.pow((y - origin.top), 2) < Math.pow(this.getRadius(), 2);
+            return Math.pow( ( x - origin.left ), 2 ) + Math.pow( ( y - origin.top ), 2 ) < Math.pow( this.getRadius(), 2 );
         }
 
         spotlight() {}
@@ -248,14 +250,14 @@ module Bubbles {
             y1 = this.y1() < rect.y1() ? rect.y1() : this.y1();
             y2 = this.y2() < rect.y2() ? this.y2() : rect.y2();
 
-            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            return new Rectangle( x1, y1, x2 - x1, y2 - y1 );
         }
 
     }
 
     export interface Hitable {
         getBoundingBox(): Rectangle;
-        isHit(x: number, y: number): boolean;
+        isHit( x: number, y: number ): boolean;
     }
 
     export class HitTester {
@@ -264,18 +266,15 @@ module Bubbles {
             var bounding1 = obj1.getBoundingBox(),
                 bounding2 = obj2.getBoundingBox();
 
-            if (!bounding1.intersects(bounding2)) {
+            if ( !bounding1.intersects( bounding2 ) ) {
                 return false;
             }
 
             var intersection = bounding1.getIntersection( bounding2 );
 
-            console.log(intersection);
-
-            for (var x = intersection.x1(); x <= intersection.x2(); x++) {
-                for (var y = intersection.y1(); y <= intersection.y2(); y++) {
-                    if (obj1.isHit(x, y) && obj2.isHit(x, y)) {
-                        console.log(x,y);
+            for ( var x = intersection.x1(); x <= intersection.x2(); x++ ) {
+                for ( var y = intersection.y1(); y <= intersection.y2(); y++ ) {
+                    if ( obj1.isHit( x, y ) && obj2.isHit( x, y ) ) {
                         return true;
                     }
                 }
