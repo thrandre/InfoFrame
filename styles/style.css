@@ -2093,7 +2093,7 @@ body {
   left: 0;
   background-size: cover;
   background-repeat: no-repeat;
-  -webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2);
+  /*-webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2);*/
 }
 .background.l1 {
   z-index: 0;
