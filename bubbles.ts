@@ -17,6 +17,7 @@ module Bubbles {
                     this.bubbles.push( this.bubbleFactory.create( $( e ), this.mediator ) ) );
 
             this.layout();
+            this.mediator.on( "bubble-flip", ( d ) => this.bubbles[0].spotlight() );
         }
 
         getStageOrigin(): JQueryCoordinates {

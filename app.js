@@ -263,6 +263,9 @@ var Bubbles;
             });
 
             this.layout();
+            this.mediator.on("bubble-flip", function (d) {
+                return _this.bubbles[0].spotlight();
+            });
         };
 
         Stage.prototype.getStageOrigin = function () {
@@ -1038,11 +1041,12 @@ var noCacheUrl = function (url) {
 };
 
 $(function () {
-    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Bubbles.BubbleFactory(), new Simple.Events());
+    var mediator = new Simple.Events();
+
+    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Bubbles.BubbleFactory(), mediator);
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr("c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04");
 
-    var mediator = new Simple.Events();
     var scheduler = new Timers.Scheduler(new Timers.TimerFactory(), mediator);
 
     var clockService = new ClockService(mediator);
@@ -1079,6 +1083,7 @@ $(function () {
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
     scheduler.schedule("tick-autoUpdater-check", 60 * 1000, true);
+    scheduler.schedule("bubble-flip", 10 * 1000, false);
 
     window.SVG("clock").clock("100%").start();
 
