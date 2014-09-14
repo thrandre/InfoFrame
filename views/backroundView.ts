@@ -22,7 +22,7 @@ module Views {
         }
 
         getPhotos(): JQueryPromise<any> {
-            return this.controller.getPhotos(800, 600)
+            return this.controller.getPhotos(1024, 768)
                 .then((photos) => this.photos = photos);
         }
 

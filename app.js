@@ -608,9 +608,12 @@ var Utils;
 
             var image = new Image();
 
-            image.onload = function (e) {
-                deferred.resolve();
-            };
+            var interval = window.setInterval(function () {
+                if (image.complete) {
+                    window.clearInterval(interval);
+                    deferred.resolve();
+                }
+            }, 500);
 
             image.src = photoData.source_large;
 
@@ -644,7 +647,7 @@ var Views;
 
         BackgroundView.prototype.getPhotos = function () {
             var _this = this;
-            return this.controller.getPhotos(800, 600).then(function (photos) {
+            return this.controller.getPhotos(1024, 768).then(function (photos) {
                 return _this.photos = photos;
             });
         };
