@@ -3,7 +3,8 @@
     export interface PhotoData {
         title: string;
         tags: string[];
-        source: string;
+        source_original: string;
+        source_large: string;
         width: number;
         height: number;
     }
@@ -17,14 +18,15 @@
         constructor( private apiKey: string, private userId: string ) { }
 
         private getApiUrl() {
-            return "https://api.flickr.com/services/rest/?method=flickr.favorites.getPublicList&api_key=" + this.apiKey + "&user_id=" + this.userId + "&extras=o_dims%2Curl_o%2Ctags&per_page=500&format=json&nojsoncallback=1";
+            return "https://api.flickr.com/services/rest/?method=flickr.favorites.getPublicList&api_key=" + this.apiKey + "&user_id=" + this.userId + "&extras=o_dims,url_o,url_l,tags&per_page=500&format=json&nojsoncallback=1";
         }
 
         private parsePhoto( data ): PhotoData {
             return {
                 title: data.title,
                 tags: data.tags.split( " " ).map( ( tag ) => tag.toLowerCase() ),
-                source: data.url_o,
+                source_original: data.url_o,
+                source_large: data.url_l,
                 width: data.width_o,
                 height: data.height_o
             };

@@ -11,7 +11,7 @@
                 deferred.resolve();
             };
 
-            image.src = photoData.source;
+            image.src = photoData.source_large;
 
             return deferred.promise();
         }

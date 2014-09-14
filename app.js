@@ -145,7 +145,7 @@ var Artwork;
             this.userId = userId;
         }
         Flickr.prototype.getApiUrl = function () {
-            return "https://api.flickr.com/services/rest/?method=flickr.favorites.getPublicList&api_key=" + this.apiKey + "&user_id=" + this.userId + "&extras=o_dims%2Curl_o%2Ctags&per_page=500&format=json&nojsoncallback=1";
+            return "https://api.flickr.com/services/rest/?method=flickr.favorites.getPublicList&api_key=" + this.apiKey + "&user_id=" + this.userId + "&extras=o_dims,url_o,url_l,tags&per_page=500&format=json&nojsoncallback=1";
         };
 
         Flickr.prototype.parsePhoto = function (data) {
@@ -154,7 +154,8 @@ var Artwork;
                 tags: data.tags.split(" ").map(function (tag) {
                     return tag.toLowerCase();
                 }),
-                source: data.url_o,
+                source_original: data.url_o,
+                source_large: data.url_l,
                 width: data.width_o,
                 height: data.height_o
             };
@@ -611,7 +612,7 @@ var Utils;
                 deferred.resolve();
             };
 
-            image.src = photoData.source;
+            image.src = photoData.source_large;
 
             return deferred.promise();
         };
@@ -643,7 +644,7 @@ var Views;
 
         BackgroundView.prototype.getPhotos = function () {
             var _this = this;
-            return this.controller.getPhotos(this.el.width(), this.el.height()).then(function (photos) {
+            return this.controller.getPhotos(800, 600).then(function (photos) {
                 return _this.photos = photos;
             });
         };
@@ -713,7 +714,7 @@ var Views;
             var l1 = this.el.find(".l1");
             var l2 = this.el.find(".l2");
 
-            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
+            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source_large + ")" });
 
             l2.velocity({ opacity: 1 }, {
                 duration: 1000,

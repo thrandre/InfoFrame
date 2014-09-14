@@ -22,7 +22,7 @@ module Views {
         }
 
         getPhotos(): JQueryPromise<any> {
-            return this.controller.getPhotos(this.el.width(), this.el.height())
+            return this.controller.getPhotos(800, 600)
                 .then((photos) => this.photos = photos);
         }
 
@@ -86,7 +86,7 @@ module Views {
             var l1 = this.el.find(".l1");
             var l2 = this.el.find(".l2");
 
-            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source + ")" });
+            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source_large + ")" });
 
             l2.velocity( { opacity: 1 }, {
                 duration: 1000,

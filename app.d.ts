@@ -59,7 +59,8 @@ declare module Artwork {
     interface PhotoData {
         title: string;
         tags: string[];
-        source: string;
+        source_original: string;
+        source_large: string;
         width: number;
         height: number;
     }
