@@ -2077,11 +2077,13 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
   float: left;
 }
 .bubble-content-wrapper.back {
   transform: rotateX(-180deg) translate(-50%, 50%);
   -webkit-transform: rotateX(-180deg) translate(-50%, 50%);
+  -moz-transform: rotateX(-180deg) translate(-50%, 50%);
 }
 .background {
   position: absolute;
@@ -2091,7 +2093,6 @@ body {
   left: 0;
   background-size: cover;
   background-repeat: no-repeat;
-  /*-webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2);*/
 }
 .background.l1 {
   z-index: 0;
@@ -2106,6 +2107,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
 }
 .weather .data .basic,
 .weather .data .advanced {
@@ -2153,6 +2155,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
 }
 #clock {
   width: 110px;
@@ -2162,4 +2165,5 @@ body {
   position: relative;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
 }

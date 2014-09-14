@@ -132,12 +132,14 @@ html, body {
 	
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
 
 	float: left;
 	
 	&.back {
 		transform: rotateX(-180deg) translate(-50%, 50%);
 		-webkit-transform: rotateX(-180deg) translate(-50%, 50%);
+		-moz-transform: rotateX(-180deg) translate(-50%, 50%);
 	}
 }
 
@@ -153,7 +155,7 @@ html, body {
 	background-size: cover;
 	background-repeat: no-repeat;
 	
-	/*-webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2);*/
+	//-webkit-filter: brightness(1.2) contrast(1.5) saturate(1.2) blur(3px);
 
 	&.l1 {
 		z-index: 0;
@@ -173,6 +175,7 @@ html, body {
 		
 		transform: translateX(-50%);
 		-webkit-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
 		
 		.basic, .advanced {
 			float: left;
@@ -230,6 +233,7 @@ html, body {
 		
 		transform: translateX(-50%);
 		-webkit-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
 	}
 }
 
@@ -242,4 +246,5 @@ html, body {
 	
 	transform: translateX(-50%);
 	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
 }
