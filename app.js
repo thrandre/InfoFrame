@@ -52,7 +52,9 @@ var Simple;
             _super.call(this);
             this.el = el;
             this.controller = controller;
-            this._template = new Template(el);
+            this._template = new Template(function () {
+                return el;
+            });
         }
         View.prototype.initialize = function () {
         };
@@ -64,15 +66,17 @@ var Simple;
     Simple.View = View;
 
     var Template = (function () {
-        function Template(el) {
-            this.el = el;
+        function Template(factory) {
+            this.factory = factory;
         }
         Template.prototype.compile = function (map) {
             var _this = this;
             return function (data) {
-                return Object.keys(map).forEach(function (i) {
-                    map[i](_this.el.find(i), data);
+                var el = _this.factory();
+                Object.keys(map).forEach(function (i) {
+                    map[i](el.find(i), data);
                 });
+                return el;
             };
         };
         return Template;
@@ -1077,6 +1081,10 @@ $(function () {
     var clockView = new Views.ClockView($(".clock"), mediator);
     var weatherView = new Views.WeatherView($(".weather"), mediator);
 
+    var ruter = new Travel.Ruter();
+
+    var travelView = new Views.TravelView($(".travel"), mediator);
+
     mediator.on("environment-update", function (data) {
         return console.log(data);
     });
@@ -1100,6 +1108,26 @@ $(function () {
     scheduler.schedule("bubble-flip", 10 * 1000, false);
 
     window.SVG("clock").clock("100%").start();
+
+    var travelTimer = new Timers.Timer(function () {
+        return ruter.getTravelData("3010610").then(function (data) {
+            var viewData = {
+                east: Query.fromArray(data).where(function (t) {
+                    return t.direction == 1;
+                }).orderByAscending(function (t) {
+                    return t.departure.unix();
+                }).take(3).toArray(),
+                west: Query.fromArray(data).where(function (t) {
+                    return t.direction == 2;
+                }).orderByAscending(function (t) {
+                    return t.departure.unix();
+                }).take(3).toArray()
+            };
+            mediator.trigger("travel-update", viewData);
+        });
+    });
+
+    travelTimer.start(60 * 1000);
 });
 var Query;
 (function (Query) {
@@ -1487,6 +1515,38 @@ var Query;
         return ArrayEnumerator;
     })();
 })(Query || (Query = {}));
+var Travel;
+(function (Travel) {
+    var Ruter = (function () {
+        function Ruter() {
+        }
+        Ruter.prototype.parseTravelData = function (data) {
+            return {
+                line: data.MonitoredVehicleJourney.LineRef,
+                destination: data.MonitoredVehicleJourney.DestinationName,
+                direction: data.MonitoredVehicleJourney.DirectionRef,
+                departure: moment(data.MonitoredVehicleJourney.MonitoredCall.ExpectedDepartureTime)
+            };
+        };
+
+        Ruter.prototype.getApiUrl = function (stopId) {
+            return "https://jsonp.nodejitsu.com/?url=http://reisapi.ruter.no/StopVisit/GetDepartures/" + stopId;
+        };
+
+        Ruter.prototype.getTravelData = function (stopId) {
+            var _this = this;
+            return $.getJSON(this.getApiUrl(stopId)).then(function (data) {
+                return data.filter(function (i) {
+                    return i.MonitoredVehicleJourney.DirectionRef > 0;
+                }).map(function (i) {
+                    return _this.parseTravelData(i);
+                });
+            });
+        };
+        return Ruter;
+    })();
+    Travel.Ruter = Ruter;
+})(Travel || (Travel = {}));
 function isUndefined(obj) {
     return !obj;
 }
@@ -1498,4 +1558,67 @@ function isEmpty(obj) {
 function isUndefinedOrEmpty(obj) {
     return isUndefined(obj) || isEmpty(obj);
 }
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
+    var TravelView = (function (_super) {
+        __extends(TravelView, _super);
+        function TravelView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
+        }
+        TravelView.prototype.initialize = function () {
+            this.mediator.on("travel-update", this.update, this);
+            this.compileTemplate();
+        };
+
+        TravelView.prototype.compileTemplate = function () {
+            var itemTemplate = new Simple.Template(function () {
+                return $("<div class=\"row\"><span class=\"col col-25 line\">1</span>" + "<span class=\"col col-50 destination\">Mortensrud</span >" + "<span class=\"col col-25 departure\">3 min</span >" + "</div>");
+            }).compile({
+                ".line": function (e, d) {
+                    return e.text(d.line);
+                },
+                ".destination": function (e, d) {
+                    return e.text(d.destination);
+                },
+                ".departure": function (e, d) {
+                    var secondsDiff = d.departure.diff(moment(), "seconds");
+                    if (secondsDiff < 45) {
+                        e.text("Nå");
+                        return;
+                    }
+                    if (secondsDiff < 540) {
+                        e.text(d.departure.diff(moment(), "minutes") + " min");
+                        return;
+                    }
+
+                    e.text(d.departure.format("HH:mm"));
+                }
+            });
+
+            this.template = this._template.compile({
+                ".east": function (e, d) {
+                    e.empty().append(d.east.map(function (i) {
+                        return itemTemplate(i);
+                    }));
+                },
+                ".west": function (e, d) {
+                    e.empty().append(d.west.map(function (i) {
+                        return itemTemplate(i);
+                    }));
+                }
+            });
+        };
+
+        TravelView.prototype.update = function (data) {
+            console.log(data);
+            this.template(data);
+        };
+        return TravelView;
+    })(Simple.View);
+    Views.TravelView = TravelView;
+})(Views || (Views = {}));
 //# sourceMappingURL=app.js.map

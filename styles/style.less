@@ -283,6 +283,49 @@ html, body {
 	background-color: #113D38;
 }
 
+.travel {
+	background-color: #2EA396;
+	font-size: 18px;
+	overflow: hidden;
+
+	.row {
+		width: 100%;
+
+		float: left;
+		clear: both;
+
+		padding: 20px;
+		box-sizing: border-box;
+
+		&:nth-child(2n) {
+			background-color: #237D73;
+		}
+
+		&.header {
+			background-color: #113D38;
+		}
+
+		.col {
+			display: block;
+			float: left;
+			
+			box-sizing: border-box;
+
+			&.col-25 {
+				width: 25%;
+			}
+
+			&.col-50 {
+				width: 50%;
+			}
+		}
+	}
+
+	.departure {
+		text-align: right;
+	}
+}
+
 #clock {
 	width: 150px;
 	height: 150px;

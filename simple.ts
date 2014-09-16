@@ -50,7 +50,7 @@
 
         constructor( public el: JQuery, public controller?: Controller ) {
             super();
-            this._template = new Template(el);
+            this._template = new Template(() => el);
         }
 
         public initialize() { }
@@ -61,13 +61,16 @@
 
     export class Template {
         
-        constructor( private el: JQuery ) {}
+        constructor( private factory: () => JQuery ) { }
 
         compile<T>( map: {[selector:string]: (el: JQuery, data: T) => void} ) {
-            return (data: T) =>
+            return (data: T) => {
+                var el = this.factory();
                 Object.keys( map ).forEach( ( i ) => {
-                    map[i](this.el.find(i), data);
+                    map[i](el.find(i), data);
                 });
+                return el;
+            };
         }
 
     }

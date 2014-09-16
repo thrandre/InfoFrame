@@ -25,11 +25,11 @@
         public render(): void;
     }
     class Template {
-        private el;
-        constructor(el: JQuery);
+        private factory;
+        constructor(factory: () => JQuery);
         public compile<T>(map: {
             [selector: string]: (el: JQuery, data: T) => void;
-        }): (data: T) => void;
+        }): (data: T) => JQuery;
     }
 }
 declare module Weather {
@@ -416,6 +416,37 @@ declare module Query {
         constructor(key: TOut);
     }
 }
+declare module Travel {
+    interface TravelData {
+        line: string;
+        destination: string;
+        direction: number;
+        departure: Moment;
+    }
+    interface TravelProvider {
+        getTravelData(stopId: string): JQueryPromise<TravelData[]>;
+    }
+    class Ruter implements TravelProvider {
+        private parseTravelData(data);
+        private getApiUrl(stopId);
+        public getTravelData(stopId: string): JQueryPromise<TravelData[]>;
+    }
+}
 declare function isUndefined(obj: any): boolean;
 declare function isEmpty(obj: any[]): boolean;
 declare function isUndefinedOrEmpty(obj: any[]): boolean;
+declare module Views {
+    interface TravelViewData {
+        east: Travel.TravelData[];
+        west: Travel.TravelData[];
+    }
+    class TravelView extends Simple.View {
+        public el: JQuery;
+        public mediator: Simple.EventEmitter;
+        private template;
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
+        public initialize(): void;
+        public compileTemplate(): void;
+        public update(data: TravelViewData): void;
+    }
+}

@@ -1,12 +1,14 @@
 <html>
 	<head>
 		<title>InfoFrame</title>
+		<meta charset="utf-8">
 		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,latin-ext,greek,greek-ext' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="styles/style.css" />
 		<script type="text/javascript" src="js/vendor/jquery.js"></script>
 		<script type="text/javascript" src="js/vendor/jquery.velocity.min.js"></script>
 		<script type="text/javascript" src="js/vendor/moment.js"></script>
 		<script type="text/javascript" src="js/vendor/svg.js"></script>
+		<script type="text/javascript" src="js/vendor/jsonPath.js"></script>
 		<script type="text/javascript" src="js/clock.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 	</head>
@@ -23,7 +25,46 @@
 					<div class="date">TUE 16. SEP</div>
 				</div>
 			</div>
-			<div class="quadrant"></div>
+			<div class="quadrant travel">
+				<div class="list">
+					<div class="row header">OST</div>
+					<div class="east">
+						<div class="row">
+							      <span class="col col-25 line">1</span>
+							      <span class="col col-50 destination">Mortensrud</span>
+							      <span class="col col-25 departure">3 min</span>
+						      </div>
+						<div class="row">
+							<span class="col col-25 line">1</span>
+							<span class="col col-50 destination">Mortensrud</span>
+							<span class="col col-25 departure">3 min</span>
+						</div>
+						<div class="row">
+							<span class="col col-25 line">1</span>
+							<span class="col col-50 destination">Mortensrud</span>
+							<span class="col col-25 departure">3 min</span>
+						</div>
+					</div>
+					<div class="row header">VEST</div>
+					<div class="west">
+						<div class="row">
+							<span class="col col-25 line">1</span>
+							<span class="col col-50 destination">Mortensrud</span>
+							<span class="col col-25 departure">3 min</span>
+						</div>
+						<div class="row">
+							<span class="col col-25 line">1</span>
+							<span class="col col-50 destination">Mortensrud</span>
+							<span class="col col-25 departure">3 min</span>
+						</div>
+						<div class="row">
+							<span class="col col-25 line">1</span>
+							<span class="col col-50 destination">Mortensrud</span>
+							<span class="col col-25 departure">3 min</span>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="quadrant">
 				<div class="octant weather">
 					<div class="wrapper">

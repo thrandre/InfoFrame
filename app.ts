@@ -248,6 +248,10 @@ $(() => {
     var clockView = new Views.ClockView( $( ".clock" ), mediator );
     var weatherView = new Views.WeatherView( $( ".weather" ), mediator );
 
+    var ruter = new Travel.Ruter();
+
+    var travelView = new Views.TravelView( $( ".travel" ), mediator );
+
     mediator.on( "environment-update", ( data ) => console.log( data ) );
     mediator.on( "github-push", ( data ) => console.log( data ) );
 
@@ -268,4 +272,15 @@ $(() => {
     scheduler.schedule( "bubble-flip", 10 * 1000, false );
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
+
+    var travelTimer = new Timers.Timer( () => ruter.getTravelData( "3010610" ).then( ( data: Travel.TravelData[] ) => {
+        var viewData: Views.TravelViewData = {
+            east: Query.fromArray( data ).where( t => t.direction == 1 ).orderByAscending( t => t.departure.unix() ).take( 3 ).toArray(),
+            west: Query.fromArray( data ).where( t => t.direction == 2 ).orderByAscending( t => t.departure.unix() ).take( 3 ).toArray()
+        };
+        mediator.trigger( "travel-update", viewData );
+    }) );
+
+    travelTimer.start(60 * 1000);
+
 });

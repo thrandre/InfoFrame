@@ -2188,6 +2188,38 @@ body {
 .news {
   background-color: #113D38;
 }
+.travel {
+  background-color: #2EA396;
+  font-size: 18px;
+  overflow: hidden;
+}
+.travel .row {
+  width: 100%;
+  float: left;
+  clear: both;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.travel .row:nth-child(2n) {
+  background-color: #237D73;
+}
+.travel .row.header {
+  background-color: #113D38;
+}
+.travel .row .col {
+  display: block;
+  float: left;
+  box-sizing: border-box;
+}
+.travel .row .col.col-25 {
+  width: 25%;
+}
+.travel .row .col.col-50 {
+  width: 50%;
+}
+.travel .departure {
+  text-align: right;
+}
 #clock {
   width: 150px;
   height: 150px;
