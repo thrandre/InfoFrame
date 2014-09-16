@@ -7,12 +7,12 @@
 
             var image = new Image();
 
-            var interval = window.setInterval(() => {
+            image.onload = () => {
                 if (image.complete) {
-                    window.clearInterval(interval);
                     deferred.resolve();
+                    image = null;
                 }
-            }, 500 );
+            };
 
             image.src = photoData.source_large;
 

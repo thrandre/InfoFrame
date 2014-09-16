@@ -13,14 +13,12 @@ module Views {
         }
 
         update(data: Moment) {
-            var time = this.el.find(".time"),
+            var time = this.el.find(".time .digital"),
                 date = this.el.find(".date");
 
-            time.find(".hour").text(data.format("HH"));
-            time.find(".minute").text(data.format("mm"));
+            time.text(data.format("HH:mm"));
 
-            date.find(".day").text(data.format("dddd"));
-            date.find(".dayMonth").text(data.format("Do MMM"));
+            date.text(data.format("ddd Do MMM"));
         }
     }
 

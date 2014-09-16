@@ -608,12 +608,12 @@ var Utils;
 
             var image = new Image();
 
-            var interval = window.setInterval(function () {
+            image.onload = function () {
                 if (image.complete) {
-                    window.clearInterval(interval);
                     deferred.resolve();
+                    image = null;
                 }
-            }, 500);
+            };
 
             image.src = photoData.source_large;
 
@@ -630,12 +630,11 @@ var Views;
 (function (Views) {
     var BackgroundView = (function (_super) {
         __extends(BackgroundView, _super);
-        function BackgroundView(el, mediator, controller, imageLoader) {
+        function BackgroundView(el, mediator, controller) {
             _super.call(this, el, controller);
             this.el = el;
             this.mediator = mediator;
             this.controller = controller;
-            this.imageLoader = imageLoader;
             this.currentPhoto = 0;
             this.initialize();
         }
@@ -713,20 +712,36 @@ var Views;
             this.updatePhotoSet(this.getEnvironmentTags(data));
         };
 
+        BackgroundView.prototype.fit = function (image) {
+            var canvasWidth = this.el.width(), canvasHeight = this.el.height(), imageWidth = image.width(), imageHeight = image.height(), aspect = imageWidth / imageHeight;
+
+            image.width(canvasWidth);
+        };
+
         BackgroundView.prototype.renderNext = function () {
+            var _this = this;
+            var deferred = $.Deferred();
+
             var l1 = this.el.find(".l1");
             var l2 = this.el.find(".l2");
 
-            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source_large + ")" });
+            l2.load(function () {
+                _this.fit(l2);
+                l2.velocity({ opacity: 1 }, {
+                    duration: 1000,
+                    complete: function () {
+                        l1.css({ opacity: 0 });
+                        l1.removeClass("l1").addClass("l2");
+                        l2.removeClass("l2").addClass("l1");
 
-            l2.velocity({ opacity: 1 }, {
-                duration: 1000,
-                complete: function () {
-                    l1.css({ opacity: 0 });
-                    l1.removeClass("l1").addClass("l2");
-                    l2.removeClass("l2").addClass("l1");
-                }
+                        deferred.resolve();
+                    }
+                });
             });
+
+            l2.attr("src", this.currentPhotoSet[this.currentPhoto].source_large);
+
+            return deferred.promise();
         };
 
         BackgroundView.prototype.render = function () {
@@ -739,9 +754,8 @@ var Views;
                 this.currentPhoto = 0;
             }
 
-            this.imageLoader.load(this.currentPhotoSet[this.currentPhoto]).then(function () {
-                _this.renderNext();
-                _this.currentPhoto++;
+            this.renderNext().then(function () {
+                return _this.currentPhoto++;
             });
         };
         return BackgroundView;
@@ -764,13 +778,11 @@ var Views;
         };
 
         ClockView.prototype.update = function (data) {
-            var time = this.el.find(".time"), date = this.el.find(".date");
+            var time = this.el.find(".time .digital"), date = this.el.find(".date");
 
-            time.find(".hour").text(data.format("HH"));
-            time.find(".minute").text(data.format("mm"));
+            time.text(data.format("HH:mm"));
 
-            date.find(".day").text(data.format("dddd"));
-            date.find(".dayMonth").text(data.format("Do MMM"));
+            date.text(data.format("ddd Do MMM"));
         };
         return ClockView;
     })(Simple.View);
@@ -803,20 +815,20 @@ var Views;
 
         WeatherView.prototype.compileTemplate = function () {
             this.template = this._template.compile({
-                ".level-1 i": function (e, d) {
+                ".symbol i": function (e, d) {
                     return e.removeClass().addClass("wi").addClass(d.icon);
                 },
-                ".temperature": function (e, d) {
+                ".temperature .val": function (e, d) {
                     return e.text(d.temperature);
                 },
                 ".description": function (e, d) {
                     return e.text(d.description);
                 },
-                ".rain-data": function (e, d) {
-                    return e.text(d.percipitation + " mm");
+                ".rain .val": function (e, d) {
+                    return e.text(d.percipitation);
                 },
-                ".wind-data": function (e, d) {
-                    return e.text(d.windSpeed + " m/s");
+                ".wind .val": function (e, d) {
+                    return e.text(d.windSpeed);
                 }
             });
         };
@@ -1047,7 +1059,6 @@ var noCacheUrl = function (url) {
 $(function () {
     var mediator = new Simple.Events();
 
-    var bubbleStage = new Bubbles.Stage($(".bubble-wrapper"), new Bubbles.BubbleFactory(), mediator);
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr("c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04");
 
@@ -1063,7 +1074,6 @@ $(function () {
 
     var updateView = new Views.UpdateView($(".update-info"), mediator);
 
-    var backgroundView = new Views.BackgroundView($(".background-wrapper"), mediator, new Controllers.BackgroundController(flickr), new Utils.ImageLoader());
     var clockView = new Views.ClockView($(".clock"), mediator);
     var weatherView = new Views.WeatherView($(".weather"), mediator);
 
@@ -1083,17 +1093,13 @@ $(function () {
 
     scheduler.schedule("tick-github-update", 5 * 60 * 1000, true);
     scheduler.schedule("tick-background-load", 60 * 60 * 1000, true);
-    scheduler.schedule("tick-background-render", 65 * 1000, true);
+    scheduler.schedule("tick-background-render", 10 * 1000, true);
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
     scheduler.schedule("tick-autoUpdater-check", 60 * 1000, true);
     scheduler.schedule("bubble-flip", 10 * 1000, false);
 
     window.SVG("clock").clock("100%").start();
-
-    $(window).resize(function () {
-        return bubbleStage.layout();
-    });
 });
 var Query;
 (function (Query) {

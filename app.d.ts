@@ -196,11 +196,10 @@ declare module Views {
         public el: JQuery;
         public mediator: Simple.EventEmitter;
         public controller: Controllers.BackgroundController;
-        public imageLoader: Utils.ImageLoader;
         private photos;
         private currentPhotoSet;
         private currentPhoto;
-        constructor(el: JQuery, mediator: Simple.EventEmitter, controller: Controllers.BackgroundController, imageLoader: Utils.ImageLoader);
+        constructor(el: JQuery, mediator: Simple.EventEmitter, controller: Controllers.BackgroundController);
         public initialize(): void;
         public getPhotos(): JQueryPromise<any>;
         public matchTags(wantedTags: string[], tags: string[]): number;
@@ -208,7 +207,8 @@ declare module Views {
         public updatePhotoSet(tags: string[]): void;
         public getEnvironmentTags(data: EnvironmentData): string[];
         public environmentUpdate(data: EnvironmentData): void;
-        public renderNext(): void;
+        public fit(image: JQuery): void;
+        public renderNext(): JQueryPromise<{}>;
         public render(): void;
     }
 }

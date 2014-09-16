@@ -10,7 +10,7 @@ module Views {
         private currentPhotoSet: Artwork.PhotoData[];
         private currentPhoto: number = 0;
 
-        constructor(public el: JQuery, public mediator: Simple.EventEmitter, public controller: Controllers.BackgroundController, public imageLoader: Utils.ImageLoader) {
+        constructor(public el: JQuery, public mediator: Simple.EventEmitter, public controller: Controllers.BackgroundController) {
             super(el, controller);
             this.initialize();
         }
@@ -82,20 +82,39 @@ module Views {
             this.updatePhotoSet(this.getEnvironmentTags(data));
         }
 
+        fit(image: JQuery) {
+            var canvasWidth = this.el.width(),
+                canvasHeight = this.el.height(),
+                imageWidth = image.width(),
+                imageHeight = image.height(),
+                aspect = imageWidth / imageHeight;
+
+                image.width(canvasWidth);
+        }
+
         renderNext() {
-            var l1 = this.el.find(".l1");
-            var l2 = this.el.find(".l2");
+            var deferred = $.Deferred();
 
-            l2.css({ "background-image": "url(" + this.currentPhotoSet[this.currentPhoto].source_large + ")" });
+            var l1 = this.el.find( ".l1" );
+            var l2 = this.el.find( ".l2" );
 
-            l2.velocity( { opacity: 1 }, {
-                duration: 1000,
-                complete: () => {
-                    l1.css( { opacity: 0 });
-                    l1.removeClass( "l1" ).addClass( "l2" );
-                    l2.removeClass( "l2" ).addClass( "l1" );
-                }
+            l2.load(() => {
+                this.fit(l2);
+                l2.velocity( { opacity: 1 }, {
+                    duration: 1000,
+                    complete: () => {
+                        l1.css( { opacity: 0 } );
+                        l1.removeClass( "l1" ).addClass( "l2" );
+                        l2.removeClass( "l2" ).addClass( "l1" );
+
+                        deferred.resolve();
+                    }
+                });
             });
+
+            l2.attr( "src", this.currentPhotoSet[this.currentPhoto].source_large );
+
+            return deferred.promise();
         }
 
         render() {
@@ -107,12 +126,7 @@ module Views {
                 this.currentPhoto = 0;
             }
 
-            this.imageLoader
-                .load( this.currentPhotoSet[this.currentPhoto] )
-                .then(() => {
-                    this.renderNext();
-                    this.currentPhoto++;
-                });
+            this.renderNext().then(() => this.currentPhoto++);
         }
 
     }

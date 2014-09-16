@@ -230,7 +230,6 @@ var noCacheUrl = (url: string) => {
 $(() => {
     var mediator = new Simple.Events();
 
-    var bubbleStage = new Bubbles.Stage( $( ".bubble-wrapper" ), new Bubbles.BubbleFactory(), mediator );
     var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
     var flickr = new Artwork.Flickr( "c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04" );
 
@@ -246,7 +245,6 @@ $(() => {
 
     var updateView = new Views.UpdateView( $(".update-info"), mediator );
 
-    var backgroundView = new Views.BackgroundView( $(".background-wrapper"), mediator, new Controllers.BackgroundController( flickr ), new Utils.ImageLoader() );
     var clockView = new Views.ClockView( $( ".clock" ), mediator );
     var weatherView = new Views.WeatherView( $( ".weather" ), mediator );
 
@@ -263,13 +261,11 @@ $(() => {
 
     scheduler.schedule( "tick-github-update", 5 * 60 * 1000, true );
     scheduler.schedule( "tick-background-load", 60 * 60 * 1000, true );
-    scheduler.schedule( "tick-background-render", 65 * 1000, true );
+    scheduler.schedule( "tick-background-render", 10 * 1000, true );
     scheduler.schedule( "tick-clock-trigger-update", 1000, true );
     scheduler.schedule( "tick-weather-trigger-update", 10 * 60 * 1000, true );
     scheduler.schedule( "tick-autoUpdater-check", 60 * 1000, true );
     scheduler.schedule( "bubble-flip", 10 * 1000, false );
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
-
-    $( window ).resize( () => bubbleStage.layout() );
 });

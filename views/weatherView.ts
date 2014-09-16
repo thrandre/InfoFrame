@@ -26,11 +26,11 @@ module Views {
 
         compileTemplate() {
             this.template = this._template.compile<Weather.WeatherData>( {
-                ".level-1 i"    : ( e, d ) => e.removeClass().addClass( "wi" ).addClass( d.icon ),
-                ".temperature"  : ( e, d ) => e.text( d.temperature ),
+                ".symbol i"    : ( e, d ) => e.removeClass().addClass( "wi" ).addClass( d.icon ),
+                ".temperature .val"  : ( e, d ) => e.text( d.temperature ),
                 ".description"  : ( e, d ) => e.text( d.description ),
-                ".rain-data"    : ( e, d ) => e.text( d.percipitation + " mm" ),
-                ".wind-data"    : ( e, d ) => e.text( d.windSpeed + " m/s")
+                ".rain .val"    : ( e, d ) => e.text( d.percipitation ),
+                ".wind .val"    : ( e, d ) => e.text( d.windSpeed )
             });
         }
 
