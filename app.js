@@ -1109,25 +1109,34 @@ $(function () {
 
     window.SVG("clock").clock("100%").start();
 
+    $.getJSON("http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?").then(function (data) {
+        console.log(window.ICAL.parse(data.contents));
+    });
+
     var travelTimer = new Timers.Timer(function () {
         return ruter.getTravelData("3010610").then(function (data) {
             var viewData = {
                 east: Query.fromArray(data).where(function (t) {
                     return t.direction == 1;
+                }).where(function (t) {
+                    return t.departure.add(5, 'minutes') > moment();
                 }).orderByAscending(function (t) {
-                    return t.departure.unix();
-                }).take(3).toArray(),
+                    return t.departure;
+                }).take(5).toArray(),
                 west: Query.fromArray(data).where(function (t) {
                     return t.direction == 2;
+                }).where(function (t) {
+                    return t.departure.add(5, 'minutes') > moment();
                 }).orderByAscending(function (t) {
-                    return t.departure.unix();
-                }).take(3).toArray()
+                    return t.departure;
+                }).take(5).toArray()
             };
             mediator.trigger("travel-update", viewData);
         });
     });
 
     travelTimer.start(60 * 1000);
+    travelTimer.trigger();
 });
 var Query;
 (function (Query) {
@@ -1530,13 +1539,13 @@ var Travel;
         };
 
         Ruter.prototype.getApiUrl = function (stopId) {
-            return "https://jsonp.nodejitsu.com/?url=http://reisapi.ruter.no/StopVisit/GetDepartures/" + stopId;
+            return "http://whateverorigin.org/get?url=http://reisapi.ruter.no/StopVisit/GetDepartures/" + stopId + "&callback=?";
         };
 
         Ruter.prototype.getTravelData = function (stopId) {
             var _this = this;
             return $.getJSON(this.getApiUrl(stopId)).then(function (data) {
-                return data.filter(function (i) {
+                return JSON.parse(data.contents).filter(function (i) {
                     return i.MonitoredVehicleJourney.DirectionRef > 0;
                 }).map(function (i) {
                     return _this.parseTravelData(i);
@@ -1586,6 +1595,11 @@ var Views;
                 },
                 ".departure": function (e, d) {
                     var secondsDiff = d.departure.diff(moment(), "seconds");
+
+                    if (secondsDiff < 420) {
+                        e.parent().addClass("urgent");
+                    }
+
                     if (secondsDiff < 45) {
                         e.text("Nå");
                         return;

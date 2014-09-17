@@ -33,7 +33,12 @@ module Views {
 					".destination": (e, d) => e.text(d.destination),
 					".departure": (e, d) => {
 						var secondsDiff = d.departure.diff(moment(), "seconds");
-						if (secondsDiff < 45) {
+
+						if (secondsDiff < 420) {
+						    e.parent().addClass("urgent");
+						}
+
+						if ( secondsDiff < 45 ) {
 							e.text( "Nå" );
 							return;
 						}

@@ -230,7 +230,7 @@ var noCacheUrl = (url: string) => {
 $(() => {
     var mediator = new Simple.Events();
 
-    var weatherProvider = new Weather.OpenWeatherMap("eee9d46aa90c56ff8b116ab88f2a5e3f");
+    var weatherProvider = new Weather.OpenWeatherMap( "eee9d46aa90c56ff8b116ab88f2a5e3f" );
     var flickr = new Artwork.Flickr( "c389742a61ae8e9474a14b57f1b3d19b", "126595250@N04" );
 
     var scheduler = new Timers.Scheduler(new Timers.TimerFactory(), mediator);
@@ -273,14 +273,19 @@ $(() => {
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
 
+    $.getJSON("http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?").then((data) => {
+        console.log((<any>window).ICAL.parse(data.contents));
+    });
+
     var travelTimer = new Timers.Timer( () => ruter.getTravelData( "3010610" ).then( ( data: Travel.TravelData[] ) => {
         var viewData: Views.TravelViewData = {
-            east: Query.fromArray( data ).where( t => t.direction == 1 ).orderByAscending( t => t.departure.unix() ).take( 3 ).toArray(),
-            west: Query.fromArray( data ).where( t => t.direction == 2 ).orderByAscending( t => t.departure.unix() ).take( 3 ).toArray()
+            east: Query.fromArray( data ).where( t => t.direction == 1 ).where(t => t.departure.add(5, 'minutes') > moment()).orderByAscending( t => t.departure ).take( 5 ).toArray(),
+            west: Query.fromArray( data ).where( t => t.direction == 2 ).where( t => t.departure.add( 5, 'minutes' ) > moment()).orderByAscending( t => t.departure ).take( 5 ).toArray()
         };
         mediator.trigger( "travel-update", viewData );
     }) );
 
-    travelTimer.start(60 * 1000);
+    travelTimer.start( 60 * 1000 );
+    travelTimer.trigger();
 
 });

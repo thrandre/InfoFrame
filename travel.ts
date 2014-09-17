@@ -23,12 +23,12 @@
         }
 
         private getApiUrl( stopId: string ): string {
-            return "https://jsonp.nodejitsu.com/?url=http://reisapi.ruter.no/StopVisit/GetDepartures/" + stopId;
+            return "http://whateverorigin.org/get?url=http://reisapi.ruter.no/StopVisit/GetDepartures/" + stopId + "&callback=?";
         }
 
         getTravelData( stopId: string ): JQueryPromise<TravelData[]> {
             return $.getJSON( this.getApiUrl( stopId ) )
-                .then( ( data ) => data.filter( i => i.MonitoredVehicleJourney.DirectionRef > 0 ).map( i => this.parseTravelData( i ) ) );
+                .then( ( data ) => JSON.parse( data.contents ).filter( i => i.MonitoredVehicleJourney.DirectionRef > 0 ).map( i => this.parseTravelData( i ) ));
         }
 
     }

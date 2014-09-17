@@ -188,6 +188,8 @@ html, body {
 	overflow: hidden;
 
 	.quadrant, .octant {
+		overflow: hidden;
+
 		.wrapper {
 			position: relative;
 			left: 50%;
@@ -284,9 +286,71 @@ html, body {
 }
 
 .travel {
-	background-color: #2EA396;
-	font-size: 18px;
-	overflow: hidden;
+	background-color: #39CAB9;
+	font-size: 22px;
+
+	.urgent {
+		font-weight: 700;
+	}
+
+	.departure {
+		text-align: right;
+	}
+
+	.list {
+		.row {
+			&:nth-child(2n) {
+				background-color: #2EA396;
+			}
+
+			&.header {
+				background-color: #237D73;
+			}
+
+			&.group-header {
+				background-color: #113D38;
+			}
+		}
+	}
+}
+
+.notifications {
+	background-color: #113D38;
+
+	.icon {
+		height: 30px;
+		background-image: url(http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg);
+		background-size: cover;
+		background-repeat: no-repeat;
+
+		display: block;
+
+		padding-right: 10px;
+	}
+}
+
+.unknown {
+	background-color: #237D73;
+}
+
+#clock {
+	width: 150px;
+	height: 150px;
+	margin-left: 0;
+}
+
+.list {
+	width: 100%;
+
+	float: left;
+	clear: both;
+
+	.group {
+		width: 100%;
+
+		float: left;
+		clear: both;
+	}
 
 	.row {
 		width: 100%;
@@ -297,19 +361,15 @@ html, body {
 		padding: 20px;
 		box-sizing: border-box;
 
-		&:nth-child(2n) {
-			background-color: #237D73;
-		}
-
-		&.header {
-			background-color: #113D38;
-		}
-
 		.col {
 			display: block;
 			float: left;
 			
 			box-sizing: border-box;
+
+			&.col-10 {
+				width: 10%;
+			}
 
 			&.col-25 {
 				width: 25%;
@@ -318,16 +378,14 @@ html, body {
 			&.col-50 {
 				width: 50%;
 			}
+
+			&.col-75 {
+				width: 75%;
+			}
+
+			&.col-90 {
+				width: 90%;
+			}
 		}
 	}
-
-	.departure {
-		text-align: right;
-	}
-}
-
-#clock {
-	width: 150px;
-	height: 150px;
-	margin-left: 0;
 }

@@ -20,6 +20,7 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="js\clock.js" />
+    <Content Include="js\vendor\ical.js" />
     <Content Include="js\vendor\jquery.velocity.min.js" />
     <Content Include="js\vendor\jsonPath.js" />
     <Content Include="styles\font-awesome\css\font-awesome.css" />
