@@ -22,7 +22,6 @@ module Views {
             }
 
 		    var animate = () => {
-		        console.log("animate");
                 this.loop = innerEl.velocity( {
                     top: targetTop
                 },

@@ -1585,7 +1585,6 @@ var Views;
             }
 
             var animate = function () {
-                console.log("animate");
                 _this.loop = innerEl.velocity({
                     top: targetTop
                 }, {
