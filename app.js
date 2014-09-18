@@ -1137,6 +1137,8 @@ $(function () {
 
     travelTimer.start(60 * 1000);
     travelTimer.trigger();
+
+    window.CalParser.parse(["foo"]);
 });
 var Query;
 (function (Query) {
@@ -1578,14 +1580,18 @@ var Views;
         }
         AutoScrollView.prototype.autoscroll = function (innerEl, duration) {
             var _this = this;
-            var targetTop = (innerEl.height() - this.el.height()) * -1;
-
-            if (this.loop) {
-                this.loop.stop();
+            if (this.animation) {
+                return;
             }
 
-            var animate = function () {
-                _this.loop = innerEl.velocity({
+            this.animation = function () {
+                var targetTop = (innerEl.height() - _this.el.height()) * -1;
+
+                if (targetTop >= 0) {
+                    return;
+                }
+
+                innerEl.velocity({
                     top: targetTop
                 }, {
                     duration: duration,
@@ -1593,13 +1599,13 @@ var Views;
                 }).velocity({
                     top: 0
                 }, {
-                    duration: 500,
+                    duration: 1000,
                     delay: 1000,
-                    complete: animate
+                    complete: _this.animation
                 });
             };
 
-            animate();
+            this.animation();
         };
         return AutoScrollView;
     })(Simple.View);

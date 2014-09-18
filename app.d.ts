@@ -442,7 +442,7 @@ declare module Views {
     }
     class AutoScrollView extends Simple.View {
         public el: JQuery;
-        private loop;
+        private animation;
         constructor(el: JQuery);
         public autoscroll(innerEl: JQuery, duration: number): void;
     }

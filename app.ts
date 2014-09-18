@@ -288,4 +288,6 @@ $(() => {
     travelTimer.start( 60 * 1000 );
     travelTimer.trigger();
 
+    (<any>window).CalParser.parse(["foo"]);
+
 });

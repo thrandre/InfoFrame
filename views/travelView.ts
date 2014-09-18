@@ -8,21 +8,26 @@ module Views {
 	}
 
 	export class AutoScrollView extends Simple.View {
-        private loop;
+        private animation;
 
 		constructor( public el: JQuery ) {
 			super(el);
 		}
 
 		autoscroll( innerEl: JQuery, duration: number ) {
-            var targetTop = ( innerEl.height() - this.el.height() ) * -1;
 
-            if (this.loop) {
-                this.loop.stop();
+            if ( this.animation ) {
+                return;
             }
 
-		    var animate = () => {
-                this.loop = innerEl.velocity( {
+		    this.animation = () => {
+                var targetTop = ( innerEl.height() - this.el.height() ) * -1;
+
+                if ( targetTop >= 0 ) {
+                    return;
+                }
+
+                innerEl.velocity( {
                     top: targetTop
                 },
                 {
@@ -33,13 +38,13 @@ module Views {
                     top: 0    
                 },
                 {
-                    duration: 500,
+                    duration: 1000,
                     delay: 1000,
-                    complete: animate
+                    complete: this.animation
                 });
             };
 
-		    animate();
+		    this.animation();
 		}
 
 	}
