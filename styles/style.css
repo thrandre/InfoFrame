@@ -2234,6 +2234,7 @@ body {
   width: 100%;
   float: left;
   clear: both;
+  position: relative;
 }
 .list .group {
   width: 100%;

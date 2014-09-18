@@ -1570,6 +1570,42 @@ function isUndefinedOrEmpty(obj) {
 ///<reference path="../simple.ts"/>
 var Views;
 (function (Views) {
+    var AutoScrollView = (function (_super) {
+        __extends(AutoScrollView, _super);
+        function AutoScrollView(el) {
+            _super.call(this, el);
+            this.el = el;
+        }
+        AutoScrollView.prototype.autoscroll = function (innerEl, duration) {
+            var _this = this;
+            var targetTop = (innerEl.height() - this.el.height()) * -1;
+
+            if (this.loop) {
+                this.loop.stop();
+            }
+
+            var animate = function () {
+                console.log("animate");
+                _this.loop = innerEl.velocity({
+                    top: targetTop
+                }, {
+                    duration: duration,
+                    delay: 1000
+                }).velocity({
+                    top: 0
+                }, {
+                    duration: 500,
+                    delay: 1000,
+                    complete: animate
+                });
+            };
+
+            animate();
+        };
+        return AutoScrollView;
+    })(Simple.View);
+    Views.AutoScrollView = AutoScrollView;
+
     var TravelView = (function (_super) {
         __extends(TravelView, _super);
         function TravelView(el, mediator) {
@@ -1628,11 +1664,11 @@ var Views;
         };
 
         TravelView.prototype.update = function (data) {
-            console.log(data);
             this.template(data);
+            this.autoscroll(this.el.find(".list"), 5000);
         };
         return TravelView;
-    })(Simple.View);
+    })(AutoScrollView);
     Views.TravelView = TravelView;
 })(Views || (Views = {}));
 //# sourceMappingURL=app.js.map

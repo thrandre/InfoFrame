@@ -7,7 +7,45 @@ module Views {
 		west: Travel.TravelData[];
 	}
 
-	export class TravelView extends Simple.View {
+	export class AutoScrollView extends Simple.View {
+        private loop;
+
+		constructor( public el: JQuery ) {
+			super(el);
+		}
+
+		autoscroll( innerEl: JQuery, duration: number ) {
+            var targetTop = ( innerEl.height() - this.el.height() ) * -1;
+
+            if (this.loop) {
+                this.loop.stop();
+            }
+
+		    var animate = () => {
+		        console.log("animate");
+                this.loop = innerEl.velocity( {
+                    top: targetTop
+                },
+                {
+                    duration: duration,
+                    delay: 1000
+                })
+                .velocity({
+                    top: 0    
+                },
+                {
+                    duration: 500,
+                    delay: 1000,
+                    complete: animate
+                });
+            };
+
+		    animate();
+		}
+
+	}
+
+	export class TravelView extends AutoScrollView {
 		private template;
 
 		constructor( public el: JQuery, public mediator: Simple.EventEmitter ) {
@@ -17,7 +55,7 @@ module Views {
 
 		initialize() {
 			this.mediator.on( "travel-update", this.update, this );
-			this.compileTemplate();
+		    this.compileTemplate();
 		}
 
 		compileTemplate() {
@@ -35,7 +73,7 @@ module Views {
 						var secondsDiff = d.departure.diff(moment(), "seconds");
 
 						if (secondsDiff < 420) {
-						    e.parent().addClass("urgent");
+							e.parent().addClass("urgent");
 						}
 
 						if ( secondsDiff < 45 ) {
@@ -62,8 +100,8 @@ module Views {
 		}
 
 		update(data: TravelViewData) {
-			console.log(data);
-			this.template( data );
+            this.template( data );
+            this.autoscroll( this.el.find( ".list" ), 5000 );
 		}
 	}
 

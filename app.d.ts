@@ -440,7 +440,13 @@ declare module Views {
         east: Travel.TravelData[];
         west: Travel.TravelData[];
     }
-    class TravelView extends Simple.View {
+    class AutoScrollView extends Simple.View {
+        public el: JQuery;
+        private loop;
+        constructor(el: JQuery);
+        public autoscroll(innerEl: JQuery, duration: number): void;
+    }
+    class TravelView extends AutoScrollView {
         public el: JQuery;
         public mediator: Simple.EventEmitter;
         private template;
