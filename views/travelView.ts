@@ -89,7 +89,7 @@ module Views {
 							return;
 						}
 
-						e.text(d.departure.format("HH:mm"));
+						e.text("ca " + d.departure.format("HH:mm"));
 					}
 				});
 
