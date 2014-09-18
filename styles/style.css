@@ -2206,10 +2206,10 @@ body {
   background-color: #2EA396;
 }
 .travel .list .row.header {
-  background-color: #237D73;
+  background-color: #2EA396;
 }
 .travel .list .row.group-header {
-  background-color: #113D38;
+  background-color: #237D73;
 }
 .notifications {
   background-color: #113D38;
@@ -2223,7 +2223,7 @@ body {
   padding-right: 10px;
 }
 .unknown {
-  background-color: #237D73;
+  background-color: #74C8BE;
 }
 #clock {
   width: 150px;
