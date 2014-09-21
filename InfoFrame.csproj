@@ -19,6 +19,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="js\calParser.js" />
     <Content Include="js\clock.js" />
     <Content Include="js\vendor\ical.js" />
     <Content Include="js\vendor\jquery.velocity.min.js" />
@@ -71,9 +72,11 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="artwork.ts" />
     <TypeScriptCompile Include="controllers\backgroundController.ts" />
+    <TypeScriptCompile Include="travel.ts" />
     <TypeScriptCompile Include="typing\velocity-animate.d.ts" />
     <TypeScriptCompile Include="utils\extensions.ts" />
     <TypeScriptCompile Include="utils\imageLoader.ts" />
+    <TypeScriptCompile Include="views\autoScrollView.ts" />
     <TypeScriptCompile Include="views\backroundView.ts" />
     <TypeScriptCompile Include="bubbles.ts" />
     <TypeScriptCompile Include="typing\jquery.d.ts" />
@@ -83,11 +86,12 @@
     <TypeScriptCompile Include="simple.ts" />
     <TypeScriptCompile Include="timers.ts" />
     <TypeScriptCompile Include="views\clockView.ts" />
+    <TypeScriptCompile Include="views\calendarView.ts" />
     <TypeScriptCompile Include="views\updateView.ts" />
     <TypeScriptCompile Include="views\views.ts" />
     <TypeScriptCompile Include="views\travelView.ts" />
     <TypeScriptCompile Include="views\weatherView.ts" />
-    <TypeScriptCompile Include="travel.ts" />
+    <TypeScriptCompile Include="calendar.ts" />
     <TypeScriptCompile Include="weather.ts" />
   </ItemGroup>
   <ItemGroup>

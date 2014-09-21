@@ -301,6 +301,25 @@ declare class AutoUpdater {
     public check(): void;
 }
 declare var noCacheUrl: (url: string) => string;
+declare module Calendar {
+    interface CalendarEvent {
+        title: string;
+        owner: string;
+        start: Moment;
+        end: Moment;
+    }
+    interface CalendarSource {
+        url: string;
+        owner: string;
+    }
+    interface CalendarProvider {
+        getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<CalendarEvent[]>;
+    }
+    class ICalCalendarProvider implements CalendarProvider {
+        private parseEventData(owner, data);
+        public getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<CalendarEvent[]>;
+    }
+}
 declare module Query {
     interface IEnumerableFactory {
         fromArray<T>(arr: T[]): IEnumerable<T>;
@@ -436,15 +455,28 @@ declare function isUndefined(obj: any): boolean;
 declare function isEmpty(obj: any[]): boolean;
 declare function isUndefinedOrEmpty(obj: any[]): boolean;
 declare module Views {
-    interface TravelViewData {
-        east: Travel.TravelData[];
-        west: Travel.TravelData[];
-    }
     class AutoScrollView extends Simple.View {
         public el: JQuery;
         private animation;
         constructor(el: JQuery);
         public autoscroll(innerEl: JQuery, duration: number): void;
+    }
+}
+declare module Views {
+    class CalendarView extends AutoScrollView {
+        public el: JQuery;
+        public mediator: Simple.EventEmitter;
+        private template;
+        constructor(el: JQuery, mediator: Simple.EventEmitter);
+        public initialize(): void;
+        public compileTemplate(): void;
+        public update(data: TravelViewData): void;
+    }
+}
+declare module Views {
+    interface TravelViewData {
+        east: Travel.TravelData[];
+        west: Travel.TravelData[];
     }
     class TravelView extends AutoScrollView {
         public el: JQuery;

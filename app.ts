@@ -252,6 +252,10 @@ $(() => {
 
     var travelView = new Views.TravelView( $( ".travel" ), mediator );
 
+    var calendar = new Calendar.ICalCalendarProvider();
+
+    var calenderView = new Views.CalendarView( $( ".calendar" ), mediator );
+
     mediator.on( "environment-update", ( data ) => console.log( data ) );
     mediator.on( "github-push", ( data ) => console.log( data ) );
 
@@ -273,10 +277,6 @@ $(() => {
 
     ( <any>window ).SVG( "clock" ).clock( "100%" ).start();
 
-    $.getJSON("http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?").then((data) => {
-        console.log((<any>window).ICAL.parse(data.contents));
-    });
-
     var travelTimer = new Timers.Timer( () => ruter.getTravelData( "3010610" ).then( ( data: Travel.TravelData[] ) => {
         var viewData: Views.TravelViewData = {
             east: Query.fromArray( data ).where( t => t.direction == 1 ).where(t => t.departure.add(5, 'minutes') > moment()).orderByAscending( t => t.departure ).take( 5 ).toArray(),
@@ -288,6 +288,20 @@ $(() => {
     travelTimer.start( 60 * 1000 );
     travelTimer.trigger();
 
-    (<any>window).CalParser.parse(["foo"]);
+    var calendarSources = [
+        {
+            owner: "Thomas",
+            url: "http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?"
+        },
+        {
+            owner: "Caroline",
+            url: "http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/97ab575d-b24f-454c-adc7-8247e5218994/e676ed5e-dc22-425a-94e5-b2396e146762/cid-c2490ffbe195f761/calendar.ics&callback=?"
+        }
+    ];
+
+    var calendarTimer = new Timers.Timer( () => calendar.getEventData( calendarSources, moment() ).then( ( data: Calendar.CalendarEvent[] ) => mediator.trigger( "calendar-update", data ) ) );
+
+    calendarTimer.start( 10 * 60 * 1000 );
+    calendarTimer.trigger();
 
 });

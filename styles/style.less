@@ -245,6 +245,8 @@ html, body {
 .weather {
 	background-color: #237D73;
 	
+	text-transform: uppercase;
+
 	.symbol {
 		width: 100%;
 		font-size: 120px;
@@ -281,8 +283,33 @@ html, body {
 	}
 }
 
-.news {
+.calendar {
 	background-color: #113D38;
+
+	text-transform: uppercase;
+
+	.list {
+		.time, .title, .owner {
+			float: left;
+			clear: both;
+		}
+
+		.time {
+			font-size: 18px;
+			
+			.start {
+				font-weight: 700;
+			}
+		}
+
+		.title {
+			font-size: 26px;
+		}
+
+		.owner {
+			font-size: 14px;
+		}
+	}
 }
 
 .travel {
@@ -298,6 +325,9 @@ html, body {
 	}
 
 	.list {
+		
+		text-transform: uppercase;
+
 		.row {
 			&:nth-child(2n) {
 				background-color: #2EA396;
@@ -360,7 +390,7 @@ html, body {
 		float: left;
 		clear: both;
 
-		padding: 20px;
+		padding: 30px;
 		box-sizing: border-box;
 
 		.col {
@@ -387,6 +417,10 @@ html, body {
 
 			&.col-90 {
 				width: 90%;
+			}
+
+			&.col-100 {
+				width: 100%;
 			}
 		}
 	}

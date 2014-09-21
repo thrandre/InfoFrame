@@ -7,48 +7,6 @@ module Views {
 		west: Travel.TravelData[];
 	}
 
-	export class AutoScrollView extends Simple.View {
-        private animation;
-
-		constructor( public el: JQuery ) {
-			super(el);
-		}
-
-		autoscroll( innerEl: JQuery, duration: number ) {
-
-            if ( this.animation ) {
-                return;
-            }
-
-		    this.animation = () => {
-                var targetTop = ( innerEl.height() - this.el.height() ) * -1;
-
-                if ( targetTop >= 0 ) {
-                    return;
-                }
-
-                innerEl.velocity( {
-                    top: targetTop
-                },
-                {
-                    duration: duration,
-                    delay: 1000
-                })
-                .velocity({
-                    top: 0    
-                },
-                {
-                    duration: 1000,
-                    delay: 1000,
-                    complete: this.animation
-                });
-            };
-
-		    this.animation();
-		}
-
-	}
-
 	export class TravelView extends AutoScrollView {
 		private template;
 
@@ -59,7 +17,7 @@ module Views {
 
 		initialize() {
 			this.mediator.on( "travel-update", this.update, this );
-		    this.compileTemplate();
+			this.compileTemplate();
 		}
 
 		compileTemplate() {
@@ -104,8 +62,8 @@ module Views {
 		}
 
 		update(data: TravelViewData) {
-            this.template( data );
-            this.autoscroll( this.el.find( ".list" ), 5000 );
+			this.template( data );
+			this.autoscroll( this.el.find( ".list" ), 5000 );
 		}
 	}
 

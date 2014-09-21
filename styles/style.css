@@ -2160,6 +2160,7 @@ body {
 }
 .weather {
   background-color: #237D73;
+  text-transform: uppercase;
 }
 .weather .symbol {
   width: 100%;
@@ -2189,8 +2190,27 @@ body {
   font-size: 40px;
   vertical-align: middle;
 }
-.news {
+.calendar {
   background-color: #113D38;
+  text-transform: uppercase;
+}
+.calendar .list .time,
+.calendar .list .title,
+.calendar .list .owner {
+  float: left;
+  clear: both;
+}
+.calendar .list .time {
+  font-size: 18px;
+}
+.calendar .list .time .start {
+  font-weight: 700;
+}
+.calendar .list .title {
+  font-size: 26px;
+}
+.calendar .list .owner {
+  font-size: 14px;
 }
 .travel {
   background-color: #39CAB9;
@@ -2201,6 +2221,9 @@ body {
 }
 .travel .departure {
   text-align: right;
+}
+.travel .list {
+  text-transform: uppercase;
 }
 .travel .list .row:nth-child(2n) {
   background-color: #2EA396;
@@ -2245,7 +2268,7 @@ body {
   width: 100%;
   float: left;
   clear: both;
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
 }
 .list .row .col {
@@ -2267,4 +2290,7 @@ body {
 }
 .list .row .col.col-90 {
   width: 90%;
+}
+.list .row .col.col-100 {
+  width: 100%;
 }

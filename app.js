@@ -1085,6 +1085,10 @@ $(function () {
 
     var travelView = new Views.TravelView($(".travel"), mediator);
 
+    var calendar = new Calendar.ICalCalendarProvider();
+
+    var calenderView = new Views.CalendarView($(".calendar"), mediator);
+
     mediator.on("environment-update", function (data) {
         return console.log(data);
     });
@@ -1108,10 +1112,6 @@ $(function () {
     scheduler.schedule("bubble-flip", 10 * 1000, false);
 
     window.SVG("clock").clock("100%").start();
-
-    $.getJSON("http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?").then(function (data) {
-        console.log(window.ICAL.parse(data.contents));
-    });
 
     var travelTimer = new Timers.Timer(function () {
         return ruter.getTravelData("3010610").then(function (data) {
@@ -1138,8 +1138,68 @@ $(function () {
     travelTimer.start(60 * 1000);
     travelTimer.trigger();
 
-    window.CalParser.parse(["foo"]);
+    var calendarSources = [
+        {
+            owner: "Thomas",
+            url: "http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?"
+        },
+        {
+            owner: "Caroline",
+            url: "http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/97ab575d-b24f-454c-adc7-8247e5218994/e676ed5e-dc22-425a-94e5-b2396e146762/cid-c2490ffbe195f761/calendar.ics&callback=?"
+        }
+    ];
+
+    var calendarTimer = new Timers.Timer(function () {
+        return calendar.getEventData(calendarSources, moment()).then(function (data) {
+            return mediator.trigger("calendar-update", data);
+        });
+    });
+
+    calendarTimer.start(10 * 60 * 1000);
+    calendarTimer.trigger();
 });
+var Calendar;
+(function (Calendar) {
+    var ICalCalendarProvider = (function () {
+        function ICalCalendarProvider() {
+        }
+        ICalCalendarProvider.prototype.parseEventData = function (owner, data) {
+            return {
+                title: data[1].filter(function (p) {
+                    return p[0] === "summary";
+                })[0][3],
+                owner: owner,
+                start: moment(data[1].filter(function (p) {
+                    return p[0] === "dtstart";
+                })[0][3]),
+                end: moment(data[1].filter(function (p) {
+                    return p[0] === "dtend";
+                })[0][3])
+            };
+        };
+
+        ICalCalendarProvider.prototype.getEventData = function (sources, today) {
+            var _this = this;
+            var promises = sources.map(function (s) {
+                return $.getJSON(s.url).then(function (data) {
+                    return window.ICAL.parse(data.contents)[1][2].filter(function (e) {
+                        return e[0] === "vevent";
+                    }).map(function (e) {
+                        return _this.parseEventData(s.owner, e);
+                    });
+                });
+            });
+
+            return $.when.apply($, promises).then(function () {
+                return Query.fromArray([].concat.apply([], arguments)).where(function (e) {
+                    return e.start.isSame(today, "day") || e.end.isSame(today, "day");
+                }).toArray();
+            });
+        };
+        return ICalCalendarProvider;
+    })();
+    Calendar.ICalCalendarProvider = ICalCalendarProvider;
+})(Calendar || (Calendar = {}));
 var Query;
 (function (Query) {
     function fromArray(arr) {
@@ -1569,7 +1629,6 @@ function isEmpty(obj) {
 function isUndefinedOrEmpty(obj) {
     return isUndefined(obj) || isEmpty(obj);
 }
-///<reference path="../simple.ts"/>
 var Views;
 (function (Views) {
     var AutoScrollView = (function (_super) {
@@ -1610,7 +1669,62 @@ var Views;
         return AutoScrollView;
     })(Simple.View);
     Views.AutoScrollView = AutoScrollView;
+})(Views || (Views = {}));
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
+    var CalendarView = (function (_super) {
+        __extends(CalendarView, _super);
+        function CalendarView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
+        }
+        CalendarView.prototype.initialize = function () {
+            this.mediator.on("calendar-update", this.update, this);
+            this.compileTemplate();
+        };
 
+        CalendarView.prototype.compileTemplate = function () {
+            var itemTemplate = new Simple.Template(function () {
+                return $("<div class=\"row\">" + "<span class=\"col col-100\">" + "<span class=\"owner\"></span>" + "<span class=\"time\">" + "<span class=\"start\"></span> - " + "<span class=\"end\"></span>" + "</span>" + "<span class=\"title\"></span>" + "</span>" + "</div>");
+            }).compile({
+                ".time .start": function (e, d) {
+                    return e.text(d.start.format("HH:mm"));
+                },
+                ".time .end": function (e, d) {
+                    return e.text(d.end.format("HH:mm"));
+                },
+                ".title": function (e, d) {
+                    return e.text(d.title);
+                },
+                ".owner": function (e, d) {
+                    return e.text(d.owner);
+                }
+            });
+
+            this.template = this._template.compile({
+                ".list": function (e, d) {
+                    console.log(d);
+                    e.empty().append(d.map(function (i) {
+                        return itemTemplate(i);
+                    }));
+                }
+            });
+        };
+
+        CalendarView.prototype.update = function (data) {
+            this.template(data);
+            this.autoscroll(this.el.find(".list"), 5000);
+        };
+        return CalendarView;
+    })(Views.AutoScrollView);
+    Views.CalendarView = CalendarView;
+})(Views || (Views = {}));
+///<reference path="../simple.ts"/>
+var Views;
+(function (Views) {
     var TravelView = (function (_super) {
         __extends(TravelView, _super);
         function TravelView(el, mediator) {
@@ -1673,7 +1787,7 @@ var Views;
             this.autoscroll(this.el.find(".list"), 5000);
         };
         return TravelView;
-    })(AutoScrollView);
+    })(Views.AutoScrollView);
     Views.TravelView = TravelView;
 })(Views || (Views = {}));
 //# sourceMappingURL=app.js.map
