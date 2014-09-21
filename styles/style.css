@@ -2201,17 +2201,17 @@ body {
   clear: both;
 }
 .calendar .list .time {
-  font-size: 24px;
+  font-size: 28px;
 }
 .calendar .list .time .start {
   font-weight: 700;
 }
 .calendar .list .title {
-  font-size: 28px;
+  font-size: 34px;
   padding-top: 10px;
 }
 .calendar .list .owner {
-  font-size: 18px;
+  font-size: 24px;
 }
 .travel {
   background-color: #39CAB9;
