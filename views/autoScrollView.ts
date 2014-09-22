@@ -7,7 +7,7 @@
             super( el );
         }
 
-        autoscroll( innerEl: JQuery, duration: number ) {
+        autoscroll( innerEl: JQuery, speed: number ) {
 
             if ( this.animation ) {
                 return;
@@ -20,6 +20,8 @@
                     return;
                 }
 
+                var duration = (targetTop * -1 / 100) * speed;
+
                 innerEl.velocity( {
                     top: targetTop
                 },
@@ -31,7 +33,7 @@
                         top: 0
                     },
                     {
-                        duration: 1000,
+                        duration: duration/2,
                         delay: 1000,
                         complete: this.animation
                     });

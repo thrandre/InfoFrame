@@ -285,30 +285,32 @@ html, body {
 
 .calendar {
 	background-color: #113D38;
-
 	text-transform: uppercase;
+	line-height: 1.5;
 
 	.list {
+		.header {
+			font-size: 34px;
+		}
+
 		.time, .title, .owner {
 			float: left;
 			clear: both;
 		}
 
 		.time {
-			font-size: 28px;
-			
-			.start {
-				font-weight: 700;
-			}
+			font-size: 20px;
+			color: #35BDAD;
 		}
 
 		.title {
 			font-size: 34px;
-			padding-top: 10px;
+			font-weight: 700;
 		}
 
 		.owner {
-			font-size: 24px;
+			font-size: 18px;
+			color: #237D73;
 		}
 	}
 }
@@ -361,7 +363,7 @@ html, body {
 }
 
 .unknown {
-	background-color: #74C8BE;
+	background-color: #237D73;
 }
 
 #clock {

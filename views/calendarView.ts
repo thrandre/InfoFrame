@@ -2,6 +2,12 @@
 
 module Views {
 
+	export interface CalendarViewData
+	{
+		today: Calendar.CalendarEvent[];
+		tomorrow: Calendar.CalendarEvent[];	
+	}
+
 	export class CalendarView extends AutoScrollView {
 		private template;
 
@@ -36,10 +42,13 @@ module Views {
 					".owner": (e, d) => e.text(d.owner)
 				});
 
-			this.template = this._template.compile<Calendar.CalendarEvent[]>({
-				".list": (e, d) => {
+			this.template = this._template.compile<CalendarViewData>({
+				".today": (e, d) => {
 					console.log(d);
-					e.empty().append( d.map( i => itemTemplate( i ) ) );
+					e.empty().append( d.today.map( i => itemTemplate( i ) ) );
+				},
+				".tomorrow": ( e, d ) => {
+					e.empty().append( d.tomorrow.map( i => itemTemplate( i ) ) );
 				}
 			});
 		}

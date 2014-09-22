@@ -63,7 +63,7 @@ module Views {
 
 		update(data: TravelViewData) {
 			this.template( data );
-			this.autoscroll( this.el.find( ".list" ), 5000 );
+			this.autoscroll( this.el.find( ".list" ), 3000 );
 		}
 	}
 

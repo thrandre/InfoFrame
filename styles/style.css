@@ -2193,6 +2193,10 @@ body {
 .calendar {
   background-color: #113D38;
   text-transform: uppercase;
+  line-height: 1.5;
+}
+.calendar .list .header {
+  font-size: 34px;
 }
 .calendar .list .time,
 .calendar .list .title,
@@ -2201,17 +2205,16 @@ body {
   clear: both;
 }
 .calendar .list .time {
-  font-size: 28px;
-}
-.calendar .list .time .start {
-  font-weight: 700;
+  font-size: 20px;
+  color: #35BDAD;
 }
 .calendar .list .title {
   font-size: 34px;
-  padding-top: 10px;
+  font-weight: 700;
 }
 .calendar .list .owner {
-  font-size: 24px;
+  font-size: 18px;
+  color: #237D73;
 }
 .travel {
   background-color: #39CAB9;
@@ -2247,7 +2250,7 @@ body {
   padding-right: 10px;
 }
 .unknown {
-  background-color: #74C8BE;
+  background-color: #237D73;
 }
 #clock {
   width: 150px;

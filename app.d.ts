@@ -307,17 +307,20 @@ declare module Calendar {
         owner: string;
         start: Moment;
         end: Moment;
+        recur: any;
     }
     interface CalendarSource {
         url: string;
         owner: string;
     }
     interface CalendarProvider {
-        getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<CalendarEvent[]>;
+        getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<Views.CalendarViewData>;
     }
     class ICalCalendarProvider implements CalendarProvider {
         private parseEventData(owner, data);
-        public getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<CalendarEvent[]>;
+        public parseRecurRule(recur: string, start: Moment): any;
+        public shouldIncludeEvent(event: CalendarEvent, today: Moment): boolean;
+        public getEventData(sources: CalendarSource[], today: Moment): JQueryPromise<Views.CalendarViewData>;
     }
 }
 declare module Query {
@@ -459,10 +462,14 @@ declare module Views {
         public el: JQuery;
         private animation;
         constructor(el: JQuery);
-        public autoscroll(innerEl: JQuery, duration: number): void;
+        public autoscroll(innerEl: JQuery, speed: number): void;
     }
 }
 declare module Views {
+    interface CalendarViewData {
+        today: Calendar.CalendarEvent[];
+        tomorrow: Calendar.CalendarEvent[];
+    }
     class CalendarView extends AutoScrollView {
         public el: JQuery;
         public mediator: Simple.EventEmitter;

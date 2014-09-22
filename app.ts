@@ -299,7 +299,7 @@ $(() => {
         }
     ];
 
-    var calendarTimer = new Timers.Timer( () => calendar.getEventData( calendarSources, moment() ).then( ( data: Calendar.CalendarEvent[] ) => mediator.trigger( "calendar-update", data ) ) );
+    var calendarTimer = new Timers.Timer( () => calendar.getEventData( calendarSources, moment() ).then( ( data: Views.CalendarViewData ) => mediator.trigger( "calendar-update", data ) ) );
 
     calendarTimer.start( 10 * 60 * 1000 );
     calendarTimer.trigger();

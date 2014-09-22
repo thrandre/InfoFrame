@@ -1164,18 +1164,87 @@ var Calendar;
         function ICalCalendarProvider() {
         }
         ICalCalendarProvider.prototype.parseEventData = function (owner, data) {
-            return {
-                title: data[1].filter(function (p) {
-                    return p[0] === "summary";
-                })[0][3],
-                owner: owner,
-                start: moment(data[1].filter(function (p) {
-                    return p[0] === "dtstart";
-                })[0][3]),
-                end: moment(data[1].filter(function (p) {
-                    return p[0] === "dtend";
-                })[0][3])
+            var _this = this;
+            var ifNotNull = function (obj, accessor) {
+                return obj ? accessor(obj) : "";
             };
+
+            var title = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "summary";
+            })[0], function (o) {
+                return o[3];
+            });
+            var start = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "dtstart";
+            })[0], function (o) {
+                return moment(o[3]);
+            });
+            var end = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "dtend";
+            })[0], function (o) {
+                return moment(o[3]);
+            });
+            var recur = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "rrule";
+            })[0], function (o) {
+                return _this.parseRecurRule(o[3], start);
+            });
+
+            return {
+                title: title,
+                owner: owner,
+                start: start,
+                end: end,
+                recur: recur
+            };
+        };
+
+        ICalCalendarProvider.prototype.parseRecurRule = function (recur, start) {
+            var rule = {};
+            console.log(recur);
+            recur.split(";").map(function (r) {
+                return r.split("=");
+            }).forEach(function (r) {
+                switch (r[0]) {
+                    case "FREQ":
+                        $.extend(rule, { freq: window.RRule[r[1]] });
+                        break;
+                    case "INTERVAL":
+                        $.extend(rule, { interval: parseInt(r[1]) });
+                        break;
+                    case "BYDAY":
+                        $.extend(rule, { byweekday: r[1].split(",").map(function (d) {
+                                return window.RRule[d];
+                            }) });
+                        break;
+                    case "UNTIL":
+                        $.extend(rule, { until: moment(r[1]).toDate() });
+                        break;
+                    case "DTSTART":
+                        $.extend(rule, { dtstart: moment(r[1]).toDate() });
+                        break;
+                    case "WKST":
+                        $.extend(rule, { wkst: window.RRule[r[1]] });
+                        break;
+                }
+            });
+
+            if (!rule.dtstart) {
+                rule.dtstart = start.toDate();
+            }
+
+            return rule;
+        };
+
+        ICalCalendarProvider.prototype.shouldIncludeEvent = function (event, today) {
+            var recurMatch = false;
+
+            if (event.recur) {
+                var rule = new window.RRule(event.recur);
+                recurMatch = rule.between(today.clone().startOf("day").toDate(), today.clone().endOf("day").toDate()).length > 0;
+            }
+
+            return event.start.isSame(today, "day") || event.end.isSame(today, "day") || recurMatch;
         };
 
         ICalCalendarProvider.prototype.getEventData = function (sources, today) {
@@ -1191,9 +1260,15 @@ var Calendar;
             });
 
             return $.when.apply($, promises).then(function () {
-                return Query.fromArray([].concat.apply([], arguments)).where(function (e) {
-                    return e.start.isSame(today, "day") || e.end.isSame(today, "day");
-                }).toArray();
+                var all = Query.fromArray([].concat.apply([], arguments));
+                return {
+                    today: all.where(function (e) {
+                        return _this.shouldIncludeEvent(e, today);
+                    }).toArray(),
+                    tomorrow: all.where(function (e) {
+                        return _this.shouldIncludeEvent(e, today.clone().add(1, "day"));
+                    }).toArray()
+                };
             });
         };
         return ICalCalendarProvider;
@@ -1637,7 +1712,7 @@ var Views;
             _super.call(this, el);
             this.el = el;
         }
-        AutoScrollView.prototype.autoscroll = function (innerEl, duration) {
+        AutoScrollView.prototype.autoscroll = function (innerEl, speed) {
             var _this = this;
             if (this.animation) {
                 return;
@@ -1650,6 +1725,8 @@ var Views;
                     return;
                 }
 
+                var duration = (targetTop * -1 / 100) * speed;
+
                 innerEl.velocity({
                     top: targetTop
                 }, {
@@ -1658,7 +1735,7 @@ var Views;
                 }).velocity({
                     top: 0
                 }, {
-                    duration: 1000,
+                    duration: duration / 2,
                     delay: 1000,
                     complete: _this.animation
                 });
@@ -1705,9 +1782,14 @@ var Views;
             });
 
             this.template = this._template.compile({
-                ".list": function (e, d) {
+                ".today": function (e, d) {
                     console.log(d);
-                    e.empty().append(d.map(function (i) {
+                    e.empty().append(d.today.map(function (i) {
+                        return itemTemplate(i);
+                    }));
+                },
+                ".tomorrow": function (e, d) {
+                    e.empty().append(d.tomorrow.map(function (i) {
                         return itemTemplate(i);
                     }));
                 }
@@ -1784,7 +1866,7 @@ var Views;
 
         TravelView.prototype.update = function (data) {
             this.template(data);
-            this.autoscroll(this.el.find(".list"), 5000);
+            this.autoscroll(this.el.find(".list"), 3000);
         };
         return TravelView;
     })(Views.AutoScrollView);
