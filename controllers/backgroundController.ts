@@ -1,8 +1,11 @@
-﻿module Controllers {
+module Controllers 
+{
 
-    export class BackgroundController extends Simple.Controller {
+    export class BackgroundController extends Simple.Controller 
+	{
 
-        constructor( private photoProvider: Artwork.IPhotoProvider ) {
+        constructor( private photoProvider: Artwork.IPhotoProvider ) 
+		{
             super();
         }
 
@@ -12,4 +15,4 @@
 
     }
 
-} 
+}

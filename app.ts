@@ -1,4 +1,6 @@
-﻿///<reference path="simple.ts"/>
+///<reference path="typing/moment.d.ts"/>
+///<reference path="typing/jquery.d.ts"/>
+///<reference path="simple.ts"/>
 ///<reference path="weather.ts"/>
 ///<reference path="artwork.ts"/>
 ///<reference path="timers.ts"/>
@@ -7,37 +9,45 @@
 
 class ClockService {
     
-    constructor( private mediator: Simple.EventEmitter ) {
+    constructor( private mediator: Simple.EventEmitter ) 
+	{
         this.initialize();
     }
 
-    initialize() {
+    initialize()
+	{
         this.mediator.on( "tick-clock-trigger-update", this.triggerUpdate, this );
     }
 
-    triggerUpdate() {
+    triggerUpdate() 
+	{
         this.mediator.trigger( "clock-update", moment() );
     }
 
 }
 
-class WeatherService {
+class WeatherService 
+{
     
-    constructor( private city: string, private countryCode: string, private weatherProvider: Weather.WeatherProvider, private mediator: Simple.EventEmitter ) {
+    constructor( private city: string, private countryCode: string, private weatherProvider: Weather.WeatherProvider, private mediator: Simple.EventEmitter ) 
+	{
         this.initialize();
     }
 
-    initialize() {
+    initialize() 
+	{
         this.mediator.on( "tick-weather-trigger-update", this.triggerUpdate, this );
     }
 
-    triggerUpdate() {
+    triggerUpdate() 
+	{
         this.weatherProvider.getWeather( this.city, this.countryCode )
             .then( ( data ) => this.mediator.trigger( "weather-update", data ) );
     }
 }
 
-interface EnvironmentData {
+interface EnvironmentData 
+{
     timeOfDay: string;
     season: string;
     weather: string;
@@ -46,17 +56,21 @@ interface EnvironmentData {
     updated: Moment;
 }
 
-class EnvironmentService {
+class EnvironmentService 
+{
 
     private currentEnvironment: EnvironmentData;
     private currentChanged: boolean = false;
 
-    constructor( private mediator: Simple.EventEmitter ) {
+    constructor( private mediator: Simple.EventEmitter ) 
+	{
         this.initialize();
     }
 
-    initialize() {
-        this.currentEnvironment = {
+    initialize() 
+	{
+        this.currentEnvironment = 
+		{
             timeOfDay: undefined,
             weather: undefined,
             season: undefined,
@@ -69,18 +83,22 @@ class EnvironmentService {
         this.mediator.on( "clock-update", this.clockUpdate, this );
     }
 
-    private setProperty(key: string, value: any) {
-        if (this.currentEnvironment[key] !== value) {
+    private setProperty(key: string, value: any) 
+	{
+        if (this.currentEnvironment[key] !== value) 
+		{
             this.currentEnvironment[key] = value;
             this.currentChanged = true;
             this.currentEnvironment.updated = moment();
         }
     }
 
-    private isComplete(): boolean {
+    private isComplete(): boolean 
+	{
         for(var key in this.currentEnvironment)
         {
-            if (!this.currentEnvironment[key]) {
+            if (!this.currentEnvironment[key]) 
+			{
                 return false;
             }
         }
@@ -88,13 +106,15 @@ class EnvironmentService {
         return true;
     }
 
-    private getTimeOfDay(now: Moment, sunrise: Moment, sunset: Moment): string {
+    private getTimeOfDay(now: Moment, sunrise: Moment, sunset: Moment): string 
+	{
         return sunrise && sunset
             ? now.isBefore(sunrise) || now.isAfter(sunset) ? "night" : "day"
             : "";
     }
 
-    private getSeason(now: Moment): string {
+    private getSeason(now: Moment): string 
+	{
         var month = now.month();
 
         if (month === 2 || month === 3 || month === 4) {
@@ -110,7 +130,8 @@ class EnvironmentService {
         return "winter";
     }
 
-    private weatherUpdate(data: Weather.WeatherData) {
+    private weatherUpdate(data: Weather.WeatherData) 
+	{
         this.setProperty( "weather", data.main.toLowerCase() );
         this.setProperty( "sunrise", data.sunrise );
         this.setProperty( "sunset", data.sunset );
@@ -118,22 +139,35 @@ class EnvironmentService {
         this.triggerEnvironmentUpdate();
     }
 
-    private clockUpdate(data: Moment) {
-        this.setProperty( "timeOfDay", this.getTimeOfDay( data, this.currentEnvironment.sunrise, this.currentEnvironment.sunset ));
-        this.setProperty( "season", this.getSeason( data ) );
-
+    private clockUpdate(data: Moment) 
+	{
+        this.setProperty
+		( 
+			"timeOfDay", 
+			this.getTimeOfDay
+			( 
+				data, 
+				this.currentEnvironment.sunrise, 
+				this.currentEnvironment.sunset 
+			)
+		);
+        
+		this.setProperty( "season", this.getSeason( data ) );
         this.triggerEnvironmentUpdate();
     }
 
-    triggerEnvironmentUpdate() {
-        if (this.currentChanged && this.isComplete()) {
+    triggerEnvironmentUpdate() 
+	{
+        if (this.currentChanged && this.isComplete()) 
+		{
             this.mediator.trigger("environment-update", this.currentEnvironment);
             this.currentChanged = false;
         }
     }
 }
 
-interface EventData {
+interface EventData 
+{
     type: string;
     actor: string;
     messages: string[];
@@ -141,11 +175,13 @@ interface EventData {
     deployMinutes: number;
 }
 
-interface EventService {
+interface EventService 
+{
     getLastEventOfType(type: string): JQueryPromise<EventData>
 }
 
-class GitHubEventService {
+class GitHubEventService 
+{
     private lastPush: Moment;
 
     constructor(private username: string, private repository: string, private mediator: Simple.EventEmitter) {
@@ -184,7 +220,8 @@ class GitHubEventService {
 
 }
 
-class AutoUpdater {
+class AutoUpdater 
+{
     
     private lastEvent;
 
@@ -216,7 +253,8 @@ class AutoUpdater {
 
 }
 
-var noCacheUrl = (url: string) => {
+var noCacheUrl = (url: string) => 
+{
     var noCache = url,
         split = url.split( "?" );
 
@@ -227,7 +265,8 @@ var noCacheUrl = (url: string) => {
     return noCache + "?" + Math.random();
 };
 
-$(() => {
+$(() => 
+{
     var mediator = new Simple.Events();
 
     var weatherProvider = new Weather.OpenWeatherMap( "eee9d46aa90c56ff8b116ab88f2a5e3f" );
@@ -288,7 +327,8 @@ $(() => {
     travelTimer.start( 60 * 1000 );
     travelTimer.trigger();
 
-    var calendarSources = [
+    var calendarSources = 
+	[
         {
             owner: "Thomas",
             url: "http://whateverorigin.org/get?url=https://sharing.calendar.live.com/calendar/private/0ec5c5e9-a270-40ab-a244-581302314b18/f7dd211a-88b0-4a5e-a963-d807a40fe6a7/cid-5d3f62a70d427c52/calendar.ics&callback=?"
