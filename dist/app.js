@@ -1,3 +1,120 @@
+var Calendar;
+(function (Calendar) {
+    var ICalCalendarProvider = (function () {
+        function ICalCalendarProvider() {
+        }
+        ICalCalendarProvider.prototype.parseEventData = function (owner, data) {
+            var _this = this;
+            var ifNotNull = function (obj, accessor) {
+                return obj ? accessor(obj) : "";
+            };
+
+            var title = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "summary";
+            })[0], function (o) {
+                return o[3];
+            });
+            var start = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "dtstart";
+            })[0], function (o) {
+                return moment(o[3]);
+            });
+            var end = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "dtend";
+            })[0], function (o) {
+                return moment(o[3]);
+            });
+            var recur = ifNotNull(data[1].filter(function (p) {
+                return p[0] === "rrule";
+            })[0], function (o) {
+                return _this.parseRecurRule(o[3], start);
+            });
+
+            return {
+                title: title,
+                owner: owner,
+                start: start,
+                end: end,
+                recur: recur
+            };
+        };
+
+        ICalCalendarProvider.prototype.parseRecurRule = function (recur, start) {
+            var rule = {};
+            recur.split(";").map(function (r) {
+                return r.split("=");
+            }).forEach(function (r) {
+                switch (r[0]) {
+                    case "FREQ":
+                        $.extend(rule, { freq: window.RRule[r[1]] });
+                        break;
+                    case "INTERVAL":
+                        $.extend(rule, { interval: parseInt(r[1]) });
+                        break;
+                    case "BYDAY":
+                        $.extend(rule, { byweekday: r[1].split(",").map(function (d) {
+                                return window.RRule[d];
+                            }) });
+                        break;
+                    case "UNTIL":
+                        $.extend(rule, { until: moment(r[1]).toDate() });
+                        break;
+                    case "DTSTART":
+                        $.extend(rule, { dtstart: moment(r[1]).toDate() });
+                        break;
+                    case "WKST":
+                        $.extend(rule, { wkst: window.RRule[r[1]] });
+                        break;
+                }
+            });
+
+            if (!rule.dtstart) {
+                rule.dtstart = start.toDate();
+            }
+
+            return rule;
+        };
+
+        ICalCalendarProvider.prototype.shouldIncludeEvent = function (event, today) {
+            var recurMatch = false;
+
+            if (event.recur) {
+                var rule = new window.RRule(event.recur);
+                recurMatch = rule.between(today.clone().startOf("day").toDate(), today.clone().endOf("day").toDate()).length > 0;
+            }
+
+            return event.start.isSame(today, "day") || event.end.isSame(today, "day") || recurMatch;
+        };
+
+        ICalCalendarProvider.prototype.getEventData = function (sources, today) {
+            var _this = this;
+            var promises = sources.map(function (s) {
+                return $.getJSON(s.url).then(function (data) {
+                    return window.ICAL.parse(data.contents)[1][2].filter(function (e) {
+                        return e[0] === "vevent";
+                    }).map(function (e) {
+                        return _this.parseEventData(s.owner, e);
+                    });
+                });
+            });
+
+            return $.when.apply($, promises).then(function () {
+                var all = Query.fromArray([].concat.apply([], arguments));
+                return {
+                    today: all.where(function (e) {
+                        return _this.shouldIncludeEvent(e, today);
+                    }).toArray(),
+                    tomorrow: all.where(function (e) {
+                        return _this.shouldIncludeEvent(e, today.clone().add(1, "day"));
+                    }).toArray()
+                };
+            });
+        };
+        return ICalCalendarProvider;
+    })();
+    Calendar.ICalCalendarProvider = ICalCalendarProvider;
+})(Calendar || (Calendar = {}));
+
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -114,7 +231,7 @@ var Query;
             this._storage = [];
         }
         SortingAggregator.prototype.getComparer = function () {
-            return this._sortOrder === SortOrder.Ascending ? function (i1, i2) {
+            return this._sortOrder === 0 /* Ascending */ ? function (i1, i2) {
                 return i1 > i2;
             } : function (i1, i2) {
                 return i2 > i1;
@@ -256,11 +373,11 @@ var Query;
         };
 
         EnumerableCore.prototype.orderByAscending = function (selector) {
-            return this.sort(selector, SortOrder.Ascending);
+            return this.sort(selector, 0 /* Ascending */);
         };
 
         EnumerableCore.prototype.orderByDescending = function (selector) {
-            return this.sort(selector, SortOrder.Descending);
+            return this.sort(selector, 1 /* Descending */);
         };
 
         EnumerableCore.prototype.aggregate = function (aggFunc, seed) {
@@ -390,123 +507,6 @@ var Query;
         return ArrayEnumerator;
     })();
 })(Query || (Query = {}));
-
-var Calendar;
-(function (Calendar) {
-    var ICalCalendarProvider = (function () {
-        function ICalCalendarProvider() {
-        }
-        ICalCalendarProvider.prototype.parseEventData = function (owner, data) {
-            var _this = this;
-            var ifNotNull = function (obj, accessor) {
-                return obj ? accessor(obj) : "";
-            };
-
-            var title = ifNotNull(data[1].filter(function (p) {
-                return p[0] === "summary";
-            })[0], function (o) {
-                return o[3];
-            });
-            var start = ifNotNull(data[1].filter(function (p) {
-                return p[0] === "dtstart";
-            })[0], function (o) {
-                return moment(o[3]);
-            });
-            var end = ifNotNull(data[1].filter(function (p) {
-                return p[0] === "dtend";
-            })[0], function (o) {
-                return moment(o[3]);
-            });
-            var recur = ifNotNull(data[1].filter(function (p) {
-                return p[0] === "rrule";
-            })[0], function (o) {
-                return _this.parseRecurRule(o[3], start);
-            });
-
-            return {
-                title: title,
-                owner: owner,
-                start: start,
-                end: end,
-                recur: recur
-            };
-        };
-
-        ICalCalendarProvider.prototype.parseRecurRule = function (recur, start) {
-            var rule = {};
-            recur.split(";").map(function (r) {
-                return r.split("=");
-            }).forEach(function (r) {
-                switch (r[0]) {
-                    case "FREQ":
-                        $.extend(rule, { freq: window.RRule[r[1]] });
-                        break;
-                    case "INTERVAL":
-                        $.extend(rule, { interval: parseInt(r[1]) });
-                        break;
-                    case "BYDAY":
-                        $.extend(rule, { byweekday: r[1].split(",").map(function (d) {
-                                return window.RRule[d];
-                            }) });
-                        break;
-                    case "UNTIL":
-                        $.extend(rule, { until: moment(r[1]).toDate() });
-                        break;
-                    case "DTSTART":
-                        $.extend(rule, { dtstart: moment(r[1]).toDate() });
-                        break;
-                    case "WKST":
-                        $.extend(rule, { wkst: window.RRule[r[1]] });
-                        break;
-                }
-            });
-
-            if (!rule.dtstart) {
-                rule.dtstart = start.toDate();
-            }
-
-            return rule;
-        };
-
-        ICalCalendarProvider.prototype.shouldIncludeEvent = function (event, today) {
-            var recurMatch = false;
-
-            if (event.recur) {
-                var rule = new window.RRule(event.recur);
-                recurMatch = rule.between(today.clone().startOf("day").toDate(), today.clone().endOf("day").toDate()).length > 0;
-            }
-
-            return event.start.isSame(today, "day") || event.end.isSame(today, "day") || recurMatch;
-        };
-
-        ICalCalendarProvider.prototype.getEventData = function (sources, today) {
-            var _this = this;
-            var promises = sources.map(function (s) {
-                return $.getJSON(s.url).then(function (data) {
-                    return window.ICAL.parse(data.contents)[1][2].filter(function (e) {
-                        return e[0] === "vevent";
-                    }).map(function (e) {
-                        return _this.parseEventData(s.owner, e);
-                    });
-                });
-            });
-
-            return $.when.apply($, promises).then(function () {
-                var all = Query.fromArray([].concat.apply([], arguments));
-                return {
-                    today: all.where(function (e) {
-                        return _this.shouldIncludeEvent(e, today);
-                    }).toArray(),
-                    tomorrow: all.where(function (e) {
-                        return _this.shouldIncludeEvent(e, today.clone().add(1, "day"));
-                    }).toArray()
-                };
-            });
-        };
-        return ICalCalendarProvider;
-    })();
-    Calendar.ICalCalendarProvider = ICalCalendarProvider;
-})(Calendar || (Calendar = {}));
 
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
