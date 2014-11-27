@@ -2142,7 +2142,7 @@ body {
   float: left;
 }
 .clock {
-  background-color: #35BDAD;
+  background-color: #35bdad;
 }
 .clock .time .analog {
   float: left;
@@ -2159,7 +2159,7 @@ body {
   text-transform: uppercase;
 }
 .weather {
-  background-color: #237D73;
+  background-color: #237d73;
   text-transform: uppercase;
 }
 .weather .symbol {
@@ -2191,7 +2191,7 @@ body {
   vertical-align: middle;
 }
 .calendar {
-  background-color: #113D38;
+  background-color: #113d38;
   text-transform: uppercase;
   line-height: 1.5;
 }
@@ -2206,7 +2206,7 @@ body {
 }
 .calendar .list .time {
   font-size: 20px;
-  color: #35BDAD;
+  color: #35bdad;
 }
 .calendar .list .title {
   font-size: 34px;
@@ -2214,10 +2214,10 @@ body {
 }
 .calendar .list .owner {
   font-size: 18px;
-  color: #237D73;
+  color: #237d73;
 }
 .travel {
-  background-color: #39CAB9;
+  background-color: #39cab9;
   font-size: 22px;
 }
 .travel .urgent {
@@ -2230,27 +2230,27 @@ body {
   text-transform: uppercase;
 }
 .travel .list .row:nth-child(2n) {
-  background-color: #2EA396;
+  background-color: #2ea396;
 }
 .travel .list .row.header {
-  background-color: #2EA396;
+  background-color: #2ea396;
 }
 .travel .list .row.group-header {
-  background-color: #237D73;
+  background-color: #237d73;
 }
 .notifications {
-  background-color: #113D38;
+  background-color: #113d38;
 }
 .notifications .icon {
   height: 30px;
-  background-image: url(http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg);
+  background-image: url("http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   display: block;
   padding-right: 10px;
 }
 .unknown {
-  background-color: #237D73;
+  background-color: #237d73;
 }
 #clock {
   width: 150px;

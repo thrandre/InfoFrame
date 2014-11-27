@@ -1,430 +1,432 @@
 @import "font-awesome/less/font-awesome.less";
 @import "weather-icons/weather-icons/weather-icons.less";
 
-html, body {
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	font-family: 'Open Sans';
-	line-height: 1;
-	color: white;
-	overflow: hidden;
-}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans';
+  line-height: 1;
+  color: white;
+  overflow: hidden;
 
+}
 * {
-	z-index: 4;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-shadow:none;
-	text-rendering: optimizeLegibility;
-}
+  z-index: 4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: none;
+  text-rendering: optimizeLegibility;
 
+}
 .wi {
-	line-height: normal;
-}
+  line-height: normal;
 
+}
 .update-info {
-	position: absolute;
-	top: 0;
-	left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 
-	padding: 10px;
-	color: #fff;
-	background-color: #222;
+  padding: 10px;
+  color: #fff;
+  background-color: #222;
 
-	z-index: 100;
+  z-index: 100;
 
-	h1 {
-		font-size: 14px;
-	}
+  h1 {
+    font-size: 14px;
 
-	li {
-		font-size: 12px;
-	}
+  }
+  li {
+    font-size: 12px;
+  }
+
 }
-
 .bubble-wrapper {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 
-	position: relative;
+  position: relative;
+
 }
-
 .bubble {
-	position: absolute;
+  position: absolute;
 
-	color: white;
-	box-sizing: border-box;
-	border-radius: 50%;
-	
-	box-shadow: 0 0 10px #000;
+  color: white;
+  box-sizing: border-box;
+  border-radius: 50%;
 
-	border: 2px dashed #fff;
+  box-shadow: 0 0 10px #000;
 
-	width: 75px;
-	height: 75px;
+  border: 2px dashed #fff;
 
-	background-color: #bf0000;
+  width: 75px;
+  height: 75px;
 
-	&.scaled {
-		width: 600px;
-		height: 600px;
-	}
+  background-color: #bf0000;
 
-	&.big {
-		width: 380px;
-		height: 380px;
-		z-index: 100;
+  &.scaled {
+    width: 600px;
+    height: 600px;
 
-		background-color: #222;
+  }
+  &.big {
+    width: 380px;
+    height: 380px;
+    z-index: 100;
 
-		.level-1 {
-			font-size: 80px;
-		}
+    background-color: #222;
 
-		.level-2 {
-			font-size: 60px;
-			font-weight: bold;
-		}
-	}
+    .level-1 {
+      font-size: 80px;
 
-	.level-1 {
-		font-size: 36px;
-		padding-bottom: 10px;
-	}
+    }
+    .level-2 {
+      font-size: 60px;
+      font-weight: bold;
+    }
 
-	.level-2 {
-		font-size: 26px;
-		font-weight: bold;
-		padding-bottom: 5px;
-	}
+  }
+  .level-1 {
+    font-size: 36px;
+    padding-bottom: 10px;
 
-	.level-3 {
-		font-size: 21px;
-		text-transform: uppercase;
-	}
+  }
+  .level-2 {
+    font-size: 26px;
+    font-weight: bold;
+    padding-bottom: 5px;
 
-	.light {
-		font-weight: 300;
-	}
+  }
+  .level-3 {
+    font-size: 21px;
+    text-transform: uppercase;
 
-	.bold {
-		font-weight: 700;
-	}
+  }
+  .light {
+    font-weight: 300;
 
-	.row {
-		float: left;
-		text-align: center;
-		width: 100%;
+  }
+  .bold {
+    font-weight: 700;
 
-		&:last-child {
-			padding-bottom: 0;
-		}
-	}
+  }
+  .row {
+    float: left;
+    text-align: center;
+    width: 100%;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
 }
-
 .bubble-content-wrapper {
-	position: relative;
-	top: 50%;
-	left: 50%;
-	
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	-moz-transform: translate(-50%, -50%);
+  position: relative;
+  top: 50%;
+  left: 50%;
 
-	float: left;
-	
-	&.back {
-		transform: rotateX(-180deg) translate(-50%, 50%);
-		-webkit-transform: rotateX(-180deg) translate(-50%, 50%);
-		-moz-transform: rotateX(-180deg) translate(-50%, 50%);
-	}
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+
+  float: left;
+
+  &.back {
+    transform: rotateX(-180deg) translate(-50%, 50%);
+    -webkit-transform: rotateX(-180deg) translate(-50%, 50%);
+    -moz-transform: rotateX(-180deg) translate(-50%, 50%);
+  }
+
 }
-
 .background {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 
-	position: relative;
+  position: relative;
 
-	overflow: hidden;
+  overflow: hidden;
 
-	img {
-		position: absolute;
-		-webkit-filter: grayscale(1) contrast(5);
-		
-		&.l1 {
-			z-index: 0;
-		}
+  img {
+    position: absolute;
+    -webkit-filter: grayscale(1) contrast(5);
 
-		&.l2 {
-			z-index: 1;
-			opacity: 0;
-		}
-	}
+    &.l1 {
+      z-index: 0;
 
-	.overlay {
-		width: 100%;
-		height: 100%;
-		
-		position: absolute;
+    }
+    &.l2 {
+      z-index: 1;
+      opacity: 0;
+    }
 
-		background-color: rgba(53, 189, 173, 0.75);
+  }
+  .overlay {
+    width: 100%;
+    height: 100%;
 
-		z-index: 3;
-	}
+    position: absolute;
+
+    background-color: rgba(53, 189, 173, 0.75);
+
+    z-index: 3;
+  }
+
 }
-
 .dashboard {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 
-	position: absolute;
+  position: absolute;
 
-	top: 0;
-	left: 0;
+  top: 0;
+  left: 0;
 
-	overflow: hidden;
+  overflow: hidden;
 
-	.quadrant, .octant {
-		overflow: hidden;
+  .quadrant,
+  .octant {
+    overflow: hidden;
 
-		.wrapper {
-			position: relative;
-			left: 50%;
-			top: 50%;
+    .wrapper {
+      position: relative;
+      left: 50%;
+      top: 50%;
 
-			float: left;
+      float: left;
 
-			transform: translate(-50%, -50%);
-			-webkit-transform: translate(-50%, -50%);
-			-moz-transform: translate(-50%, -50%);
-		}
-	}
+      transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+    }
 
-	.quadrant {
-		width: 50%;
-		height: 50%;
+  }
+  .quadrant {
+    width: 50%;
+    height: 50%;
 
-		float: left;
+    float: left;
 
-		.octant {
-			width: 50%;
-			height: 100%;
-			float: left;
-		}
-	}
+    .octant {
+      width: 50%;
+      height: 100%;
+      float: left;
+    }
+  }
+
 }
-
-
-
 .clock {
-	background-color: #35BDAD;
+  background-color: #35bdad;
 
-		.time {
-			.analog {
-				float: left;
-			}
+  .time {
+    .analog {
+      float: left;
 
-			.digital {
-				float: left;
-				font-size: 120px;
-				font-weight: 700;
-			}
-		}
+    }
+    .digital {
+      float: left;
+      font-size: 120px;
+      font-weight: 700;
+    }
 
-		.date {
-			float: right;
-			font-size: 30px;
-			font-weight: 300;
-			text-transform: uppercase;
-		}
+  }
+  .date {
+    float: right;
+    font-size: 30px;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
 }
-
 .weather {
-	background-color: #237D73;
-	
-	text-transform: uppercase;
+  background-color: #237d73;
 
-	.symbol {
-		width: 100%;
-		font-size: 120px;
-		text-align: center;
-	}
+  text-transform: uppercase;
 
-	.temperature {
-		text-align: center;
-		font-size: 70px;
-		font-weight: 700;
+  .symbol {
+    width: 100%;
+    font-size: 120px;
+    text-align: center;
 
-		.valsymbol {
-			font-weight: 300;
-		}
-	}
+  }
+  .temperature {
+    text-align: center;
+    font-size: 70px;
+    font-weight: 700;
 
-	.advanced {
-		margin-top: 30px;
-		text-align: center;
-		font-size: 20px;
+    .valsymbol {
+      font-weight: 300;
+    }
 
-		.val {
-			font-weight: 700;
-		}
+  }
+  .advanced {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 20px;
 
-		.rain {
-			margin-right: 15px;
-		}
+    .val {
+      font-weight: 700;
 
-		.wi {
-			font-size: 40px;
-			vertical-align: middle;
-		}
-	}
+    }
+    .rain {
+      margin-right: 15px;
+
+    }
+    .wi {
+      font-size: 40px;
+      vertical-align: middle;
+    }
+  }
+
 }
-
 .calendar {
-	background-color: #113D38;
-	text-transform: uppercase;
-	line-height: 1.5;
+  background-color: #113d38;
+  text-transform: uppercase;
+  line-height: 1.5;
 
-	.list {
-		.header {
-			font-size: 34px;
-		}
+  .list {
+    .header {
+      font-size: 34px;
 
-		.time, .title, .owner {
-			float: left;
-			clear: both;
-		}
+    }
+    .time,
+    .title,
+    .owner {
+      float: left;
+      clear: both;
 
-		.time {
-			font-size: 20px;
-			color: #35BDAD;
-		}
+    }
+    .time {
+      font-size: 20px;
+      color: #35bdad;
 
-		.title {
-			font-size: 34px;
-			font-weight: 700;
-		}
+    }
+    .title {
+      font-size: 34px;
+      font-weight: 700;
 
-		.owner {
-			font-size: 18px;
-			color: #237D73;
-		}
-	}
+    }
+    .owner {
+      font-size: 18px;
+      color: #237d73;
+    }
+  }
+
 }
-
 .travel {
-	background-color: #39CAB9;
-	font-size: 22px;
+  background-color: #39cab9;
+  font-size: 22px;
 
-	.urgent {
-		font-weight: 700;
-	}
+  .urgent {
+    font-weight: 700;
 
-	.departure {
-		text-align: right;
-	}
+  }
+  .departure {
+    text-align: right;
 
-	.list {
-		
-		text-transform: uppercase;
+  }
+  .list {
 
-		.row {
-			&:nth-child(2n) {
-				background-color: #2EA396;
-			}
+    text-transform: uppercase;
 
-			&.header {
-				background-color: #2EA396;
-			}
+    .row {
+      &:nth-child(2n) {
+        background-color: #2ea396;
 
-			&.group-header {
-				background-color: #237D73;
-			}
-		}
-	}
+      }
+      &.header {
+        background-color: #2ea396;
+
+      }
+      &.group-header {
+        background-color: #237d73;
+      }
+    }
+  }
+
 }
-
 .notifications {
-	background-color: #113D38;
+  background-color: #113d38;
 
-	.icon {
-		height: 30px;
-		background-image: url(http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg);
-		background-size: cover;
-		background-repeat: no-repeat;
+  .icon {
+    height: 30px;
+    background-image: url("http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
 
-		display: block;
+    display: block;
 
-		padding-right: 10px;
-	}
+    padding-right: 10px;
+  }
+
 }
-
 .unknown {
-	background-color: #237D73;
-}
+  background-color: #237d73;
 
+}
 #clock {
-	width: 150px;
-	height: 150px;
-	margin-left: 0;
+  width: 150px;
+  height: 150px;
+  margin-left: 0;
+
 }
-
 .list {
-	width: 100%;
+  width: 100%;
 
-	float: left;
-	clear: both;
+  float: left;
+  clear: both;
 
-	position: relative;
+  position: relative;
 
-	.group {
-		width: 100%;
+  .group {
+    width: 100%;
 
-		float: left;
-		clear: both;
-	}
+    float: left;
+    clear: both;
 
-	.row {
-		width: 100%;
+  }
+  .row {
+    width: 100%;
 
-		float: left;
-		clear: both;
+    float: left;
+    clear: both;
 
-		padding: 30px;
-		box-sizing: border-box;
+    padding: 30px;
+    box-sizing: border-box;
 
-		.col {
-			display: block;
-			float: left;
-			
-			box-sizing: border-box;
+    .col {
+      display: block;
+      float: left;
 
-			&.col-10 {
-				width: 10%;
-			}
+      box-sizing: border-box;
 
-			&.col-25 {
-				width: 25%;
-			}
+      &.col-10 {
+        width: 10%;
 
-			&.col-50 {
-				width: 50%;
-			}
+      }
+      &.col-25 {
+        width: 25%;
 
-			&.col-75 {
-				width: 75%;
-			}
+      }
+      &.col-50 {
+        width: 50%;
 
-			&.col-90 {
-				width: 90%;
-			}
+      }
+      &.col-75 {
+        width: 75%;
 
-			&.col-100 {
-				width: 100%;
-			}
-		}
-	}
+      }
+      &.col-90 {
+        width: 90%;
+
+      }
+      &.col-100 {
+        width: 100%;
+      }
+    }
+  }
 }
