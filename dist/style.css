@@ -1993,122 +1993,6 @@ body {
   text-shadow: none;
   text-rendering: optimizeLegibility;
 }
-.wi {
-  line-height: normal;
-}
-.update-info {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 10px;
-  color: #fff;
-  background-color: #222;
-  z-index: 100;
-}
-.update-info h1 {
-  font-size: 14px;
-}
-.update-info li {
-  font-size: 12px;
-}
-.bubble-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.bubble {
-  position: absolute;
-  color: white;
-  box-sizing: border-box;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #000;
-  border: 2px dashed #fff;
-  width: 75px;
-  height: 75px;
-  background-color: #bf0000;
-}
-.bubble.scaled {
-  width: 600px;
-  height: 600px;
-}
-.bubble.big {
-  width: 380px;
-  height: 380px;
-  z-index: 100;
-  background-color: #222;
-}
-.bubble.big .level-1 {
-  font-size: 80px;
-}
-.bubble.big .level-2 {
-  font-size: 60px;
-  font-weight: bold;
-}
-.bubble .level-1 {
-  font-size: 36px;
-  padding-bottom: 10px;
-}
-.bubble .level-2 {
-  font-size: 26px;
-  font-weight: bold;
-  padding-bottom: 5px;
-}
-.bubble .level-3 {
-  font-size: 21px;
-  text-transform: uppercase;
-}
-.bubble .light {
-  font-weight: 300;
-}
-.bubble .bold {
-  font-weight: 700;
-}
-.bubble .row {
-  float: left;
-  text-align: center;
-  width: 100%;
-}
-.bubble .row:last-child {
-  padding-bottom: 0;
-}
-.bubble-content-wrapper {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  float: left;
-}
-.bubble-content-wrapper.back {
-  transform: rotateX(-180deg) translate(-50%, 50%);
-  -webkit-transform: rotateX(-180deg) translate(-50%, 50%);
-  -moz-transform: rotateX(-180deg) translate(-50%, 50%);
-}
-.background {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-.background img {
-  position: absolute;
-  -webkit-filter: grayscale(1) contrast(5);
-}
-.background img.l1 {
-  z-index: 0;
-}
-.background img.l2 {
-  z-index: 1;
-  opacity: 0;
-}
-.background .overlay {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(53, 189, 173, 0.75);
-  z-index: 3;
-}
 .dashboard {
   width: 100%;
   height: 100%;
@@ -2166,6 +2050,7 @@ body {
   width: 100%;
   font-size: 120px;
   text-align: center;
+  margin-bottom: 40px;
 }
 .weather .temperature {
   text-align: center;
@@ -2194,6 +2079,9 @@ body {
   background-color: #113d38;
   text-transform: uppercase;
   line-height: 1.5;
+}
+.calendar .list .row {
+  padding: 15px 30px 0;
 }
 .calendar .list .header {
   font-size: 34px;
@@ -2238,16 +2126,28 @@ body {
 .travel .list .row.group-header {
   background-color: #237d73;
 }
-.notifications {
-  background-color: #113d38;
-}
-.notifications .icon {
-  height: 30px;
-  background-image: url("http://userserve-ak.last.fm/serve/500/71524914/Kvelertak+++Hasselt+Belgium.jpg");
-  background-size: cover;
+.lastfm {
   background-repeat: no-repeat;
-  display: block;
-  padding-right: 10px;
+  background-size: cover;
+  text-transform: uppercase;
+}
+.lastfm .track {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.lastfm .artist-album {
+  font-size: 24px;
+}
+.lastfm .artist-album .artist {
+  font-weight: 700;
+}
+.lastfm .track,
+.lastfm .artist-album {
+  overflow: hidden;
+  max-width: 500px;
+  text-overflow: elipsis;
+  white-space: nowrap;
 }
 .unknown {
   background-color: #237d73;

@@ -9,6 +9,7 @@
 ///<reference path="travel.ts"/>
 ///<reference path="calendar.ts"/>
 ///<reference path="updater.ts"/>
+///<reference path="LastFm.ts"/>
 
 class ClockService {
 
@@ -39,6 +40,22 @@ class WeatherService {
   triggerUpdate() {
     this.weatherProvider.getWeather(this.city, this.countryCode)
       .then((data) => this.mediator.trigger("weather-update", data));
+  }
+}
+
+class ScrobbleService {
+
+  constructor(private scrobbleProvider: LastFm.ScrobbleProvider, private mediator: Simple.EventEmitter) {
+    this.initialize();
+  }
+
+  initialize() {
+    this.mediator.on("tick-lastfm-update", this.triggerUpdate, this);
+  }
+
+  triggerUpdate() {
+    this.scrobbleProvider.getPlayingTrack()
+      .then(data => this.mediator.trigger("scrobble-update", data));
   }
 }
 
@@ -168,6 +185,7 @@ $(() => {
   var clockService = new ClockService(mediator);
   var weatherService = new WeatherService("Oslo", "NO", weatherProvider, mediator);
   var environmentService = new EnvironmentService(mediator);
+  var scrobbleService = new ScrobbleService(new LastFm.ScrobbleProvider("thomrand", "42fc325d7df948bf99b0e8713cf93584"), mediator);
 
   var github = new Updater.GitHubEventService("thrandre", "InfoFrame", mediator);
 
@@ -177,6 +195,8 @@ $(() => {
 
   var clockView = new Views.ClockView($(".clock"), mediator);
   var weatherView = new Views.WeatherView($(".weather"), mediator);
+
+  var scrobbleView = new Views.ScrobbleView($(".lastfm"), mediator);
 
   var ruter = new Travel.Ruter();
 
@@ -203,7 +223,7 @@ $(() => {
   scheduler.schedule("tick-clock-trigger-update", 1000, true);
   scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
   scheduler.schedule("tick-autoUpdater-check", 60 * 1000, true);
-  scheduler.schedule("bubble-flip", 10 * 1000, false);
+  scheduler.schedule("tick-lastfm-update", 10 * 1000, true);
 
   (<any>window).SVG("clock").clock("100%").start();
 
@@ -215,7 +235,7 @@ $(() => {
     mediator.trigger("travel-update", viewData);
   }));
 
-  travelTimer.start(60 * 1000);
+  travelTimer.start(5 * 1000);
   travelTimer.trigger();
 
   var calendarSources =

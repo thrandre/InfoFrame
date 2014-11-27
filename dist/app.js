@@ -732,8 +732,10 @@ var Views;
         }
         AutoScrollView.prototype.autoscroll = function (innerEl, speed) {
             var _this = this;
-            if (this.animation) {
-                return;
+            var self = this;
+            var start = false;
+            if (!this.animation) {
+                start = true;
             }
             this.animation = function () {
                 var targetTop = (innerEl.height() - _this.el.height()) * -1;
@@ -745,16 +747,16 @@ var Views;
                     top: targetTop
                 }, {
                     duration: duration,
-                    delay: 1000
-                }).velocity({
-                    top: 0
-                }, {
-                    duration: duration / 2,
                     delay: 1000,
-                    complete: _this.animation
+                    complete: function () {
+                        innerEl.css("top", "0px");
+                        self.animation();
+                    }
                 });
             };
-            this.animation();
+            if (start) {
+                this.animation();
+            }
         };
         return AutoScrollView;
     })(Simple.View);
@@ -971,6 +973,34 @@ var Views;
 
 
 
+var LastFm;
+(function (LastFm) {
+    var ScrobbleProvider = (function () {
+        function ScrobbleProvider(username, apiKey) {
+            this.username = username;
+            this.apiKey = apiKey;
+        }
+        ScrobbleProvider.prototype.parseScrobbleData = function (data) {
+            return {
+                artist: data.artist["#text"],
+                track: data.name,
+                album: data.album["#text"],
+                imageUrl: data.image[3] ? data.image[3]["#text"].replace("300x300", "500") : "",
+                nowPlaying: data["@attr"] ? data["@attr"].nowplaying == "true" : false
+            };
+        };
+        ScrobbleProvider.prototype.getApiUrl = function () {
+            return "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + this.username + "&api_key=" + this.apiKey + "&format=json";
+        };
+        ScrobbleProvider.prototype.getPlayingTrack = function () {
+            var _this = this;
+            return $.getJSON(this.getApiUrl()).then(function (data) { return data.recenttracks.track.map(function (d) { return _this.parseScrobbleData(d); }).filter(function (d) { return d.nowPlaying; })[0]; });
+        };
+        return ScrobbleProvider;
+    })();
+    LastFm.ScrobbleProvider = ScrobbleProvider;
+})(LastFm || (LastFm = {}));
+
 ///<reference path="typing/moment.d.ts"/>
 ///<reference path="typing/jquery.d.ts"/>
 ///<reference path="utils/extensions.ts"/>
@@ -982,6 +1012,7 @@ var Views;
 ///<reference path="travel.ts"/>
 ///<reference path="calendar.ts"/>
 ///<reference path="updater.ts"/>
+///<reference path="LastFm.ts"/>
 var ClockService = (function () {
     function ClockService(mediator) {
         this.mediator = mediator;
@@ -1011,6 +1042,21 @@ var WeatherService = (function () {
         this.weatherProvider.getWeather(this.city, this.countryCode).then(function (data) { return _this.mediator.trigger("weather-update", data); });
     };
     return WeatherService;
+})();
+var ScrobbleService = (function () {
+    function ScrobbleService(scrobbleProvider, mediator) {
+        this.scrobbleProvider = scrobbleProvider;
+        this.mediator = mediator;
+        this.initialize();
+    }
+    ScrobbleService.prototype.initialize = function () {
+        this.mediator.on("tick-lastfm-update", this.triggerUpdate, this);
+    };
+    ScrobbleService.prototype.triggerUpdate = function () {
+        var _this = this;
+        this.scrobbleProvider.getPlayingTrack().then(function (data) { return _this.mediator.trigger("scrobble-update", data); });
+    };
+    return ScrobbleService;
 })();
 var EnvironmentService = (function () {
     function EnvironmentService(mediator) {
@@ -1094,11 +1140,13 @@ $(function () {
     var clockService = new ClockService(mediator);
     var weatherService = new WeatherService("Oslo", "NO", weatherProvider, mediator);
     var environmentService = new EnvironmentService(mediator);
+    var scrobbleService = new ScrobbleService(new LastFm.ScrobbleProvider("thomrand", "42fc325d7df948bf99b0e8713cf93584"), mediator);
     var github = new Updater.GitHubEventService("thrandre", "InfoFrame", mediator);
     var autoUpdater = new Updater.AutoUpdater(mediator, github);
     var updateView = new Views.UpdateView($(".update-info"), mediator);
     var clockView = new Views.ClockView($(".clock"), mediator);
     var weatherView = new Views.WeatherView($(".weather"), mediator);
+    var scrobbleView = new Views.ScrobbleView($(".lastfm"), mediator);
     var ruter = new Travel.Ruter();
     var travelView = new Views.TravelView($(".travel"), mediator);
     var calendar = new Calendar.ICalCalendarProvider();
@@ -1115,7 +1163,7 @@ $(function () {
     scheduler.schedule("tick-clock-trigger-update", 1000, true);
     scheduler.schedule("tick-weather-trigger-update", 10 * 60 * 1000, true);
     scheduler.schedule("tick-autoUpdater-check", 60 * 1000, true);
-    scheduler.schedule("bubble-flip", 10 * 1000, false);
+    scheduler.schedule("tick-lastfm-update", 10 * 1000, true);
     window.SVG("clock").clock("100%").start();
     var travelTimer = new Timers.Timer(function () { return ruter.getTravelData("3010610").then(function (data) {
         var viewData = {
@@ -1124,7 +1172,7 @@ $(function () {
         };
         mediator.trigger("travel-update", viewData);
     }); });
-    travelTimer.start(60 * 1000);
+    travelTimer.start(5 * 1000);
     travelTimer.trigger();
     var calendarSources = [
         {
@@ -1140,3 +1188,44 @@ $(function () {
     calendarTimer.start(10 * 60 * 1000);
     calendarTimer.trigger();
 });
+
+///<reference path="../simple.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Views;
+(function (Views) {
+    var ScrobbleView = (function (_super) {
+        __extends(ScrobbleView, _super);
+        function ScrobbleView(el, mediator) {
+            _super.call(this, el);
+            this.el = el;
+            this.mediator = mediator;
+            this.initialize();
+        }
+        ScrobbleView.prototype.initialize = function () {
+            this.mediator.on("scrobble-update", this.update, this);
+            this.compileTemplate();
+        };
+        ScrobbleView.prototype.compileTemplate = function () {
+            this.template = this._template.compile({
+                "": function (e, d) { return e.andSelf().css("background", "linear-gradient( rgba(35, 125, 115, 0.75), rgba(35, 125, 115, 1) ), url('" + d.imageUrl + "') top/contain no-repeat"); },
+                ".track": function (e, d) { return e.text(d.track); },
+                ".artist": function (e, d) { return e.text(d.artist); },
+                ".album": function (e, d) { return e.text(d.album); }
+            });
+        };
+        ScrobbleView.prototype.update = function (data) {
+            if (!data) {
+                this.el.css("background", "linear-gradient( rgba(35, 125, 115, 1), rgba(35, 125, 115, 1) )");
+                this.el.empty();
+            }
+            this.template(data);
+        };
+        return ScrobbleView;
+    })(Simple.View);
+    Views.ScrobbleView = ScrobbleView;
+})(Views || (Views = {}));

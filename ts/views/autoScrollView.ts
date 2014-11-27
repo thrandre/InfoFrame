@@ -10,9 +10,11 @@ module Views {
     }
 
     autoscroll(innerEl: JQuery, speed: number) {
+      var self = this;
+      var start = false;
 
-      if (this.animation) {
-        return;
+      if (!this.animation) {
+        start = true;
       }
 
       this.animation = () => {
@@ -29,19 +31,16 @@ module Views {
         },
           {
             duration: duration,
-            delay: 1000
-          })
-          .velocity({
-            top: 0
-          },
-          {
-            duration: duration / 2,
             delay: 1000,
-            complete: this.animation
+            complete: () => {
+              innerEl.css("top", "0px");
+              self.animation();
+            }
           });
       };
-
-      this.animation();
+      if (start) {
+        this.animation();
+      }
     }
 
   }
