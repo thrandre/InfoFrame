@@ -1213,7 +1213,7 @@ var Views;
         };
         ScrobbleView.prototype.compileTemplate = function () {
             this.template = this._template.compile({
-                "": function (e, d) { return e.andSelf().css("background", "linear-gradient( rgba(35, 125, 115, 0.75), rgba(35, 125, 115, 1) ), url('" + d.imageUrl + "') top/cover no-repeat"); },
+                "": function (e, d) { return d.imageUrl !== "" && e.andSelf().css("background", "linear-gradient( rgba(35, 125, 115, 0.75), rgba(35, 125, 115, 1) ), url('" + d.imageUrl + "') top/cover no-repeat"); },
                 ".track": function (e, d) { return e.text(d.track); },
                 ".artist": function (e, d) { return e.text(d.artist); },
                 ".album": function (e, d) { return e.text(d.album); }
@@ -1221,8 +1221,7 @@ var Views;
         };
         ScrobbleView.prototype.update = function (data) {
             if (!data) {
-                this.el.css("background", "linear-gradient( rgba(35, 125, 115, 1), rgba(35, 125, 115, 1) )");
-                this.el.empty();
+                this.template({ track: "", artist: "", album: "", imageUrl: "" });
                 return;
             }
             this.template(data);
