@@ -21,6 +21,7 @@ module Views {
         var targetTop = (innerEl.height() - this.el.height()) * -1;
 
         if (targetTop >= 0) {
+          this.animation = undefined;
           return;
         }
 

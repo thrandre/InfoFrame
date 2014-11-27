@@ -235,7 +235,7 @@ $(() => {
     mediator.trigger("travel-update", viewData);
   }));
 
-  travelTimer.start(5 * 1000);
+  travelTimer.start(60 * 1000);
   travelTimer.trigger();
 
   var calendarSources =

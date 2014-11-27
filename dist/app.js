@@ -740,6 +740,7 @@ var Views;
             this.animation = function () {
                 var targetTop = (innerEl.height() - _this.el.height()) * -1;
                 if (targetTop >= 0) {
+                    _this.animation = undefined;
                     return;
                 }
                 var duration = (targetTop * -1 / 100) * speed;
@@ -1172,7 +1173,7 @@ $(function () {
         };
         mediator.trigger("travel-update", viewData);
     }); });
-    travelTimer.start(5 * 1000);
+    travelTimer.start(60 * 1000);
     travelTimer.trigger();
     var calendarSources = [
         {
@@ -1212,7 +1213,7 @@ var Views;
         };
         ScrobbleView.prototype.compileTemplate = function () {
             this.template = this._template.compile({
-                "": function (e, d) { return e.andSelf().css("background", "linear-gradient( rgba(35, 125, 115, 0.75), rgba(35, 125, 115, 1) ), url('" + d.imageUrl + "') top/contain no-repeat"); },
+                "": function (e, d) { return e.andSelf().css("background", "linear-gradient( rgba(35, 125, 115, 0.75), rgba(35, 125, 115, 1) ), url('" + d.imageUrl + "') top/cover no-repeat"); },
                 ".track": function (e, d) { return e.text(d.track); },
                 ".artist": function (e, d) { return e.text(d.artist); },
                 ".album": function (e, d) { return e.text(d.album); }
@@ -1222,6 +1223,7 @@ var Views;
             if (!data) {
                 this.el.css("background", "linear-gradient( rgba(35, 125, 115, 1), rgba(35, 125, 115, 1) )");
                 this.el.empty();
+                return;
             }
             this.template(data);
         };
