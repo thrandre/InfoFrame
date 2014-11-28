@@ -2132,12 +2132,12 @@ body {
   text-transform: uppercase;
 }
 .lastfm .track {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 700;
   margin-bottom: 5px;
 }
 .lastfm .artist-album {
-  font-size: 24px;
+  font-size: 28px;
 }
 .lastfm .artist-album .artist {
   font-weight: 700;
