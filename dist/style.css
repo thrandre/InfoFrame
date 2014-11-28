@@ -2145,7 +2145,8 @@ body {
 .lastfm .track,
 .lastfm .artist-album {
   overflow: hidden;
-  max-width: 500px;
+  max-width: 600px;
+  width: 600px;
   text-overflow: elipsis;
   white-space: nowrap;
 }
