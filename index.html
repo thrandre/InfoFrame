@@ -107,7 +107,7 @@
     var browserHeight;
 
     // Specify the number of snowflakes you want visible
-    var numberOfSnowflakes = 20;
+    var numberOfSnowflakes = 10;
 
     // Flag to reset the position of the snowflakes
     var resetPosition = false;
@@ -225,11 +225,20 @@
       moveSnowflakes();
     }
 
+    var group = 0;
     //
     // Responsible for moving each snowflake by calling its update function
     //
     function moveSnowflakes() {
-      for (var i = 0; i < snowflakes.length; i++) {
+      var groupSize = snowflakes.length / 2;
+
+      if (group === 1) {
+        group = 0;
+      } else {
+        group = 1;
+      }
+
+      for (var i = (group * groupSize); i < ((group + 1) * groupSize); i++) {
         var snowflake = snowflakes[i];
         snowflake.update();
       }
