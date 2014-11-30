@@ -53,7 +53,7 @@ gulp.task('concat', ['typescript', 'vendor'], function() {
 
 // Compile Our Less
 gulp.task('less', function() {
-  return gulp.src('styles/style.less')
+  return gulp.src('styles/christmas.less')
     .pipe(less({
       paths: [path.join(__dirname, 'less', 'includes')]
     }))
