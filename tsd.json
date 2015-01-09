@@ -22,6 +22,9 @@
     },
     "es6-promise/es6-promise.d.ts": {
       "commit": "c81ca4017272502c6609f48f839e193056e54cad"
+    },
+    "tween.js/tween.js.d.ts": {
+      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
     }
   }
 }

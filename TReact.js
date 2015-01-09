@@ -4,7 +4,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var React = require("react");
+var React = require("react/addons");
 var NotImplementedError = (function () {
     function NotImplementedError(methodName) {
         this.name = "NotImplementedError";
@@ -98,8 +98,8 @@ function createClass(clazz, mixins) {
     return React.createClass(spec);
 }
 exports.createClass = createClass;
-function jsx(transformedJsx, data) {
-    return transformedJsx(data);
+function jsx(transformedJsx, data, context) {
+    return transformedJsx.call(context || this, data);
 }
 exports.jsx = jsx;
 //# sourceMappingURL=TReact.js.map

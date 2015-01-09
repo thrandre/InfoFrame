@@ -16,7 +16,8 @@ class ClockView extends TReact.Component<ClockProps, any> {
 				hour: dt.format("HH"),
 				minute: dt.format("mm"),
 				second: dt.format("s")
-			}
+			},
+            this
 		);
 	}
 

@@ -1,4 +1,4 @@
-﻿import React = require("react");
+﻿import React = require("react/addons");
 
 export class NotImplementedError implements Error {
 	name = "NotImplementedError";
@@ -100,8 +100,8 @@ export function createClass<P, S>( clazz: { new (): Component<P, S> }, mixins?: 
 	return React.createClass( spec );
 }
 
-export function jsx(transformedJsx: (data: {}) => any, data: {}): React.ReactElement<any>
+export function jsx(transformedJsx: (data: {}) => any, data: {}, context): React.ReactElement<any>
 {
-	return transformedJsx(data);
+	return transformedJsx.call(context || this, data);
 }
  

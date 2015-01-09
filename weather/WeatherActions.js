@@ -1,7 +1,7 @@
 var RequestAction = require("../RequestAction");
 var WeatherActions = (function () {
     function WeatherActions() {
-        this.getWeatherData = new RequestAction();
+        this.getArticleData = new RequestAction();
     }
     return WeatherActions;
 })();

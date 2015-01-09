@@ -38,8 +38,8 @@ class WeatherService
 
 	getWeather(city: string, countryCode: string): Thenable<WeatherData>
 	{
-        WeatherActions.getWeatherData.trigger({ state: RequestState.Pending });
-        return $.getJSON(this.getApiUrl(city, countryCode)).then((data: any) => WeatherActions.getWeatherData.trigger({ data: this.parseWeatherData(data), state: RequestState.Success }));
+        WeatherActions.getArticleData.trigger({ state: RequestState.Pending });
+        return $.getJSON(this.getApiUrl(city, countryCode)).then((data: any) => WeatherActions.getArticleData.trigger({ data: this.parseWeatherData(data), state: RequestState.Success }));
 	}
 }
 

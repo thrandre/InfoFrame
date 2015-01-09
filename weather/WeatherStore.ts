@@ -12,7 +12,7 @@ class WeatherStore extends Store
     constructor(private weatherService: WeatherService)
 	{
 		super();
-        WeatherActions.getWeatherData.listen(pl => { 
+        WeatherActions.getArticleData.listen(pl => { 
             if (pl.state === RequestState.Success) {
                 this.state = pl.data;
                 this.trigger(this.getState());

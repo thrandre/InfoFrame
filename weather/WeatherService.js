@@ -31,8 +31,8 @@ var WeatherService = (function () {
     };
     WeatherService.prototype.getWeather = function (city, countryCode) {
         var _this = this;
-        WeatherActions.getWeatherData.trigger({ state: 0 /* Pending */ });
-        return $.getJSON(this.getApiUrl(city, countryCode)).then(function (data) { return WeatherActions.getWeatherData.trigger({ data: _this.parseWeatherData(data), state: 2 /* Success */ }); });
+        WeatherActions.getArticleData.trigger({ state: 0 /* Pending */ });
+        return $.getJSON(this.getApiUrl(city, countryCode)).then(function (data) { return WeatherActions.getArticleData.trigger({ data: _this.parseWeatherData(data), state: 2 /* Success */ }); });
     };
     return WeatherService;
 })();

@@ -19,7 +19,7 @@ var ClockView = (function (_super) {
             hour: dt.format("HH"),
             minute: dt.format("mm"),
             second: dt.format("s")
-        });
+        }, this);
     };
     return ClockView;
 })(TReact.Component);

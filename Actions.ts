@@ -2,9 +2,7 @@
 
 class Actions
 {
-	fooAction = new Action<number>();
+	animationFrame = new Action<any>();
 }
 
-var actions = new Actions();
-
-export = actions;
+export = Actions;

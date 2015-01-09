@@ -1,6 +1,7 @@
 ﻿var React = require("react");
 var ClockView = require("../ClockView");
 var WeatherView = require("../../weather/WeatherView");
+var NewsView = require("../../news/NewsView");
 
 module.exports = function(data) {
 	return (
@@ -30,17 +31,8 @@ module.exports = function(data) {
 				</div>
 			  </div>
 			</div>
-			<div className="quadrant lastfm">
-			  <div className="wrapper">
-				<div className="track">
-				  Under pressure
-				</div>
-				<div className="artist-album">
-				  <span className="artist">Logic</span>
-				  <span>/</span>
-				  <span className="album">Logic</span>
-				</div>
-			  </div>
+			<div className="quadrant news">
+				<NewsView { ...data.newsProps } />
 			</div>
 		</div>
 	);

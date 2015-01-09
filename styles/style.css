@@ -2136,29 +2136,41 @@ html {
 .travel .list .row.group-header {
   background-color: #237d73;
 }
-.lastfm {
-  background-repeat: no-repeat;
-  background-size: cover;
+.news {
+  background-color: #237d73;
+}
+.news .articles {
+  float: left;
+  clear: both;
+  position: relative;
+}
+.news .articles .article {
+  width: 100%;
+  height: 100%;
+  float: left;
+  clear: both;
+  padding: 30px;
+  box-sizing: border-box;
+}
+.news .articles .article .time {
+  float: left;
+  clear: both;
+  font-weight: 600;
+  font-size: 20px;
+}
+.news .articles .article .title {
+  font-weight: 600;
+  font-size: 45px;
   text-transform: uppercase;
+  float: left;
+  clear: both;
+  margin-top: 10px;
 }
-.lastfm .track {
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-.lastfm .artist-album {
-  font-size: 28px;
-}
-.lastfm .artist-album .artist {
-  font-weight: 700;
-}
-.lastfm .track,
-.lastfm .artist-album {
-  overflow: hidden;
-  max-width: 600px;
-  width: 600px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.news .articles .article .summary {
+  font-size: 30px;
+  float: left;
+  clear: both;
+  margin-top: 20px;
 }
 .unknown {
   background-color: #237d73;

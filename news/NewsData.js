@@ -1,0 +1,1 @@
+//# sourceMappingURL=NewsData.js.map

@@ -26,7 +26,8 @@ class ClockView extends TReact.Component<AnalogClockProps, any> {
 				hourRotation: this.getHourRotation(this.props.hour), 
 				minuteRotation: this.getMinuteRotation(this.props.minute), 
 				secondRotation: this.getSecondRotation(this.props.second)
-			}
+			},
+            this
 		);
 	}
 

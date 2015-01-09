@@ -24,7 +24,7 @@ var ClockView = (function (_super) {
             hourRotation: this.getHourRotation(this.props.hour),
             minuteRotation: this.getMinuteRotation(this.props.minute),
             secondRotation: this.getSecondRotation(this.props.second)
-        });
+        }, this);
     };
     return ClockView;
 })(TReact.Component);

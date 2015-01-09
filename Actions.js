@@ -1,10 +1,9 @@
 var Action = require("./Action");
 var Actions = (function () {
     function Actions() {
-        this.fooAction = new Action();
+        this.animationFrame = new Action();
     }
     return Actions;
 })();
-var actions = new Actions();
-module.exports = actions;
+module.exports = Actions;
 //# sourceMappingURL=Actions.js.map

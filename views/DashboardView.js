@@ -7,6 +7,7 @@ var __extends = this.__extends || function (d, b) {
 var WeatherStore = require("../weather/WeatherStore");
 var TReact = require("../TReact");
 var ClockStore = require("../stores/ClockStore");
+var NewsStore = require("../news/NewsStore");
 var DashboardView = (function (_super) {
     __extends(DashboardView, _super);
     function DashboardView() {
@@ -15,12 +16,14 @@ var DashboardView = (function (_super) {
     DashboardView.prototype.getInitialState = function () {
         return {
             clockProps: ClockStore.getState(),
-            weatherProps: WeatherStore.getState()
+            weatherProps: WeatherStore.getState(),
+            newsProps: NewsStore.getState()
         };
     };
     DashboardView.prototype.componentDidMount = function () {
         ClockStore.listen(this.handleClockStoreChange);
         WeatherStore.listen(this.handleWeatherStoreChange);
+        NewsStore.listen(this.handleNewsStoreChange);
     };
     DashboardView.prototype.handleClockStoreChange = function (payload) {
         this.setState({ clockProps: payload });
@@ -28,8 +31,11 @@ var DashboardView = (function (_super) {
     DashboardView.prototype.handleWeatherStoreChange = function (payload) {
         this.setState({ weatherProps: payload });
     };
+    DashboardView.prototype.handleNewsStoreChange = function (payload) {
+        this.setState({ newsProps: payload });
+    };
     DashboardView.prototype.render = function () {
-        return TReact.jsx(require("./jsx/DashboardView.jsx"), this.state);
+        return TReact.jsx(require("./jsx/DashboardView.jsx"), this.state, this);
     };
     return DashboardView;
 })(TReact.Component);

@@ -3,7 +3,7 @@ import RequestAction = require("../RequestAction");
 import WeatherData = require("./WeatherData");
 
 class WeatherActions {
-    getWeatherData = new RequestAction<WeatherData>();
+    getArticleData = new RequestAction<WeatherData>();
 }
 
 var weatherActions = new WeatherActions();

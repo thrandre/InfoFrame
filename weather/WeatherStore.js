@@ -15,7 +15,7 @@ var WeatherStore = (function (_super) {
         var _this = this;
         _super.call(this);
         this.weatherService = weatherService;
-        WeatherActions.getWeatherData.listen(function (pl) {
+        WeatherActions.getArticleData.listen(function (pl) {
             if (pl.state === 2 /* Success */) {
                 _this.state = pl.data;
                 _this.trigger(_this.getState());
