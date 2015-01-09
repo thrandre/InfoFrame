@@ -1,0 +1,5 @@
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\bin\InfoFramez.dll
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\bin\InfoFramez.pdb
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFramez.dll
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFramez.pdb
+C:\Users\Thomas Andresen\Documents\GitHub\InfoFrame\obj\Debug\InfoFramez.csprojResolveAssemblyReference.cache

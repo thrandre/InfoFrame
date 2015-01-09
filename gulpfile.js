@@ -1,80 +1,50 @@
-'use strict';
+var gulp = require("gulp");
+var source = require("vinyl-source-stream");
+var browserify = require("browserify");
+var watchify = require("watchify");
+var reactify = require("reactify");
+var path = require("path");
+var less = require("gulp-less");
+var transformTools = require("browserify-transform-tools");
 
-// Include gulp
-var gulp = require('gulp');
+var build = function (b, src) {
+	b.bundle()
+		.pipe(source(src))
+		.pipe(gulp.dest("./build"));
 
-// Include Our Plugins
-var express = require('express');
-var ts = require('gulp-typescript');
-var less = require('gulp-less');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
-var path = require('path');
-var debug = require('gulp-debug');
+	return b;
+};
 
-var serverport = 1337;
-var server = express();
-server.use(express.static('./'));
-server.get('/', function(req, res) {
-  res.redirect('/');
+gulp.task("browserify", function () {
+	var b = browserify({debug: true});
+
+	b.transform(reactify);
+
+	b = watchify(b);
+
+	b.add("./App.js");
+
+	b.on("update", function () {
+		build(b, "./App.js");
+	});
+
+	build(b, "./App.js");
 });
 
-gulp.task('serve', function(cb) {
-  server.listen(serverport);
-  cb();
+/*global __dirname*/
+gulp.task("less", function () {
+	return gulp.src("styles/style.less")
+	  .pipe(less({
+		paths: [path.join(__dirname, "less", "includes")]
+	  }))
+	  .pipe(gulp.dest("./styles"));
 });
 
-gulp.task('vendor', function() {
-  return gulp.src(['js/vendor/*.js', 'js/*.js'])
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('dist'));
+gulp.task("fonts", function () {
+	return gulp.src(["styles/font-awesome/fonts/*",
+		"styles/weather-icons/fonts/*"
+	])
+	  .pipe(gulp.dest("dist/fonts"));
 });
 
-gulp.task('typescript', function() {
-  var tsResult = gulp.src('ts/**/*.ts')
-    .pipe(ts({
-      noExternalResolve: false,
-      module: 'commonjs',
-      target: 'ES5',
-      sortOutput: true
-    }));
-
-  return tsResult.js.pipe(concat('app.js')).pipe(gulp.dest('dist'));
-});
-
-// Concatenate & Minify JS
-gulp.task('concat', ['typescript', 'vendor'], function() {
-  return gulp.src(['dist/vendor.js', 'dist/app.js'])
-    .pipe(uglify())
-    .pipe(concat('app.all.min.js'))
-    .pipe(gulp.dest('dist'));
-});
-
-// Compile Our Less
-gulp.task('less', function() {
-  return gulp.src('styles/christmas.less')
-    .pipe(less({
-      paths: [path.join(__dirname, 'less', 'includes')]
-    }))
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('fonts', function() {
-  return gulp.src(['styles/font-awesome/fonts/*',
-      'styles/weather-icons/fonts/*'
-    ])
-    .pipe(gulp.dest('dist/fonts'));
-});
-
-gulp.task('watch', ['typescript', 'vendor', 'concat', 'less'], function() {
-  gulp.watch('ts/**/*.ts', ['typescript', 'concat']);
-  gulp.watch('styles/*.less', ['less']);
-  gulp.watch('js/**/*.js', ['vendor', 'concat']);
-});
-
-// Default Task
-gulp.task('default', ['serve', 'typescript', 'vendor', 'concat', 'less',
-  'fonts',
-  'watch'
-]);
+gulp.task("default", ["browserify", "less", "fonts"]);
