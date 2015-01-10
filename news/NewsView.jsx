@@ -6,7 +6,8 @@ module.exports = function(data) {
 	}
 
 	var style = {
-		transform: "translate(0, "+ this.state.top +"px)"
+		transform: "translate(0, "+ this.state.top +"px)",
+		"-webkit-transform": "translate(0, "+ this.state.top +"px)"
 	};
 
 	return (
