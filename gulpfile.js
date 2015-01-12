@@ -47,4 +47,8 @@ gulp.task("fonts", function () {
 	  .pipe(gulp.dest("dist/fonts"));
 });
 
-gulp.task("default", ["browserify", "less", "fonts"]);
+gulp.task("watch", function () {
+    gulp.watch("styles/**/*", ["less"]);
+});
+
+gulp.task("default", ["browserify", "less", "fonts", "watch"]);

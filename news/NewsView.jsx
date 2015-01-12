@@ -15,7 +15,7 @@ module.exports = function(data) {
 			{ data.articles.map(function(article) {
 				return (
 					<div key={ article.id } className="article">
-						<div className="time">{ article.updated.format("HH:mm") }</div>
+						<div className="time">{ article.updated.format("dddd HH:mm") }</div>
 						<div className="title">{ article.title }</div>
 						<div className="summary">{ article.summary }</div>
 					</div>

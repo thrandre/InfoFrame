@@ -8,17 +8,13 @@ class NewsView extends TReact.Component<NewsProps, any>
 {
     private animating = false;
     private currentArticle = 0;
-    private distance = 0;
-
-    private tween: Tween.Tween;
 
     shouldComponentUpdate: (nextProps: NewsProps) => boolean;
 
     getInitialState()
     {
         return {
-            top: 0,
-            translate: "translate(0,0);"
+            top: 0
         };
     }
 
@@ -39,34 +35,38 @@ class NewsView extends TReact.Component<NewsProps, any>
             return;
         }
 
-        var first = $(domNode).children().first();
-
         this.animating = true;
-        this.distance = first.outerHeight();
 
-        setInterval(() => this.scroll(domNode), 15500);
+        var scrollDistance = $(domNode).children().first().outerHeight(true);
+
+        setInterval(() => this.scroll(domNode, scrollDistance), 15500);
     }
 
-    scroll(domNode: Element)
+    scroll(domNode: Element, scrollDistance: number)
     {
         this.currentArticle++;
-
-        if (this.tween) 
-        {
-            this.tween.stop();
-        }
 
         if (this.currentArticle >= this.props.articles.length) 
         {
             this.currentArticle = 0;
         }
 
-        var newTop = this.currentArticle * this.distance * -1;
-        var tweenObj = $.extend({}, this.state);
+        var offset = this.currentArticle * scrollDistance * -1;
+
+        this.tween(() => this.state.top, val => this.setState({ top: val }), { endValue: offset, duration: 500 }).start();
+    }
+
+    tween(valueGetter: () => number, valueSetter: (val) => void, props: { endValue: number; duration?: number; easing?: (k: number) => number }): { start: () => void }
+    {
+        var tweenFrom = { value: valueGetter() || 0 };
+        var tweenTo = { value: props.endValue || 0 };
         
-        this.tween = new Tween.Tween(tweenObj).to({ top: newTop }, 500).onUpdate(() => { 
-            this.setState(tweenObj);
-        }).start();
+        var tween = new Tween.Tween(tweenFrom)
+            .to(tweenTo, props.duration || 0)
+            .easing(props.easing || Tween.Easing.Linear.None)
+            .onUpdate(() => valueSetter(tweenFrom.value));
+
+        return { start: () => tween.start() };
     }
 
     render(): React.ReactElement<NewsProps>

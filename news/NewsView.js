@@ -13,12 +13,10 @@ var NewsView = (function (_super) {
         _super.apply(this, arguments);
         this.animating = false;
         this.currentArticle = 0;
-        this.distance = 0;
     }
     NewsView.prototype.getInitialState = function () {
         return {
-            top: 0,
-            translate: "translate(0,0);"
+            top: 0
         };
     };
     NewsView.prototype.componentDidMount = function () {
@@ -32,25 +30,24 @@ var NewsView = (function (_super) {
         if (this.animating || !domNode) {
             return;
         }
-        var first = $(domNode).children().first();
         this.animating = true;
-        this.distance = first.outerHeight();
-        setInterval(function () { return _this.scroll(domNode); }, 15500);
+        var scrollDistance = $(domNode).children().first().outerHeight(true);
+        setInterval(function () { return _this.scroll(domNode, scrollDistance); }, 15500);
     };
-    NewsView.prototype.scroll = function (domNode) {
+    NewsView.prototype.scroll = function (domNode, scrollDistance) {
         var _this = this;
         this.currentArticle++;
-        if (this.tween) {
-            this.tween.stop();
-        }
         if (this.currentArticle >= this.props.articles.length) {
             this.currentArticle = 0;
         }
-        var newTop = this.currentArticle * this.distance * -1;
-        var tweenObj = $.extend({}, this.state);
-        this.tween = new Tween.Tween(tweenObj).to({ top: newTop }, 500).onUpdate(function () {
-            _this.setState(tweenObj);
-        }).start();
+        var offset = this.currentArticle * scrollDistance * -1;
+        this.tween(function () { return _this.state.top; }, function (val) { return _this.setState({ top: val }); }, { endValue: offset, duration: 500 }).start();
+    };
+    NewsView.prototype.tween = function (valueGetter, valueSetter, props) {
+        var tweenFrom = { value: valueGetter() || 0 };
+        var tweenTo = { value: props.endValue || 0 };
+        var tween = new Tween.Tween(tweenFrom).to(tweenTo, props.duration || 0).easing(props.easing || Tween.Easing.Linear.None).onUpdate(function () { return valueSetter(tweenFrom.value); });
+        return { start: function () { return tween.start(); } };
     };
     NewsView.prototype.render = function () {
         return TReact.jsx(require("./NewsView.jsx"), this.props, this);
