@@ -1995,17 +1995,19 @@ html {
 .dashboard {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+}
+.main {
+  width: 100%;
+  height: 93%;
+  overflow: hidden;
+  float: left;
+}
+.main .quadrant,
+.main .octant {
   overflow: hidden;
 }
-.dashboard .quadrant,
-.dashboard .octant {
-  overflow: hidden;
-}
-.dashboard .quadrant .wrapper,
-.dashboard .octant .wrapper {
+.main .quadrant .wrapper,
+.main .octant .wrapper {
   position: relative;
   left: 50%;
   top: 50%;
@@ -2014,15 +2016,60 @@ html {
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
 }
-.dashboard .quadrant {
+.main .quadrant {
   width: 50%;
   height: 50%;
   float: left;
 }
-.dashboard .quadrant .octant {
+.main .quadrant .octant {
   width: 50%;
   height: 100%;
   float: left;
+}
+.ticker {
+  width: 100%;
+  height: 7%;
+  float: left;
+  clear: both;
+  background-color: #35bdad;
+  font-size: 20px;
+}
+.ticker .header,
+.ticker .entries,
+.ticker .entry,
+.ticker .container {
+  float: left;
+  height: 100%;
+}
+.ticker .header,
+.ticker .entry {
+  padding: 20px;
+  box-sizing: border-box;
+}
+.ticker .header span,
+.ticker .entry span {
+  display: block;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  float: left;
+}
+.ticker .container .header {
+  background-color: #113d38;
+}
+.ticker .container .entry:nth-child(2n) {
+  background-color: #2ea396;
+}
+.ticker .container .entry .line {
+  border-radius: 50%;
+  border: 2px solid white;
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  margin-right: 15px;
+  font-weight: 600;
+  line-height: 200%;
 }
 .clock {
   background-color: #35bdad;
