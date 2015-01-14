@@ -3,394 +3,395 @@
 
 html,
 body {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: 'Open Sans';
-    line-height: 1;
-    color: white;
-    overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	font-family: 'Open Sans';
+	line-height: 1;
+	color: white;
+	overflow: hidden;
 }
 
 html {
-    z-index: 4;
-    -webkit-font-smoothing: antialiased;
-    text-shadow: none;
-    text-rendering: optimizeLegibility;
+	z-index: 4;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: none;
+	text-rendering: optimizeLegibility;
 }
 
 .dashboard {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .main {
-    width: 100%;
-    height: 93%;
-    overflow: hidden;
-    float: left;
+	width: 100%;
+	height: 93%;
+	overflow: hidden;
+	float: left;
 
-    .quadrant,
-    .octant {
-        overflow: hidden;
+	.quadrant,
+	.octant {
+		overflow: hidden;
 
-        .wrapper {
-            position: relative;
-            left: 50%;
-            top: 50%;
-            float: left;
-            transform: translate(-50%, -50%);
-            -webkit-transform: translate(-50%, -50%);
-            -moz-transform: translate(-50%, -50%);
-        }
-    }
+		.wrapper {
+			position: relative;
+			left: 50%;
+			top: 50%;
+			float: left;
+			transform: translate(-50%, -50%);
+			-webkit-transform: translate(-50%, -50%);
+			-moz-transform: translate(-50%, -50%);
+		}
+	}
 
-    .quadrant {
-        width: 50%;
-        height: 50%;
-        float: left;
+	.quadrant {
+		width: 50%;
+		height: 50%;
+		float: left;
 
-        .octant {
-            width: 50%;
-            height: 100%;
-            float: left;
-        }
-    }
+		.octant {
+			width: 50%;
+			height: 100%;
+			float: left;
+		}
+	}
 }
 
 .ticker {
-    width: 100%;
-    height: 7%;
-    float: left;
-    clear: both;
-    background-color: #35bdad;
-    font-size: 26px;
+	width: 100%;
+	height: 7%;
+	float: left;
+	clear: both;
+	background-color: #35bdad;
+	font-size: 26px;
 
-    overflow: hidden;
+	overflow: hidden;
 
-    * {
-        box-sizing: border-box;
-    }
+	* {
+		box-sizing: border-box;
+	}
 
-    .container {
-        height: 100%;
-        white-space: nowrap;
-        position: relative;
-        float: left;
+	.container {
+		height: 100%;
+		white-space: nowrap;
+		position: relative;
+		float: left;
 
-        .header {
-            height: 100%;
-            background-color: #113d38;
-            display: inline-block;
-            padding: 0 40px 0 40px;
-            position: relative;
-            box-sizing: border-box;
+		.header {
+			height: 100%;
+			background-color: #113d38;
+			display: inline-block;
+			padding: 0 40px 0 40px;
+			position: relative;
+			box-sizing: border-box;
 
-            .text {
-                display: block;
-                position: relative;
-                top: 50%;
-                transform: translateY(-50%);
-                float: left;
-            }
-        }
+			.text {
+				display: block;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				float: left;
+			}
+		}
 
-        .entries {
-            height: 100%;
-            display: inline-block;
-            white-space: nowrap;
-            position: relative;
-        }
+		.entries {
+			height: 100%;
+			display: inline-block;
+			white-space: nowrap;
+			position: relative;
+		}
 
-        .entry {
-            height: 100%;
-            display: inline-block;
+		.entry {
+			height: 100%;
+			display: inline-block;
 
-            padding: 0 40px 0 40px;
+			padding: 0 40px 0 40px;
 
-            &:nth-child(2n) {
-                background-color: #2ea396;
-            }
+			&:nth-child(2n) {
+				background-color: #2ea396;
+			}
 
-            span {
-                position: relative;
-                top: 50%;
-                transform: translateY(-50%);
-                float: left;
-            }
+			span {
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				float: left;
+			}
 
-            .line {
-                border-radius: 50%;
-                border: 3px solid white;
-                width: 45px;
-                height: 45px;
-                vertical-align: middle;
-                text-align: center;
-                margin-right: 15px;
-                font-weight: 600;
-                line-height: 150%;
-            }
+			.line {
+				border-radius: 50%;
+				border: 3px solid white;
+				width: 45px;
+				height: 45px;
+				vertical-align: middle;
+				text-align: center;
+				margin-right: 15px;
+				font-weight: 600;
+				line-height: 150%;
+			}
 
-            .destination {
-                margin-right: 30px;
-                text-transform: uppercase;
-            }
+			.destination {
+				margin-right: 30px;
+				text-transform: uppercase;
+			}
 
-            .time {
-                text-transform: uppercase;
-            }
-        }
-    }
+			.time {
+				text-transform: uppercase;
+			}
+		}
+	}
 }
 
 .clock {
-    background-color: #35bdad;
-    width: 100%;
-    height: 100%;
+	background-color: #35bdad;
+	width: 100%;
+	height: 100%;
 
-    .time {
-        .analog {
-            float: left;
-        }
+	.time {
+		.analog {
+			float: left;
+		}
 
-        .digital {
-            float: left;
-            font-size: 145px;
-            font-weight: 600;
+		.digital {
+			float: left;
+			font-size: 145px;
+			font-weight: 600;
 
-            .minute {
-                font-weight: 400;
-            }
-        }
-    }
+			.minute {
+				font-weight: 400;
+			}
+		}
+	}
 
-    .date {
-        float: right;
-        font-size: 35px;
-        font-weight: 300;
-        text-transform: uppercase;
+	.date {
+		float: right;
+		font-size: 35px;
+		font-weight: 300;
+		text-transform: uppercase;
 
-        .day {
-            font-weight: 600;
-        }
-    }
+		.day {
+			font-weight: 600;
+		}
+	}
 }
 
 .weather {
-    background-color: #237d73;
-    width: 100%;
-    height: 100%;
-    text-transform: uppercase;
+	background-color: #237d73;
+	width: 100%;
+	height: 100%;
+	text-transform: uppercase;
 
-    .symbol {
-        width: 100%;
-        font-size: 130px;
-        text-align: center;
-        margin-bottom: 40px;
-    }
+	.symbol {
+		width: 100%;
+		font-size: 130px;
+		text-align: center;
+		margin-bottom: 40px;
+	}
 
-    .temperature {
-        text-align: center;
-        font-size: 80px;
-        font-weight: 700;
+	.temperature {
+		text-align: center;
+		font-size: 80px;
+		font-weight: 700;
 
-        .valsymbol {
-            font-weight: 300;
-        }
-    }
+		.valsymbol {
+			font-weight: 300;
+		}
+	}
 
-    .advanced {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 30px;
+	.advanced {
+		margin-top: 30px;
+		text-align: center;
+		font-size: 30px;
 
-        .val {
-            font-weight: 700;
-        }
+		.val {
+			font-weight: 700;
+		}
 
-        .rain {
-            margin-right: 15px;
-        }
+		.rain {
+			margin-right: 15px;
+		}
 
-        .wi {
-            font-size: 40px;
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-    }
+		.wi {
+			font-size: 40px;
+			vertical-align: middle;
+			margin-right: 5px;
+		}
+	}
 }
 
 .calendar {
-    background-color: #113d38;
-    text-transform: uppercase;
-    line-height: 1.5;
+	background-color: #113d38;
+	text-transform: uppercase;
+	line-height: 1.5;
 
-    .list {
-        .row {
-            padding: 30px 30px 0;
-        }
+	.list {
+		.row {
+			padding: 30px 30px 0;
+		}
 
-        .header {
-            font-size: 34px;
-        }
+		.header {
+			font-size: 34px;
+		}
 
-        .time,
-        .title,
-        .owner {
-            float: left;
-            clear: both;
-        }
+		.time,
+		.title,
+		.owner {
+			float: left;
+			clear: both;
+		}
 
-        .time {
-            font-size: 20px;
-            color: #35bdad;
-        }
+		.time {
+			font-size: 20px;
+			color: #35bdad;
+		}
 
-        .title {
-            font-size: 34px;
-            font-weight: 700;
-        }
+		.title {
+			font-size: 34px;
+			font-weight: 700;
+		}
 
-        .owner {
-            font-size: 18px;
-            color: #237d73;
-        }
-    }
+		.owner {
+			font-size: 18px;
+			color: #237d73;
+		}
+	}
 }
 
 .travel {
-    background-color: #39cab9;
-    font-size: 22px;
+	background-color: #39cab9;
+	font-size: 22px;
 
-    .urgent {
-        font-weight: 700;
-    }
+	.urgent {
+		font-weight: 700;
+	}
 
-    .departure {
-        text-align: right;
-    }
+	.departure {
+		text-align: right;
+	}
 
-    .list {
-        text-transform: uppercase;
+	.list {
+		text-transform: uppercase;
 
-        .row {
-            &:nth-child(2n) {
-                background-color: #2ea396;
-            }
+		.row {
+			&:nth-child(2n) {
+				background-color: #2ea396;
+			}
 
-            &.header {
-                background-color: #2ea396;
-            }
+			&.header {
+				background-color: #2ea396;
+			}
 
-            &.group-header {
-                background-color: #237d73;
-            }
-        }
-    }
+			&.group-header {
+				background-color: #237d73;
+			}
+		}
+	}
 }
 
 .news {
-    background-color: #237d73;
+	background-color: #237d73;
 
-    .articles {
-        float: left;
-        clear: both;
-        position: relative;
+	.articles {
+		float: left;
+		clear: both;
+		position: relative;
 
-        .article {
-            width: 100%;
-            height: 100%;
-            max-height: 100%;
-            float: left;
-            clear: both;
-            overflow: hidden;
-            padding: 30px;
-            box-sizing: border-box;
+		.article {
+			width: 100%;
+			height: 100%;
+			max-height: 100%;
+			float: left;
+			clear: both;
+			overflow: hidden;
+			padding: 30px;
+			box-sizing: border-box;
 
-            .time {
-                float: left;
-                clear: both;
-                font-size: 20px;
-                text-transform: uppercase;
-            }
+			.time {
+				float: left;
+				clear: both;
+				font-size: 20px;
+				text-transform: uppercase;
+			}
 
-            .title {
-                font-weight: 600;
-                font-size: 45px;
-                text-transform: uppercase;
-                float: left;
-                clear: both;
-                margin-top: 10px;
-            }
+			.title {
+				font-weight: 600;
+				font-size: 45px;
+				text-transform: uppercase;
+				float: left;
+				clear: both;
+				margin-top: 10px;
+			}
 
-            .summary {
-                font-size: 34px;
-                float: left;
-                clear: both;
-                margin-top: 20px;
-            }
-        }
-    }
+			.summary {
+				font-size: 34px;
+				float: left;
+				clear: both;
+				margin-top: 20px;
+			}
+		}
+	}
 }
 
 .unknown {
-    background-color: #237d73;
+	background-color: #237d73;
 }
 
 #clock {
-    width: 150px;
-    height: 150px;
-    margin-left: 0;
+	width: 150px;
+	height: 150px;
+	margin-left: 0;
 }
 
 .list {
-    width: 100%;
-    float: left;
-    clear: both;
-    position: relative;
+	width: 100%;
+	float: left;
+	clear: both;
+	position: relative;
 
-    .group {
-        width: 100%;
-        float: left;
-        clear: both;
-    }
+	.group {
+		width: 100%;
+		float: left;
+		clear: both;
+	}
 
-    .row {
-        width: 100%;
-        float: left;
-        clear: both;
-        padding: 30px;
-        box-sizing: border-box;
+	.row {
+		width: 100%;
+		float: left;
+		clear: both;
+		padding: 30px;
+		box-sizing: border-box;
 
-        .col {
-            display: block;
-            float: left;
-            box-sizing: border-box;
+		.col {
+			display: block;
+			float: left;
+			box-sizing: border-box;
 
-            &.col-10 {
-                width: 10%;
-            }
+			&.col-10 {
+				width: 10%;
+			}
 
-            &.col-25 {
-                width: 25%;
-            }
+			&.col-25 {
+				width: 25%;
+			}
 
-            &.col-50 {
-                width: 50%;
-            }
+			&.col-50 {
+				width: 50%;
+			}
 
-            &.col-75 {
-                width: 75%;
-            }
+			&.col-75 {
+				width: 75%;
+			}
 
-            &.col-90 {
-                width: 90%;
-            }
+			&.col-90 {
+				width: 90%;
+			}
 
-            &.col-100 {
-                width: 100%;
-            }
-        }
-    }
+			&.col-100 {
+				width: 100%;
+			}
+		}
+	}
 }

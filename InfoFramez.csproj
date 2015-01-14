@@ -44,6 +44,12 @@
     <TypeScriptCompile Include="Dispatcher.ts" />
     <TypeScriptCompile Include="foo.ts" />
     <TypeScriptCompile Include="lastfm.ts" />
+    <TypeScriptCompile Include="calendar\EventData.ts" />
+    <TypeScriptCompile Include="calendar\CalendarActions.ts" />
+    <TypeScriptCompile Include="calendar\CalendarProps.ts" />
+    <TypeScriptCompile Include="calendar\CalendarService.ts" />
+    <TypeScriptCompile Include="calendar\CalendarStore.ts" />
+    <TypeScriptCompile Include="calendar\CalendarView.ts" />
     <TypeScriptCompile Include="news\NewsActions.ts" />
     <TypeScriptCompile Include="news\ArticleData.ts" />
     <TypeScriptCompile Include="news\NewsProps.ts" />
@@ -151,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="news\NewsView.jsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="calendar\CalendarView.jsx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
