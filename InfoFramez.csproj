@@ -50,11 +50,17 @@
     <TypeScriptCompile Include="news\NewsService.ts" />
     <TypeScriptCompile Include="news\NewsStore.ts" />
     <TypeScriptCompile Include="news\NewsView.ts" />
-    <TypeScriptCompile Include="query.ts" />
+    <TypeScriptCompile Include="Query.ts" />
     <TypeScriptCompile Include="RequestAction.ts" />
     <TypeScriptCompile Include="RequestPayload.ts" />
     <TypeScriptCompile Include="RequestState.ts" />
     <TypeScriptCompile Include="typings\tween.js\tween.js.d.ts" />
+    <TypeScriptCompile Include="travel\TravelActions.ts" />
+    <TypeScriptCompile Include="travel\TravelData.ts" />
+    <TypeScriptCompile Include="travel\TravelProps.ts" />
+    <TypeScriptCompile Include="travel\TravelService.ts" />
+    <TypeScriptCompile Include="travel\TravelStore.ts" />
+    <TypeScriptCompile Include="travel\TravelView.ts" />
     <TypeScriptCompile Include="weather\WeatherActions.ts" />
     <TypeScriptCompile Include="weather\WeatherService.ts" />
     <TypeScriptCompile Include="simple.ts" />
@@ -62,7 +68,6 @@
     <TypeScriptCompile Include="stores\ClockStore.ts" />
     <TypeScriptCompile Include="weather\WeatherStore.ts" />
     <TypeScriptCompile Include="Timer.ts" />
-    <TypeScriptCompile Include="travel.ts" />
     <TypeScriptCompile Include="TReact.ts" />
     <TypeScriptCompile Include="typings\es6-promise\es6-promise.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
@@ -141,7 +146,9 @@
   <ItemGroup>
     <Content Include="weather\WeatherView.jsx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="travel\TravelView.jsx" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="news\NewsView.jsx" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿import ArticleData = require("./ArticleData");
+﻿import ArticleData = require("EventData");
 
 interface NewsProps
 {

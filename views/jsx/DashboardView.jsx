@@ -2,6 +2,7 @@
 var ClockView = require("../ClockView");
 var WeatherView = require("../../weather/WeatherView");
 var NewsView = require("../../news/NewsView");
+var TravelView = require("../../travel/TravelView");
 
 module.exports = function(data) {
 	return (
@@ -30,21 +31,7 @@ module.exports = function(data) {
 				</div>
 			</div>
 			<div className="ticker">
-				<div className="container">
-					<div className="header">
-						<span className="text">T-BANE</span>
-					</div>
-					<div className="entries">
-						<div className="entry">
-							<span className="line">5V</span>
-							<span className="time">3 MIN</span>
-						</div>
-						<div className="entry">
-							<span className="line">30Ø</span>
-							<span className="time">3 MIN</span>
-						</div>
-					</div>
-				</div>
+				<TravelView { ...data.travelProps } />
 			</div>
 		</div>
 	);

@@ -6,6 +6,8 @@ import TReact = require("../TReact");
 import ClockStore = require("../stores/ClockStore");
 import NewsStore = require("../news/NewsStore");
 import NewsProps = require("../news/NewsProps");
+import TravelStore = require("../travel/TravelStore");
+import TravelProps = require("../travel/TravelProps");
 
 class DashboardView extends TReact.Component<any, DashboardProps> {
 
@@ -14,7 +16,8 @@ class DashboardView extends TReact.Component<any, DashboardProps> {
 	    return {
 	        clockProps: ClockStore.getState(),
 	        weatherProps: WeatherStore.getState(),
-	        newsProps: NewsStore.getState()
+	        newsProps: NewsStore.getState(),
+	        travelProps: TravelStore.getState()
 	    };
 	}
 
@@ -23,6 +26,7 @@ class DashboardView extends TReact.Component<any, DashboardProps> {
 		ClockStore.listen(this.handleClockStoreChange);
 		WeatherStore.listen(this.handleWeatherStoreChange);
 	    NewsStore.listen(this.handleNewsStoreChange);
+	    TravelStore.listen(this.handleTravelStoreChange);
 	}
 
 	handleClockStoreChange(payload: ClockProps)
@@ -38,6 +42,11 @@ class DashboardView extends TReact.Component<any, DashboardProps> {
     handleNewsStoreChange(payload: NewsProps)
     {
         this.setState({ newsProps: payload });
+    }
+
+    handleTravelStoreChange(payload: TravelProps)
+    {
+        this.setState({ travelProps: payload });
     }
 
     render(): React.ReactElement<any>

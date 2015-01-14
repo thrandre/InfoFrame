@@ -1,0 +1,1 @@
+//# sourceMappingURL=NewsProps.js.map

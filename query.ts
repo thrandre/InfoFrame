@@ -393,7 +393,7 @@ module Query {
   }
 
   class ArrayEnumerator<TIn> implements IEnumerator<TIn> {
-    private _currentIndex: number = 0;
+    private _currentIndex = 0;
 
     get current(): TIn {
       return this._accessor(this._currentIndex);
@@ -418,3 +418,5 @@ module Query {
   }
 
 }
+
+export = Query;

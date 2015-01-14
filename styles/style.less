@@ -3,23 +3,21 @@
 
 html,
 body {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  font-family: 'Open Sans';
-  line-height: 1;
-  color: white;
-  overflow: hidden;
-
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans';
+    line-height: 1;
+    color: white;
+    overflow: hidden;
 }
 
 html {
-  z-index: 4;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: none;
-  text-rendering: optimizeLegibility;
-
+    z-index: 4;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: none;
+    text-rendering: optimizeLegibility;
 }
 
 .dashboard {
@@ -30,255 +28,274 @@ html {
 .main {
     width: 100%;
     height: 93%;
+    overflow: hidden;
+    float: left;
 
-  overflow: hidden;
+    .quadrant,
+    .octant {
+        overflow: hidden;
 
-  float: left;
+        .wrapper {
+            position: relative;
+            left: 50%;
+            top: 50%;
+            float: left;
+            transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+        }
+    }
 
-  .quadrant,
-  .octant {
-	overflow: hidden;
+    .quadrant {
+        width: 50%;
+        height: 50%;
+        float: left;
 
-	.wrapper {
-	  position: relative;
-	  left: 50%;
-	  top: 50%;
-
-	  float: left;
-
-	  transform: translate(-50%, -50%);
-	  -webkit-transform: translate(-50%, -50%);
-	  -moz-transform: translate(-50%, -50%);
-	}
-
-  }
-  .quadrant {
-	width: 50%;
-	height: 50%;
-
-	float: left;
-
-	.octant {
-	  width: 50%;
-	  height: 100%;
-	  float: left;
-	}
-  }
-
+        .octant {
+            width: 50%;
+            height: 100%;
+            float: left;
+        }
+    }
 }
 
 .ticker {
     width: 100%;
     height: 7%;
-
     float: left;
     clear: both;
-
     background-color: #35bdad;
+    font-size: 26px;
 
-    font-size: 20px;
+    overflow: hidden;
 
-    .header, .entries, .entry, .container {
-        float: left;
-        height: 100%;
-    }
-
-    .header, .entry {
-        padding: 20px;
+    * {
         box-sizing: border-box;
-
-        span {
-            display: block;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-            float: left;
-        }
     }
 
     .container {
+        height: 100%;
+        white-space: nowrap;
+        position: relative;
+        float: left;
+
         .header {
+            height: 100%;
             background-color: #113d38;
+            display: inline-block;
+            padding: 0 40px 0 40px;
+            position: relative;
+            box-sizing: border-box;
+
+            .text {
+                display: block;
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+                float: left;
+            }
+        }
+
+        .entries {
+            height: 100%;
+            display: inline-block;
+            white-space: nowrap;
+            position: relative;
         }
 
         .entry {
+            height: 100%;
+            display: inline-block;
+
+            padding: 0 40px 0 40px;
+
             &:nth-child(2n) {
                 background-color: #2ea396;
             }
 
+            span {
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+                float: left;
+            }
+
             .line {
                 border-radius: 50%;
-                border: 2px solid white;
-                width: 40px;
-                height: 40px;
+                border: 3px solid white;
+                width: 45px;
+                height: 45px;
                 vertical-align: middle;
                 text-align: center;
                 margin-right: 15px;
                 font-weight: 600;
-                line-height: 200%;
+                line-height: 150%;
+            }
+
+            .destination {
+                margin-right: 30px;
+                text-transform: uppercase;
+            }
+
+            .time {
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+.clock {
+    background-color: #35bdad;
+    width: 100%;
+    height: 100%;
+
+    .time {
+        .analog {
+            float: left;
+        }
+
+        .digital {
+            float: left;
+            font-size: 145px;
+            font-weight: 600;
+
+            .minute {
+                font-weight: 400;
             }
         }
     }
 
+    .date {
+        float: right;
+        font-size: 35px;
+        font-weight: 300;
+        text-transform: uppercase;
+
+        .day {
+            font-weight: 600;
+        }
+    }
 }
 
-.clock {
-  background-color: #35bdad;
-
-  width: 100%;
-  height: 100%;
-
-  .time {
-	.analog {
-	  float: left;
-
-	}
-	.digital {
-	  float: left;
-	  font-size: 145px;
-	  font-weight: 600;
-
-	  .minute {
-		font-weight: 400;
-	  }
-	}
-
-  }
-
-  .date {
-	float: right;
-	font-size: 35px;
-	font-weight: 300;
-	text-transform: uppercase;
-
-	.day {
-		font-weight: 600;
-	}
-
-  }
-
-}
 .weather {
-  background-color: #237d73;
+    background-color: #237d73;
+    width: 100%;
+    height: 100%;
+    text-transform: uppercase;
 
-  width: 100%;
-  height: 100%;
+    .symbol {
+        width: 100%;
+        font-size: 130px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
 
-  text-transform: uppercase;
+    .temperature {
+        text-align: center;
+        font-size: 80px;
+        font-weight: 700;
 
-  .symbol {
-	width: 100%;
-	font-size: 150px;
-	text-align: center;
-	margin-bottom: 40px;
-  }
+        .valsymbol {
+            font-weight: 300;
+        }
+    }
 
-  .temperature {
-	text-align: center;
-	font-size: 80px;
-	font-weight: 700;
+    .advanced {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 30px;
 
-	.valsymbol {
-	  font-weight: 300;
-	}
+        .val {
+            font-weight: 700;
+        }
 
-  }
-  .advanced {
-	margin-top: 30px;
-	text-align: center;
-	font-size: 30px;
+        .rain {
+            margin-right: 15px;
+        }
 
-	.val {
-	  font-weight: 700;
-
-	}
-	.rain {
-	  margin-right: 15px;
-
-	}
-	.wi {
-	  font-size: 40px;
-	  vertical-align: middle;
-      margin-right: 5px;
-	}
-  }
-
+        .wi {
+            font-size: 40px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    }
 }
+
 .calendar {
-  background-color: #113d38;
-  text-transform: uppercase;
-  line-height: 1.5;
+    background-color: #113d38;
+    text-transform: uppercase;
+    line-height: 1.5;
 
-  .list {
-	.row {
-	  padding: 30px 30px 0;
-	}
-	.header {
-	  font-size: 34px;
-	}
-	.time,
-	.title,
-	.owner {
-	  float: left;
-	  clear: both;
+    .list {
+        .row {
+            padding: 30px 30px 0;
+        }
 
-	}
-	.time {
-	  font-size: 20px;
-	  color: #35bdad;
+        .header {
+            font-size: 34px;
+        }
 
-	}
-	.title {
-	  font-size: 34px;
-	  font-weight: 700;
+        .time,
+        .title,
+        .owner {
+            float: left;
+            clear: both;
+        }
 
-	}
-	.owner {
-	  font-size: 18px;
-	  color: #237d73;
-	}
-  }
+        .time {
+            font-size: 20px;
+            color: #35bdad;
+        }
 
+        .title {
+            font-size: 34px;
+            font-weight: 700;
+        }
+
+        .owner {
+            font-size: 18px;
+            color: #237d73;
+        }
+    }
 }
+
 .travel {
-  background-color: #39cab9;
-  font-size: 22px;
+    background-color: #39cab9;
+    font-size: 22px;
 
-  .urgent {
-	font-weight: 700;
+    .urgent {
+        font-weight: 700;
+    }
 
-  }
-  .departure {
-	text-align: right;
+    .departure {
+        text-align: right;
+    }
 
-  }
-  .list {
+    .list {
+        text-transform: uppercase;
 
-	text-transform: uppercase;
+        .row {
+            &:nth-child(2n) {
+                background-color: #2ea396;
+            }
 
-	.row {
-	  &:nth-child(2n) {
-		background-color: #2ea396;
+            &.header {
+                background-color: #2ea396;
+            }
 
-	  }
-	  &.header {
-		background-color: #2ea396;
-
-	  }
-	  &.group-header {
-		background-color: #237d73;
-	  }
-	}
-  }
-
+            &.group-header {
+                background-color: #237d73;
+            }
+        }
+    }
 }
 
 .news {
     background-color: #237d73;
+
     .articles {
         float: left;
         clear: both;
-
         position: relative;
 
         .article {
@@ -287,9 +304,7 @@ html {
             max-height: 100%;
             float: left;
             clear: both;
-
             overflow: hidden;
-
             padding: 30px;
             box-sizing: border-box;
 
@@ -316,71 +331,66 @@ html {
                 margin-top: 20px;
             }
         }
-   }
+    }
 }
+
 .unknown {
-  background-color: #237d73;
-
+    background-color: #237d73;
 }
+
 #clock {
-  width: 150px;
-  height: 150px;
-  margin-left: 0;
-
+    width: 150px;
+    height: 150px;
+    margin-left: 0;
 }
+
 .list {
-  width: 100%;
+    width: 100%;
+    float: left;
+    clear: both;
+    position: relative;
 
-  float: left;
-  clear: both;
+    .group {
+        width: 100%;
+        float: left;
+        clear: both;
+    }
 
-  position: relative;
+    .row {
+        width: 100%;
+        float: left;
+        clear: both;
+        padding: 30px;
+        box-sizing: border-box;
 
-  .group {
-	width: 100%;
+        .col {
+            display: block;
+            float: left;
+            box-sizing: border-box;
 
-	float: left;
-	clear: both;
+            &.col-10 {
+                width: 10%;
+            }
 
-  }
-  .row {
-	width: 100%;
+            &.col-25 {
+                width: 25%;
+            }
 
-	float: left;
-	clear: both;
+            &.col-50 {
+                width: 50%;
+            }
 
-	padding: 30px;
-	box-sizing: border-box;
+            &.col-75 {
+                width: 75%;
+            }
 
-	.col {
-	  display: block;
-	  float: left;
+            &.col-90 {
+                width: 90%;
+            }
 
-	  box-sizing: border-box;
-
-	  &.col-10 {
-		width: 10%;
-
-	  }
-	  &.col-25 {
-		width: 25%;
-
-	  }
-	  &.col-50 {
-		width: 50%;
-
-	  }
-	  &.col-75 {
-		width: 75%;
-
-	  }
-	  &.col-90 {
-		width: 90%;
-
-	  }
-	  &.col-100 {
-		width: 100%;
-	  }
-	}
-  }
+            &.col-100 {
+                width: 100%;
+            }
+        }
+    }
 }

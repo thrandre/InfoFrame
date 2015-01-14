@@ -312,4 +312,5 @@ var Query;
         return ArrayEnumerator;
     })();
 })(Query || (Query = {}));
-//# sourceMappingURL=query.js.map
+module.exports = Query;
+//# sourceMappingURL=Query.js.map
