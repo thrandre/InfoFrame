@@ -11,7 +11,7 @@ var ClockStore = (function (_super) {
     function ClockStore() {
         var _this = this;
         _super.call(this);
-        setInterval(function () { return _this.trigger(_this.getState()); }, 1000);
+        setInterval(function () { return _this.trigger(_this.getState()); }, 10000);
     }
     ClockStore.prototype.getState = function () {
         return { datetime: Moment() };
