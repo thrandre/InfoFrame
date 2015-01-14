@@ -10,7 +10,7 @@ window.onload = () =>
 
 function animate()
 {
-    requestAnimationFrame(animate);
+    setTimeout(() => requestAnimationFrame(animate), 500);
     Tween.update();
 }
 

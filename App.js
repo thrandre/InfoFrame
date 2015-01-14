@@ -6,7 +6,7 @@ window.onload = function () {
     animate();
 };
 function animate() {
-    requestAnimationFrame(animate);
+    setTimeout(function () { return requestAnimationFrame(animate); }, 500);
     Tween.update();
 }
 //# sourceMappingURL=App.js.map
