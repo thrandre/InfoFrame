@@ -1,10 +1,11 @@
-﻿import WeatherProps = require("./WeatherProps");
+﻿import PureRenderMixin = require("../PureRenderMixin");
+import WeatherProps = require("./WeatherProps");
 import React = require("react/addons");
 import TReact = require("../TReact");
 
-class WeatherView extends TReact.Component<WeatherProps, any>
+class WeatherView extends TReact.Component<WeatherProps, any> implements PureRenderMixin<WeatherProps, any>
 {
-    
+
     shouldComponentUpdate: (nextProps: WeatherProps) => boolean;
     
     render(): React.ReactElement<WeatherProps>
@@ -15,6 +16,6 @@ class WeatherView extends TReact.Component<WeatherProps, any>
 
 }
 
-var WeatherViewClass = TReact.createClass(WeatherView, [React.addons.PureRenderMixin]);
+var WeatherViewClass = TReact.createClass(WeatherView, [TReact.createMixin(PureRenderMixin)]);
 
 export = WeatherViewClass;

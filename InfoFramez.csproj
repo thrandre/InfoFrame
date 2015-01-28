@@ -43,6 +43,8 @@
     <TypeScriptCompile Include="calendar.ts" />
     <TypeScriptCompile Include="Dispatcher.ts" />
     <TypeScriptCompile Include="foo.ts" />
+    <TypeScriptCompile Include="Imm.ts" />
+    <TypeScriptCompile Include="ImmCursorExpression.ts" />
     <TypeScriptCompile Include="lastfm.ts" />
     <TypeScriptCompile Include="news\NewsActions.ts" />
     <TypeScriptCompile Include="news\ArticleData.ts" />
@@ -50,10 +52,14 @@
     <TypeScriptCompile Include="news\NewsService.ts" />
     <TypeScriptCompile Include="news\NewsStore.ts" />
     <TypeScriptCompile Include="news\NewsView.ts" />
+    <TypeScriptCompile Include="PureRenderMixin.ts" />
     <TypeScriptCompile Include="Query.ts" />
     <TypeScriptCompile Include="RequestAction.ts" />
     <TypeScriptCompile Include="RequestPayload.ts" />
     <TypeScriptCompile Include="RequestState.ts" />
+    <TypeScriptCompile Include="typings\immutable\immutable.d.ts" />
+    <TypeScriptCompile Include="typings\immutable\immutable.cursor.d.ts" />
+    <TypeScriptCompile Include="typings\lodash\lodash.d.ts" />
     <TypeScriptCompile Include="typings\tween.js\tween.js.d.ts" />
     <TypeScriptCompile Include="travel\TravelActions.ts" />
     <TypeScriptCompile Include="travel\TravelData.ts" />

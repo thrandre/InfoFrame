@@ -5,7 +5,7 @@ import Moment = require("moment");
 class ClockStore extends Store {
 	constructor() {
 		super();
-		setInterval(() => this.trigger(this.getState()), 10000);
+		setInterval(() => this.trigger(this.getState()), 1000);
 	}
 
 	getState(): ClockProps {

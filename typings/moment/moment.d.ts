@@ -459,6 +459,6 @@ interface MomentStatic {
 
 declare var moment: MomentStatic;
 
-declare module 'moment' {
+declare module "moment" {
     export = moment;
 }

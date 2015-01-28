@@ -53,7 +53,7 @@ class NewsView extends TReact.Component<NewsProps, any>
 
         var offset = this.currentArticle * scrollDistance * -1;
 
-        this.tween(() => this.state.top, val => this.setState({ top: val }), { endValue: offset, duration: 500 }).start();
+        this.setState({ top: offset });
     }
 
     tween(valueGetter: () => number, valueSetter: (val) => void, props: { endValue: number; duration?: number; easing?: (k: number) => number }): { start: () => void }

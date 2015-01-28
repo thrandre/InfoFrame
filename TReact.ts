@@ -45,6 +45,11 @@ export class Mixin<P, S> implements React.Mixin<P, S> {
 	}
 }
 
+export function componentz<TP, TS>(mixins: {}[], renderFunc: () => React.ReactElement<any>)
+{
+    
+}
+
 export class Component<P, S> extends Mixin<P, S> implements React.CompositeComponent<P, S> {
 	render(): React.ReactElement<any>
 	{

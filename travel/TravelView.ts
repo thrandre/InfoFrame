@@ -1,14 +1,17 @@
-﻿import TravelProps = require("./TravelProps");
+﻿import PureRenderMixin = require("../PureRenderMixin");
+import TravelProps = require("./TravelProps");
 import React = require("react/addons");
 import TReact = require("../TReact");
 import Moment = require("moment");
 import Tween = require("tween.js");
 import $ = require("jquery");
 
-class TravelView extends TReact.Component<TravelProps, any>
+class TravelView extends TReact.Component<TravelProps, any> implements PureRenderMixin<TravelProps, any>
 {
     private animating = false;
-    
+
+    shouldComponentUpdate: (nextProps: TravelProps) => boolean;
+
     getInitialState()
     {
         return {
@@ -90,6 +93,6 @@ class TravelView extends TReact.Component<TravelProps, any>
 	}
 }
 
-var TravelViewClass = TReact.createClass(TravelView);
+var TravelViewClass = TReact.createClass(TravelView, [TReact.createMixin(PureRenderMixin)]);
 
 export = TravelViewClass;

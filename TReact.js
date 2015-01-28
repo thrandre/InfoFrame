@@ -40,6 +40,9 @@ var Mixin = (function () {
     return Mixin;
 })();
 exports.Mixin = Mixin;
+function componentz(mixins, renderFunc) {
+}
+exports.componentz = componentz;
 var Component = (function (_super) {
     __extends(Component, _super);
     function Component() {

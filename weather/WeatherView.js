@@ -4,7 +4,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var React = require("react/addons");
+var PureRenderMixin = require("../PureRenderMixin");
 var TReact = require("../TReact");
 var WeatherView = (function (_super) {
     __extends(WeatherView, _super);
@@ -17,6 +17,6 @@ var WeatherView = (function (_super) {
     };
     return WeatherView;
 })(TReact.Component);
-var WeatherViewClass = TReact.createClass(WeatherView, [React.addons.PureRenderMixin]);
+var WeatherViewClass = TReact.createClass(WeatherView, [TReact.createMixin(PureRenderMixin)]);
 module.exports = WeatherViewClass;
 //# sourceMappingURL=WeatherView.js.map

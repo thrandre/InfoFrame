@@ -35,13 +35,12 @@ var NewsView = (function (_super) {
         setInterval(function () { return _this.scroll(domNode, scrollDistance); }, 15500);
     };
     NewsView.prototype.scroll = function (domNode, scrollDistance) {
-        var _this = this;
         this.currentArticle++;
         if (this.currentArticle >= this.props.articles.length) {
             this.currentArticle = 0;
         }
         var offset = this.currentArticle * scrollDistance * -1;
-        this.tween(function () { return _this.state.top; }, function (val) { return _this.setState({ top: val }); }, { endValue: offset, duration: 500 }).start();
+        this.setState({ top: offset });
     };
     NewsView.prototype.tween = function (valueGetter, valueSetter, props) {
         var tweenFrom = { value: valueGetter() || 0 };

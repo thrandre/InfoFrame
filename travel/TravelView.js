@@ -4,6 +4,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var PureRenderMixin = require("../PureRenderMixin");
 var TReact = require("../TReact");
 var Moment = require("moment");
 var Tween = require("tween.js");
@@ -69,6 +70,6 @@ var TravelView = (function (_super) {
     };
     return TravelView;
 })(TReact.Component);
-var TravelViewClass = TReact.createClass(TravelView);
+var TravelViewClass = TReact.createClass(TravelView, [TReact.createMixin(PureRenderMixin)]);
 module.exports = TravelViewClass;
 //# sourceMappingURL=TravelView.js.map
