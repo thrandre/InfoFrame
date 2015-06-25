@@ -2,7 +2,7 @@
 
 interface ClockProps
 {
-    datetime: Moment;
+    datetime: moment.Moment;
 }
 
 export = ClockProps;

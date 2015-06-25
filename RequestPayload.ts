@@ -2,7 +2,7 @@
 
 interface RequestPayload<T> {
     data?: T;
-    state: RequestState;
+    state?: RequestState;
 }
 
 export = RequestPayload;

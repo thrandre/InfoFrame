@@ -1,4 +1,4 @@
-class Timer 
+class Timer
 {
     private times: number;
     private maxTimes: number;
@@ -6,20 +6,20 @@ class Timer
 
     constructor(private action: () => void) { }
 
-    private tick() 
+    private tick()
     {
-        if (!this.maxTimes || this.times < this.maxTimes) 
+        if (!this.maxTimes || this.times < this.maxTimes)
         {
             this.action();
             this.times++;
         }
-        else 
+        else
         {
             window.clearInterval(this.handle);
         }
     }
 
-    start(interval: number, immediate: boolean = false, times?: number) 
+    start(interval: number, immediate: boolean = false, times?: number)
     {
         this.times = 0;
         this.maxTimes = times;
@@ -32,11 +32,11 @@ class Timer
 
     stop()
     {
-        if (!this.handle) 
+        if (!this.handle)
         {
             return;
         }
-        
+
         window.clearInterval(this.handle);
     }
 

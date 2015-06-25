@@ -26,20 +26,20 @@ var CalendarView = Component<CalendarModel>(function(props)
         return date.fromNow();
     };
     
-    return (
-        React.createElement("div", {className: "calendar"}, 
-             React.createElement("ul", {className: "events"}, 
-                 props.events.map(function(e) {
+    return jsx(`
+        <div className="calendar">
+             <ul className="events">
+                 {props.events.map(function(e) {
                     return (
-                        React.createElement("li", {className: "event"}, 
-                            React.createElement("span", {className: "title"}, e.title), 
-                            React.createElement("span", {className: "start"}, formatDate(e.start))
-                        )
+                        <li className="event">
+                            <span className="title">{e.title}</span>
+                            <span className="start">{formatDate(e.start)}</span>
+                        </li>
                     );
-                 })
-             )
-        )
-    );
+                 })}
+             </ul>
+        </div>
+    `);
 });
 
 export = CalendarView;

@@ -1,81 +1,31 @@
-﻿import $ = require("jquery");
-import NewsProps = require("./NewsProps");
+﻿import NewsProps = require("./NewsProps");
 import React = require("react/addons");
-import TReact = require("../TReact");
-import Tween = require("tween.js");
+import Component = require("../purereact/Component");
+import ImmCursor = require("../purereact/ImmCursor");
 
-class NewsView extends TReact.Component<NewsProps, any>
+var NewsView = Component<ImmCursor<NewsProps>>("News", (props) =>
 {
-    private animating = false;
-    private currentArticle = 0;
+    var articles = <any>props.wrapped.get(x => x.articles).deref();
 
-    shouldComponentUpdate: (nextProps: NewsProps) => boolean;
-
-    getInitialState()
-    {
-        return {
-            top: 0
-        };
+    if (!articles) {
+        return null;
     }
 
-    componentDidMount()
-    {
-        this.animate(this.getDOMNode());
-    }
+    var style = {
+        transform: "translate(0, " + 0 + "px)",
+        "-webkit-transform": "translate(0, " + 0 + "px)"
+    };
 
-    componentDidUpdate()
-    {
-        this.animate(this.getDOMNode());
-    }
+    return (
+        React.createElement("div", { className: "articles", style: style },
+            articles.toJS().map(article => 
+                React.createElement("div", { key: article.id, className: "article" },
+                React.createElement("div", { className: "time" }, article.updated.format("dddd HH:mm")),
+                React.createElement("div", { className: "title" }, article.title),
+                React.createElement("div", { className: "summary" }, article.summary)
+            ))
+        )
+    );
+});
 
-    animate(domNode: Element)
-    {
-        if (this.animating || !domNode) 
-        {
-            return;
-        }
-
-        this.animating = true;
-
-        var scrollDistance = $(domNode).children().first().outerHeight(true);
-
-        setInterval(() => this.scroll(domNode, scrollDistance), 15500);
-    }
-
-    scroll(domNode: Element, scrollDistance: number)
-    {
-        this.currentArticle++;
-
-        if (this.currentArticle >= this.props.articles.length) 
-        {
-            this.currentArticle = 0;
-        }
-
-        var offset = this.currentArticle * scrollDistance * -1;
-
-        this.setState({ top: offset });
-    }
-
-    tween(valueGetter: () => number, valueSetter: (val) => void, props: { endValue: number; duration?: number; easing?: (k: number) => number }): { start: () => void }
-    {
-        var tweenFrom = { value: valueGetter() || 0 };
-        var tweenTo = { value: props.endValue || 0 };
-        
-        var tween = new Tween.Tween(tweenFrom)
-            .to(tweenTo, props.duration || 0)
-            .easing(props.easing || Tween.Easing.Linear.None)
-            .onUpdate(() => valueSetter(tweenFrom.value));
-
-        return { start: () => tween.start() };
-    }
-
-    render(): React.ReactElement<NewsProps>
-    {
-        return TReact.jsx(require("./NewsView.jsx"), this.props, this);
-	}
-
-}
-
-var NewsViewClass = TReact.createClass(NewsView);
-
-export = NewsViewClass;
+export = NewsView;

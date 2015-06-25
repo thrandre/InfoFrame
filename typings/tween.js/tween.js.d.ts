@@ -4,14 +4,14 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 declare module TWEEN {
-  var REVISION: string;
-  function getAll(): Tween[];
-  function removeAll(): void;
-  function add(tween:Tween): void;
-  function remove(tween:Tween): void;
-  function update(time?:number): boolean;
+  export var REVISION: string;
+  export function getAll(): Tween[];
+  export function removeAll(): void;
+  export function add(tween:Tween): void;
+  export function remove(tween:Tween): void;
+  export function update(time?:number): boolean;
   
-  class Tween {
+  export class Tween {
     constructor(object?:any);
     to(properties:any, duration:number): Tween;
     start(time?:number): Tween;
@@ -27,8 +27,8 @@ declare module TWEEN {
     repeat(times: number): Tween;
     yoyo(enable: boolean): Tween;
   }
-  var Easing: TweenEasing;
-  var Interpolation: TweenInterpolation;
+  export var Easing: TweenEasing;
+  export var Interpolation: TweenInterpolation;
 }
 
 interface TweenEasing {
@@ -97,9 +97,4 @@ interface TweenInterpolation {
     Bernstein(n:number, i:number): number;
     Factorial(n): number;
   };
-}
-
-declare module "tween.js"
-{
-    export = TWEEN;
 }

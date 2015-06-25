@@ -6,25 +6,19 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "react/react.d.ts": {
-      "commit": "494b30d2327ab489fa5b5f082a3c9a299e4c5644"
+      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
     },
     "node/node.d.ts": {
-      "commit": "494b30d2327ab489fa5b5f082a3c9a299e4c5644"
+      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
     },
     "jquery/jquery.d.ts": {
-      "commit": "494b30d2327ab489fa5b5f082a3c9a299e4c5644"
+      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
     },
     "moment/moment.d.ts": {
-      "commit": "494b30d2327ab489fa5b5f082a3c9a299e4c5644"
-    },
-    "tspromise/tspromise.d.ts": {
-      "commit": "494b30d2327ab489fa5b5f082a3c9a299e4c5644"
-    },
-    "es6-promise/es6-promise.d.ts": {
-      "commit": "c81ca4017272502c6609f48f839e193056e54cad"
+      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
     },
     "tween.js/tween.js.d.ts": {
-      "commit": "4abbdff87f05616cfc421e0bf46c54a0ffdc06ce"
+      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
     }
   }
 }

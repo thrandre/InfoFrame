@@ -1984,6 +1984,7 @@ body {
   font-family: 'Open Sans';
   line-height: 1;
   color: white;
+  background-color: black;
   overflow: hidden;
 }
 html {
@@ -1992,309 +1993,109 @@ html {
   text-shadow: none;
   text-rendering: optimizeLegibility;
 }
+body {
+  padding: 30px;
+  box-sizing: border-box;
+}
 .dashboard {
   width: 100%;
   height: 100%;
-}
-.main {
-  width: 100%;
-  height: 93%;
-  overflow: hidden;
-  float: left;
-}
-.main .quadrant,
-.main .octant {
-  overflow: hidden;
-}
-.main .quadrant .wrapper,
-.main .octant .wrapper {
-  position: relative;
-  left: 50%;
-  top: 50%;
-  float: left;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-}
-.main .quadrant {
-  width: 50%;
-  height: 50%;
-  float: left;
-}
-.main .quadrant .octant {
-  width: 50%;
-  height: 100%;
-  float: left;
-}
-.ticker {
-  width: 100%;
-  height: 7%;
-  float: left;
-  clear: both;
-  background-color: #35bdad;
-  font-size: 26px;
-  overflow: hidden;
-}
-.ticker * {
-  box-sizing: border-box;
-}
-.ticker .container {
-  height: 100%;
-  white-space: nowrap;
-  position: relative;
-  float: left;
-}
-.ticker .container .header {
-  height: 100%;
-  background-color: #113d38;
-  display: inline-block;
-  padding: 0 40px 0 40px;
   position: relative;
   box-sizing: border-box;
-}
-.ticker .container .header .text {
-  display: block;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  float: left;
-}
-.ticker .container .entries {
-  height: 100%;
-  display: inline-block;
-  white-space: nowrap;
-  position: relative;
-}
-.ticker .container .entry {
-  height: 100%;
-  display: inline-block;
-  padding: 0 40px 0 40px;
-}
-.ticker .container .entry:nth-child(2n) {
-  background-color: #2ea396;
-}
-.ticker .container .entry span {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  float: left;
-}
-.ticker .container .entry .line {
-  border-radius: 50%;
-  border: 3px solid white;
-  width: 45px;
-  height: 45px;
-  vertical-align: middle;
-  text-align: center;
-  margin-right: 15px;
-  font-weight: 600;
-  line-height: 150%;
-}
-.ticker .container .entry .destination {
-  margin-right: 30px;
-  text-transform: uppercase;
-}
-.ticker .container .entry .time {
-  text-transform: uppercase;
-}
-.clock {
-  background-color: #35bdad;
-  width: 100%;
-  height: 100%;
-}
-.clock .time .analog {
-  float: left;
-}
-.clock .time .digital {
-  float: left;
-  font-size: 145px;
-  font-weight: 600;
-}
-.clock .time .digital .minute {
-  font-weight: 400;
-}
-.clock .date {
-  float: right;
-  font-size: 35px;
-  font-weight: 300;
-  text-transform: uppercase;
-}
-.clock .date .day {
-  font-weight: 600;
-}
-.weather {
-  background-color: #237d73;
-  width: 100%;
-  height: 100%;
-  text-transform: uppercase;
-}
-.weather .symbol {
-  width: 100%;
-  font-size: 130px;
-  text-align: center;
-  margin-bottom: 40px;
-}
-.weather .temperature {
-  text-align: center;
-  font-size: 80px;
-  font-weight: 700;
-}
-.weather .temperature .valsymbol {
-  font-weight: 300;
-}
-.weather .advanced {
-  margin-top: 30px;
-  text-align: center;
-  font-size: 30px;
-}
-.weather .advanced .val {
-  font-weight: 700;
-}
-.weather .advanced .rain {
-  margin-right: 15px;
-}
-.weather .advanced .wi {
-  font-size: 40px;
-  vertical-align: middle;
-  margin-right: 5px;
-}
-.calendar {
-  background-color: #113d38;
-  text-transform: uppercase;
-  line-height: 1.5;
-}
-.calendar .list .row {
-  padding: 30px 30px 0;
-}
-.calendar .list .header {
-  font-size: 34px;
-}
-.calendar .list .time,
-.calendar .list .title,
-.calendar .list .owner {
-  float: left;
-  clear: both;
-}
-.calendar .list .time {
-  font-size: 20px;
-  color: #35bdad;
-}
-.calendar .list .title {
-  font-size: 34px;
-  font-weight: 700;
-}
-.calendar .list .owner {
-  font-size: 18px;
-  color: #237d73;
-}
-.travel {
-  background-color: #39cab9;
-  font-size: 22px;
-}
-.travel .urgent {
-  font-weight: 700;
-}
-.travel .departure {
-  text-align: right;
-}
-.travel .list {
-  text-transform: uppercase;
-}
-.travel .list .row:nth-child(2n) {
-  background-color: #2ea396;
-}
-.travel .list .row.header {
-  background-color: #2ea396;
-}
-.travel .list .row.group-header {
-  background-color: #237d73;
-}
-.news {
-  background-color: #237d73;
-}
-.news .articles {
-  float: left;
-  clear: both;
-  position: relative;
-}
-.news .articles .article {
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  float: left;
-  clear: both;
-  overflow: hidden;
-  padding: 30px;
-  box-sizing: border-box;
-}
-.news .articles .article .time {
-  float: left;
-  clear: both;
-  font-size: 20px;
-  text-transform: uppercase;
-}
-.news .articles .article .title {
-  font-weight: 600;
-  font-size: 45px;
-  text-transform: uppercase;
-  float: left;
-  clear: both;
-  margin-top: 10px;
-}
-.news .articles .article .summary {
-  font-size: 34px;
-  float: left;
-  clear: both;
-  margin-top: 20px;
-}
-.unknown {
-  background-color: #237d73;
 }
 #clock {
-  width: 150px;
-  height: 150px;
-  margin-left: 0;
+  width: 70px;
+  height: 70px;
+  margin: 0;
+  padding-left: 20px;
+  padding-top: 10px;
 }
-.list {
-  width: 100%;
+.left {
   float: left;
   clear: both;
-  position: relative;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
-.list .group {
-  width: 100%;
+.clock {
   float: left;
   clear: both;
 }
-.list .row {
-  width: 100%;
+.clock .time,
+.clock .date {
   float: left;
   clear: both;
-  padding: 30px;
-  box-sizing: border-box;
 }
-.list .row .col {
+.clock .analog,
+.clock .digital {
+  float: left;
+}
+.clock .date {
+  padding-top: 15px;
+  text-transform: lowercase;
+  font-size: 28px;
+}
+.clock .time .digital {
+  font-size: 100px;
+}
+.calendar {
+  float: left;
+  clear: both;
+  padding-top: 60px;
+}
+.calendar .events {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+.calendar .events .event {
+  font-size: 22px;
+  line-height: 1.5;
+  text-transform: lowercase;
   display: block;
   float: left;
-  box-sizing: border-box;
+  clear: both;
 }
-.list .row .col.col-10 {
-  width: 10%;
+.calendar .events .event .title {
+  width: 250px;
+  padding-right: 50px;
+  float: left;
+  white-space: nowrap;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.list .row .col.col-25 {
-  width: 25%;
+.calendar .events .event .start {
+  color: #999;
 }
-.list .row .col.col-50 {
-  width: 50%;
+.weather {
+  float: left;
+  clear: both;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
-.list .row .col.col-75 {
-  width: 75%;
+.weather .temperature {
+  font-size: 100px;
 }
-.list .row .col.col-90 {
-  width: 90%;
+.weather .temperature .wi {
+  font-size: 60px;
+  line-height: 1;
+  padding-right: 20px;
+  vertical-align: top;
+  padding-top: 10px;
 }
-.list .row .col.col-100 {
-  width: 100%;
+.weather .details {
+  padding-top: 15px;
+  text-transform: lowercase;
+  font-size: 28px;
+  text-align: right;
+}
+.weather .details .wi {
+  line-height: 1;
+  padding-right: 10px;
+  vertical-align: middle;
+}
+.weather .details .wind {
+  padding-right: 15px;
 }

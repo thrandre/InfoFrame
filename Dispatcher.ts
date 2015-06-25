@@ -1,8 +1,6 @@
-﻿import Promises = require("es6-promise");
-var Promise = Promises.Promise;
+﻿class Dispatcher {
 
-class Dispatcher {
-	private callbacks: { (payload: any): any }[] = [];
+    private callbacks: { (payload: any): any }[] = [];
 	private promises: any[] = <any>[];
 
 	listen(callback: (payload: any) => any)
@@ -10,7 +8,7 @@ class Dispatcher {
 		this.callbacks.push(callback);
 	}
 
-	trigger(payload: any): Thenable<any>
+	trigger(payload: any): Promise<any>
 	{
 		var resolves = <any>[];
 		var rejects = <any>[];
