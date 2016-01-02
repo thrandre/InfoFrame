@@ -1,15 +1,15 @@
-﻿class Dispatcher {
+import { Promise } from "es6-promise";
+
+export class Dispatcher {
 
     private callbacks: { (payload: any): any }[] = [];
 	private promises: any[] = <any>[];
 
-	listen(callback: (payload: any) => any)
-	{
+	listen(callback: (payload: any) => any) {
 		this.callbacks.push(callback);
 	}
 
-	trigger(payload: any): Promise<any>
-	{
+	trigger(payload?: any): Promise<any> {
 		var resolves = <any>[];
 		var rejects = <any>[];
 
@@ -28,4 +28,4 @@
 	}
 }
 
-export = Dispatcher;
+export default new Dispatcher();

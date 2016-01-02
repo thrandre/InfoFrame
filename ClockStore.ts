@@ -1,23 +1,28 @@
-import Store = require("./Store");
-import Actions = require("./Actions");
+import StoreFactory from "./Store";
+import StoreAssign from "./StoreAssign";
+import Actions from "./Actions";
+import DispatcherInstance from "./Dispatcher";
+import { Factory, InstantiationMode } from "./Factory";
+import { Storage } from "./Storage";
 
-import ClockProps = require("./viewmodels/ClockProps");
+import { ClockModel } from "./ClockModel";
 
-class ClockStore extends Store
-{
-	clockModel: ClockProps;
-	
-	constructor() {
-		super();
-		Actions.setClock.listen(s => this.clockUpdate(s));
+var ClockStore = StoreAssign
+(
+	{
+		model: Storage.single<ClockModel>(),
+		numbers: Storage.multiple<number, number>(n => n).select(n => n.foo = FooStore.getSomeShit(n))
+	}, 
+	store => 
+	{
+		store.bindTo(Actions.setClock, { onSuccess: d => store.model.set(null) });
 	}
-	
-	private clockUpdate(model: ClockProps) {
-		this.clockModel = model;
-		this.trigger(model);
-	}
-}
+);
 
-var clockStore = new ClockStore();
+export var ClockStoreFactory = new Factory(ClockStore, InstantiationMode.Singleton)
+	.withDefaultParams(StoreFactory.getInstance(DispatcherInstance));
 
-export = clockStore;
+ClockStoreFactory.getInstance().numbers.get(1)
+ClockStoreFactory.getInstance().numbers.all()
+
+export default ClockStoreFactory.getInstance();

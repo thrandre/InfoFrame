@@ -1,75 +1,94 @@
 var gulp = require("gulp");
-var source = require("vinyl-source-stream");
-var browserify = require("browserify");
-var watchify = require("watchify");
-var reactify = require("reactify");
+var gutil = require("gulp-util");
+var webpack = require("webpack");
+var WebpackDevServer = require("webpack-dev-server");
+var webpackConfig = require("./webpack.config.js");
 var path = require("path");
 var less = require("gulp-less");
-var transformTools = require("browserify-transform-tools");
-var tsify = require("tsify");
-var rename = require("gulp-rename");
-var jsx = require("react-jsx-anywhere/gulp");
 
-var build = function (b, src, dst) {
-	b.bundle()
-		.pipe(source(src))
-		.pipe(rename(dst))
-		.pipe(gulp.dest("./build"));
+// The development server (the recommended option for development)
+gulp.task("default", ["less", "watch", "webpack-dev-server"]);
 
-	return b;
-};
+// Build and watch cycle (another option for development)
+// Advantage: No server required, can run app from filesystem
+// Disadvantage: Requests are not blocked until bundle is available,
+//               can serve an old app on refresh
+gulp.task("build-dev", ["webpack:build-dev"], function() {
+	gulp.watch(["app/**/*"], ["webpack:build-dev"]);
+});
 
-gulp.task("browserify", ["jsx"], function () {
-	var b = browserify({debug: true, extensions: [".jsx"]});
-	
-	b.on('error', function(err){
-      console.log(err.message);
-      this.emit('end');
-    });
-	
-	b.on("update", function () {
-		build(b, "./App.ts", "App.js");
+// Production build
+gulp.task("build", ["webpack:build"]);
+
+gulp.task("webpack:build", function(callback) {
+	// modify some webpack config options
+	var myConfig = Object.create(webpackConfig);
+	myConfig.plugins = myConfig.plugins.concat(
+		new webpack.DefinePlugin({
+			"process.env": {
+				// This has effect on the react lib size
+				"NODE_ENV": JSON.stringify("development")
+			}
+		}),
+		new webpack.optimize.DedupePlugin(),
+		new webpack.optimize.UglifyJsPlugin()
+	);
+
+	// run webpack
+	webpack(myConfig, function(err, stats) {
+		if(err) throw new gutil.PluginError("webpack:build", err);
+		gutil.log("[webpack:build]", stats.toString({
+			colors: true
+		}));
+		callback();
 	});
-	
-	b.transform(reactify);
-	
-	b = watchify(b);
-
-	b.add("./App.ts");
-	
-	b.plugin("tsify", { target: "ES5" });
-
-	build(b, "./App.ts", "App.js");
 });
 
-gulp.task("jsx", function() {
-	return gulp.src("**/*.react.ts")
-		.pipe(jsx())
-		.pipe(rename(function(p) {
-			return p.basename = p.basename.replace(".react", "");
-		}))
-		.pipe(gulp.dest("./"));
+// modify some webpack config options
+var myDevConfig = Object.create(webpackConfig);
+myDevConfig.devtool = "sourcemap";
+myDevConfig.debug = true;
+
+// create a single instance of the compiler to allow caching
+var devCompiler = webpack(myDevConfig);
+
+gulp.task("webpack:build-dev", function(callback) {
+	// run webpack
+	devCompiler.run(function(err, stats) {
+		if(err) throw new gutil.PluginError("webpack:build-dev", err);
+		gutil.log("[webpack:build-dev]", stats.toString({
+			colors: true
+		}));
+		callback();
+	});
 });
 
-/*global __dirname*/
-gulp.task("less", function () {
-	return gulp.src("styles/*.less")
-		.pipe(less({
-			paths: [ path.join(__dirname, 'less', 'includes') ]
-		}))
-	  	.pipe(gulp.dest("./styles"));
+gulp.task("webpack-dev-server", function(callback) {
+	// modify some webpack config options
+	var myConfig = Object.create(webpackConfig);
+	myConfig.devtool = "eval";
+	myConfig.debug = true;
+
+	// Start a webpack-dev-server
+	new WebpackDevServer(webpack(myConfig), {
+		publicPath: "/" + myConfig.output.publicPath,
+		stats: {
+			colors: true
+		}
+	}).listen(8080, "0.0.0.0", function(err) {
+		if(err) throw new gutil.PluginError("webpack-dev-server", err);
+		gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+	});
 });
 
-gulp.task("fonts", function () {
-	return gulp.src(["styles/font-awesome/fonts/*",
-		"styles/weather-icons/fonts/*"
-	])
-	 .pipe(gulp.dest("dist/fonts"));
+gulp.task("less", function() {
+	return gulp.src('./styles/*.less')
+    	.pipe(less({
+      		paths: [ path.join(__dirname, 'styles', 'includes') ]
+    	}))
+    	.pipe(gulp.dest('./styles'));
 });
 
-gulp.task("watch", function () {
-	gulp.watch("**/*.react.ts", ["jsx"]);
-	gulp.watch("styles/**/*", ["less"]);
+gulp.task("watch", function() {
+	gulp.watch("./styles/*.less", ["less"]);
 });
-
-gulp.task("default", ["jsx", "browserify", "less", "fonts", "watch"]);

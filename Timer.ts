@@ -1,4 +1,4 @@
-class Timer
+export default class Timer
 {
     private times: number;
     private maxTimes: number;
@@ -45,5 +45,3 @@ class Timer
         return new Timer(action);
     }
 }
-
-export = Timer;

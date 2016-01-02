@@ -1,5 +1,14 @@
-@import "font-awesome/less/font-awesome.less";
-@import "weather-icons/weather-icons/weather-icons.less";
+* {
+	box-sizing: border-box;
+}
+
+.hidden {
+	opacity: 0;
+}
+
+.warning {
+	font-size: 72px;
+}
 
 html,
 body {
@@ -7,11 +16,13 @@ body {
 	height: 100%;
 	padding: 0;
 	margin: 0;
-	font-family: 'Open Sans';
+	font-family: 'Roboto';
+	font-weight: 100;
 	line-height: 1;
 	color: white;
 	background-color: black;
 	overflow: hidden;
+	text-transform: uppercase;
 }
 
 html {
@@ -22,60 +33,54 @@ html {
 }
 
 body {
-	padding: 30px;
 	box-sizing: border-box;
+	position: relative;
+	padding: 30px;
 }
 
 .dashboard {
 	width: 100%;
 	height: 100%;
-	
+
 	position: relative;
 	box-sizing: border-box;
 }
 
 #clock {
-	width: 70px;
-	height: 70px;
+	width: 100px;
+	height: 100px;
 	margin: 0;
-	padding-left: 20px;
-	padding-top: 10px;
-	
-	
-}
-
-.left {
-	float: left;
-	clear: both;
-	
-	position: absolute;
-	top: 0px;
-	left: 0px;
+	margin-left: 25px;
 }
 
 .clock {
 	float: left;
 	clear: both;
-	
+
+	position: absolute;
+
+	top: 0px;
+	right: 0px;
+
 	.time, .date {
 		float: left;
 		clear: both;
 	}
-	
+
 	.analog, .digital {
 		float: left;
 	}
-	
+
 	.date {
-		padding-top: 15px;
-		text-transform: lowercase;
-		font-size: 28px;
+		padding-top: 10px;
+		font-size: 25px;
+		font-weight: 400;
 	}
-	
+
 	.time {
 		.digital {
 			font-size: 100px;
-		}	
+		}
 	}
 }
 
@@ -83,32 +88,31 @@ body {
 	float: left;
 	clear: both;
 	padding-top: 60px;
-	
+
 	.events {
 		display: inline-block;
 		margin: 0;
 		padding: 0;
-		
+
 		.event {
 			font-size: 22px;
 			line-height: 1.5;
-			text-transform: lowercase;
-			
+
 			display: block;
 			float: left;
 			clear: both;
-			
+
 			.title {
 				width: 250px;
 				padding-right: 50px;
 				float: left;
-				
+
 				  white-space: nowrap;
 				  max-width: 250px;
 				  overflow: hidden;
 				  text-overflow: ellipsis;
 			}
-			
+
 			.start {
 				color: #999;
 			}
@@ -119,39 +123,83 @@ body {
 .weather {
 	float: left;
 	clear: both;
-	
+
 	position: absolute;
-	
+
 	top: 0px;
-	right: 0px;
-	
-	.temperature {
-		font-size: 100px;
-		
-		.wi {
-			font-size: 60px;
-			line-height: 1;
-			padding-right: 20px;
-			vertical-align: top;
-			padding-top:10px;
+	left: 0px;
+
+	.currentWeather {
+
+		float: left;
+		margin-right: 25px;
+		padding-right: 25px;
+
+		border-right: 2px solid white;
+
+		.temperature {
+			font-size: 100px;
+
+			&* {
+				float: left;
+			}
+
+			.wi {
+				font-size: 60px;
+				line-height: 1;
+				margin-right: 25px;
+			}
 		}
+
+		.details {
+			padding-top: 10px;
+			font-size: 25px;
+			font-weight: 400;
+
+			.wi {
+				line-height: 0.7;
+				padding-right: 15px;
+				font-size: 40px;
+				vertical-align: middle;
+			}
+
+			.wind {
+				float: right;
+				margin-right: 25px;
+			}
+
+			.percipitation {
+				float: right;
+			}
+		}
+
 	}
-	
-	.details {
-		padding-top: 15px;
-		text-transform: lowercase;
-		font-size: 28px;
-		
-		text-align: right;
-		
-		.wi {
-			line-height: 1;
-			padding-right: 10px;
-			vertical-align: middle;
-		}
-		
-		.wind {
-			padding-right: 15px;
+
+	.forecasts {
+		float: left;
+
+		.forecast {
+			float: right;
+			clear: both;
+
+			font-size: 25px;
+			padding-top: 10px;
+
+			.wi {
+				padding-right: 15px;
+				vertical-align: middle;
+				line-height: 0.7;
+				font-size: 30px;
+			}
+
+			.hour, .temperature, .wind, .percipitation {
+				padding-right: 10px;
+			}
+
+			.temperature {
+				padding-left: 15px;
+				padding-right: 15px;
+			}
 		}
 	}
 }

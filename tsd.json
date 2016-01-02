@@ -6,19 +6,10 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "react/react.d.ts": {
-      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     },
-    "node/node.d.ts": {
-      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
-    },
-    "jquery/jquery.d.ts": {
-      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
-    },
-    "moment/moment.d.ts": {
-      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
-    },
-    "tween.js/tween.js.d.ts": {
-      "commit": "e42bef3a8f9024a50468b12202df69519315b023"
+    "react/react-dom.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     }
   }
 }

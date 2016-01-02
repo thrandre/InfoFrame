@@ -1,25 +1,28 @@
-﻿import Action = require("./Action");
-import RequestAction = require("./RequestAction");
+/// <reference path="typings/tsd.d.ts"/>
 
-import ClockModel = require("./viewmodels/ClockProps");
-import WeatherModel = require("./viewmodels/WeatherProps");
-import CalendarModel = require("./CalendarProps");
+import Dispatcher from "./Dispatcher";
+import { Action, ServerAction } from "./Action";
+import { Factory, InstantiationMode } from "./Factory";
 
-import Services = require("./Services");
+import { ClockModel } from "./ClockModel";
+import { WeatherModel } from "./WeatherModel";
 
-class Actions
-{
-	setClock = new Action<ClockModel>();
-	
-	getWeather = new RequestAction<{ cityName: string; countryCode:string }, WeatherModel>(req => {
-		return Services.weatherService.getWeather(req.cityName, req.countryCode);
-	});
-	
-	getCalendarEvents = new RequestAction<{ calendars: {owner:string;url:string}[] }, CalendarModel>(req => {
-		return Services.calendarService.getEvents(req.calendars);
-	});
-}
+import Services from "./Services";
 
-var actions = new Actions();
+var Actions = ActionAssign({	
+	getTime: new ServerAction<any, ClockModel>(Dispatcher)
+		.loadWith(() => Services.timeService.getTime())
+});
 
-export = actions;
+var actions = {
+	test: null
+};
+
+ActionsAssign(d => {
+	test: new ServerAction(d)
+})
+
+export var ActionsFactory = new Factory<Actions, { dispatcher: typeof Dispatcher }>(n => new Actions(n.dispatcher), InstantiationMode.Singleton)
+	.withDefaultParams({ dispatcher: Dispatcher });
+
+export default ActionsFactory.getInstance();

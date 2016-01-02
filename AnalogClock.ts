@@ -1,9 +1,4 @@
-/// <reference path="typings/tsd.d.ts"/>
-/// <reference path="node_modules/react-jsx-anywhere/jsx.d.ts"/>
-
-import React = require("react");
-import Component = require("./purereact/Component");
-import AnalogClockProps = require("./viewmodels/AnalogClockProps");
+import * as React from "react";
 
 var polarToCartesian = (centerX:number, centerY:number, radius:number, angleInDegrees:number) =>
 {
@@ -30,19 +25,24 @@ var describeArc = (x:number, y:number, radius:number, startAngle:number, endAngl
     return d;
 };
 
-var ClockView = Component<AnalogClockProps>
-(
-    function(props)
-    {
-        var hourRotation = props.hour > 0 ? (props.hour / 12) * 360 : 0;
-        var minuteRotation = props.minute > 0 ? (props.minute / 60) * 360 : 0;
-        var secondRotation = props.second > 0 ? (props.second / 60) * 360 : 0;
-    
+export interface AnalogClockProps {
+    hour: number;
+    minute: number;
+    second: number;
+}
+
+export default class AnalogClock extends React.Component<AnalogClockProps, any> {
+
+    render() {
+        var hourRotation = this.props.hour > 0 ? (this.props.hour / 12) * 360 : 0;
+        var minuteRotation = this.props.minute > 0 ? (this.props.minute / 60) * 360 : 0;
+        var secondRotation = this.props.second > 0 ? (this.props.second / 60) * 360 : 0;
+
         return (
             React.createElement("figure", { id: "clock" },
                 React.createElement("svg", { id: "SvgjsSvg1000", xmlns: "http://www.w3.org/2000/svg", version: "1.1", width: "100%", height: "100%" },
                     React.createElement("svg", { id: "SvgjsSvg1006", viewBox: "0 0 100 100", width: "100%", height: "100%" },
-                        React.createElement("ellipse", { id: "SvgjsEllipse1007", rx: "38.5", ry: "38.5", cx: "50", cy: "50", stroke: "#ffffff", strokeWidth: "8", fillOpacity: "0" }),
+                        React.createElement("ellipse", { id: "SvgjsEllipse1007", rx: "38.5", ry: "38.5", cx: "50", cy: "50", stroke: "#ffffff", strokeWidth: "3", fillOpacity: "0" }),
                         React.createElement("rect", { id: "SvgjsRect1008", width: "5", height: "20", x: "47.5", y: "30", fill: "#ffffff", transform: "rotate( " + hourRotation + " 50 50)" }),
                         React.createElement("ellipse", { id: "SvgjsEllipse1009", rx: "3.5", ry: "3.5", cx: "50", cy: "50", fill: "#ffffff" }),
                         React.createElement("rect", { id: "SvgjsRect1010", width: "3", height: "30", x: "48.5", y: "20", fill: "#ffffff", transform: "rotate( " + minuteRotation + " 50 50)" }),
@@ -52,6 +52,5 @@ var ClockView = Component<AnalogClockProps>
             )
         );
     }
-);
 
-export = ClockView; 
+}
